@@ -4,20 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G&T Aircraft Troubleshooting</title>
-
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-}
-
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-font-family:Arial, Helvetica, sans-serif;
+font-family:Arial,Helvetica,sans-serif;
 background:#e9edf3;
 color:#1f2b3a;
 }
-
 .page{
 max-width:1420px;
 margin:18px auto;
@@ -26,7 +19,6 @@ border-radius:20px;
 overflow:hidden;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
-
 .topbar{
 display:flex;
 justify-content:space-between;
@@ -36,13 +28,11 @@ background:#f4f7fb;
 border-bottom:1px solid #d8e2ef;
 gap:16px;
 }
-
 .brand{
 display:flex;
 align-items:center;
 gap:18px;
 }
-
 .logo-box{
 width:72px;
 height:72px;
@@ -55,46 +45,36 @@ justify-content:center;
 font-weight:700;
 font-size:26px;
 }
-
 .brand-text h1{
 font-size:28px;
 color:#224d88;
 margin-bottom:6px;
 }
-
 .brand-text p{
 font-size:14px;
 color:#526070;
 }
-
 .top-actions{
 display:flex;
 align-items:center;
 gap:14px;
 }
-
 .user-meta{
 text-align:right;
 line-height:1.35;
 }
-
-.user-meta .name{
-font-size:15px;
-}
-
+.user-meta .name{font-size:15px}
 .user-meta .sub{
 font-size:12px;
 color:#6e7b8c;
 }
-
 .pill-group{
 display:flex;
 border:1px solid #d8e2ef;
 border-radius:10px;
 overflow:hidden;
-background:white;
+background:#fff;
 }
-
 .pill-group div{
 padding:12px 16px;
 min-width:86px;
@@ -103,7 +83,6 @@ border-right:1px solid #d8e2ef;
 font-size:14px;
 color:#384659;
 }
-
 .pill-group div:last-child{
 border-right:none;
 min-width:56px;
@@ -114,26 +93,23 @@ position:relative;
 min-height:600px;
 background:#dbe6f2;
 }
-
 .hero{
 position:relative;
 min-height:600px;
 padding:46px 34px 30px;
 background-image:
-linear-gradient(rgba(223,232,244,.22), rgba(223,232,244,.22)),
+linear-gradient(rgba(223,232,244,.18), rgba(223,232,244,.18)),
 url('https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=1600&q=80');
 background-size:cover;
 background-position:center;
 }
-
 .hero::after{
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(90deg, rgba(236,242,248,.10) 0%, rgba(215,226,241,.06) 42%, rgba(215,226,241,.02) 100%);
+background:linear-gradient(90deg, rgba(236,242,248,.08) 0%, rgba(215,226,241,.05) 42%, rgba(215,226,241,.02) 100%);
 pointer-events:none;
 }
-
 .hero-content{
 position:relative;
 z-index:2;
@@ -141,7 +117,6 @@ max-width:58%;
 padding-top:64px;
 padding-left:60px;
 }
-
 .hero-title{
 color:#fff;
 text-shadow:0 2px 8px rgba(0,0,0,.2);
@@ -150,14 +125,12 @@ line-height:1.15;
 margin-bottom:18px;
 font-weight:700;
 }
-
 .hero-sub{
 color:#edf4ff;
 font-size:21px;
 margin-bottom:34px;
 text-shadow:0 2px 8px rgba(0,0,0,.16);
 }
-
 .cta{
 background:linear-gradient(180deg,#4f8de0,#2c67b8);
 color:#fff;
@@ -183,24 +156,20 @@ box-shadow:0 10px 30px rgba(0,0,0,.08);
 z-index:3;
 overflow:hidden;
 }
-
 .side-panel h3{
 font-size:24px;
 color:#2a3340;
 padding:24px 24px 12px;
 }
-
 .side-section{
 padding:0 24px 10px;
 }
-
 .upload-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:10px;
 margin:12px 0 8px;
 }
-
 .upload-btn{
 background:#eef3f9;
 border:1px solid #d8e2ef;
@@ -212,11 +181,9 @@ font-size:13px;
 font-weight:700;
 color:#304155;
 }
-
 .upload-btn:hover{
 background:#e4edf8;
 }
-
 .upload-list{
 margin-top:10px;
 background:#fbfdff;
@@ -225,42 +192,35 @@ border-radius:10px;
 padding:10px;
 font-size:12px;
 color:#526070;
-min-height:64px;
+min-height:72px;
 }
-
 .upload-list div{
 padding:4px 0;
 border-bottom:1px solid #eef3f8;
 }
-
 .upload-list div:last-child{
 border-bottom:none;
 }
-
 .item{
 padding:16px 0;
 border-top:1px solid #d8e2ef;
 color:#364253;
 font-size:15px;
 }
-
 .item small{
 display:block;
 color:#8a96a6;
 margin-top:4px;
 }
-
 .recent-title{
 font-size:18px;
 font-weight:700;
 color:#2a3340;
 padding:10px 24px 0;
 }
-
 .recent-list{
 padding:10px 24px 24px;
 }
-
 .recent-list p{
 padding:13px 0;
 border-top:1px solid #d8e2ef;
@@ -276,7 +236,6 @@ grid-template-columns:repeat(3,1fr);
 gap:18px;
 margin:-42px 32px 18px;
 }
-
 .module{
 background:rgba(249,251,255,.95);
 border:1px solid #d8e2ef;
@@ -285,19 +244,16 @@ padding:26px 22px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
 min-height:220px;
 }
-
 .module h4{
 font-size:19px;
 color:#243247;
 margin-bottom:12px;
 }
-
 .module p{
 font-size:14px;
 color:#556273;
 line-height:1.6;
 }
-
 .mini-bar{
 margin-top:22px;
 width:124px;
@@ -305,7 +261,6 @@ height:18px;
 border-radius:7px;
 background:linear-gradient(180deg,#73a3e3,#4c80c6);
 }
-
 .tip{
 margin-top:18px;
 padding:16px;
@@ -316,11 +271,7 @@ color:#425063;
 font-size:14px;
 line-height:1.5;
 }
-
-.tip b{
-color:#27456d;
-}
-
+.tip b{color:#27456d}
 .footer{
 text-align:center;
 color:#6b7787;
@@ -339,7 +290,6 @@ align-items:center;
 justify-content:center;
 padding:20px;
 }
-
 .modal{
 width:100%;
 max-width:460px;
@@ -348,7 +298,6 @@ border-radius:18px;
 box-shadow:0 20px 50px rgba(0,0,0,.25);
 overflow:hidden;
 }
-
 .modal-header{
 padding:18px 22px;
 background:#f4f7fb;
@@ -357,20 +306,16 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 }
-
 .modal-header h2{
 color:#224d88;
 font-size:22px;
 }
-
 .modal-body{
 padding:22px;
 }
-
 .field{
 margin-bottom:14px;
 }
-
 .field label{
 display:block;
 margin-bottom:6px;
@@ -378,7 +323,6 @@ font-size:13px;
 font-weight:700;
 color:#334254;
 }
-
 .field input,
 .field select,
 .field textarea{
@@ -388,9 +332,8 @@ border:1px solid #ced8e5;
 border-radius:10px;
 font-size:14px;
 }
-
 .field textarea{
-min-height:90px;
+min-height:96px;
 resize:vertical;
 }
 
@@ -399,7 +342,6 @@ display:flex;
 gap:10px;
 margin-top:16px;
 }
-
 .blue-btn{
 background:linear-gradient(180deg,#4f8de0,#2c67b8);
 color:#fff;
@@ -409,7 +351,6 @@ padding:13px 18px;
 cursor:pointer;
 font-weight:700;
 }
-
 .soft-btn{
 background:#eef3f9;
 color:#304155;
@@ -419,7 +360,6 @@ padding:13px 18px;
 cursor:pointer;
 font-weight:700;
 }
-
 .error-box{
 margin-top:14px;
 padding:12px;
@@ -437,7 +377,7 @@ position:fixed;
 top:80px;
 left:50%;
 transform:translateX(-50%);
-width:min(980px, calc(100vw - 40px));
+width:min(1080px, calc(100vw - 40px));
 background:#fff;
 border-radius:18px;
 box-shadow:0 20px 50px rgba(0,0,0,.28);
@@ -445,7 +385,6 @@ z-index:3000;
 overflow:hidden;
 display:none;
 }
-
 .drag-header{
 background:#f4f7fb;
 border-bottom:1px solid #d8e2ef;
@@ -455,28 +394,23 @@ justify-content:space-between;
 align-items:center;
 cursor:move;
 }
-
 .drag-header h2{
 color:#224d88;
 font-size:22px;
 }
-
 .window-body{
 padding:22px;
 max-height:80vh;
 overflow:auto;
 }
-
 .grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:16px;
 }
-
 .full{
 grid-column:1 / -1;
 }
-
 .warn{
 margin-top:16px;
 padding:14px;
@@ -487,7 +421,6 @@ color:#7a271f;
 font-size:13px;
 line-height:1.5;
 }
-
 .result-box{
 margin-top:18px;
 padding:18px;
@@ -496,67 +429,39 @@ border-radius:14px;
 background:#fbfdff;
 display:none;
 }
-
 .result-box h3{
 color:#224d88;
 margin-bottom:12px;
 }
-
+.result-box h4{
+color:#243247;
+margin:14px 0 8px;
+}
 .result-box p{
 line-height:1.6;
 margin-bottom:10px;
 }
-
 .result-box ul{
 margin-left:18px;
 line-height:1.6;
 }
-
 .hidden-input{
 display:none;
 }
-
+.inline-note{
+font-size:12px;
+color:#6e7b8c;
+margin-top:6px;
+}
 @media (max-width: 1020px){
-.page{
-margin:0;
-border-radius:0;
-}
-
-.topbar{
-flex-direction:column;
-align-items:flex-start;
-}
-
-.hero{
-min-height:460px;
-}
-
-.hero-content{
-max-width:100%;
-padding-left:0;
-text-align:center;
-}
-
-.hero-title{
-margin-left:auto;
-margin-right:auto;
-}
-
-.side-panel{
-position:static;
-width:auto;
-margin:18px 20px 0;
-}
-
-.modules{
-grid-template-columns:1fr;
-margin:20px;
-}
-
-.grid{
-grid-template-columns:1fr;
-}
-
+.page{margin:0;border-radius:0}
+.topbar{flex-direction:column;align-items:flex-start}
+.hero{min-height:460px}
+.hero-content{max-width:100%;padding-left:0;text-align:center}
+.hero-title{margin-left:auto;margin-right:auto}
+.side-panel{position:static;width:auto;margin:18px 20px 0}
+.modules{grid-template-columns:1fr;margin:20px}
+.grid{grid-template-columns:1fr}
 .draggable-window{
 top:20px;
 left:20px;
@@ -603,7 +508,6 @@ transform:none;
 
 <div class="side-panel">
 <h3>Quick Access</h3>
-
 <div class="side-section">
 <div class="upload-grid">
 <label class="upload-btn" for="ammInput">Upload AMM</label>
@@ -691,9 +595,7 @@ G&amp;T Aircraft Troubleshooting | Safety Notice | Technical Data Responsibility
 <button class="soft-btn" onclick="closeLogin()">Cancel</button>
 </div>
 
-<div class="error-box" id="loginError">
-Usuario o contraseña incorrectos.
-</div>
+<div class="error-box" id="loginError">Usuario o contraseña incorrectos.</div>
 </div>
 </div>
 </div>
@@ -725,6 +627,7 @@ Usuario o contraseña incorrectos.
 <option value="ATA 21 - Pressurization">ATA 21 - Pressurization</option>
 <option value="ATA 24 - Electrical Power">ATA 24 - Electrical Power</option>
 </select>
+<div class="inline-note">No information is preloaded. Enter the real case data.</div>
 </div>
 
 <div class="field">
@@ -855,11 +758,9 @@ function openDiagnostic(){
 const win = document.getElementById('diagWindow');
 win.style.display = 'block';
 }
-
 function closeDiagnostic(){
 document.getElementById('diagWindow').style.display = 'none';
 }
-
 function clearDiagnostic(){
 document.getElementById('aircraftModel').value = '';
 document.getElementById('serialNumber').value = '';
@@ -891,59 +792,93 @@ let html = `
 <p><b>Fault:</b> ${fault}</p>
 `;
 
-if(!faultType || !cbCheck || !lampTest || !bulbCheck || !socketCheck){
-html += `
-<p><b>G&T:</b> Complete all required selections before running the diagnostic.</p>
-`;
+if(!faultType || !cbCheck || !lampTest || !bulbCheck || !socketCheck || !ata){
+html += `<p><b>G&T:</b> Complete all required fields before running the diagnostic.</p>`;
 } else if(cbCheck === 'no' || lampTest === 'no' || bulbCheck === 'no' || socketCheck === 'no'){
 html += `
-<p><b>Initial G&T Conclusion:</b> Do not continue to deep troubleshooting yet.</p>
+<h4>Initial G&T Conclusion</h4>
 <ul>
+<li>Do not continue to deep troubleshooting yet.</li>
 <li>Complete all basic checks first: circuit breaker, lamp test, bulb and socket.</li>
-<li>Confirm real aircraft condition after these checks.</li>
+<li>Confirm the real aircraft condition after these checks.</li>
 <li>Only then continue to switch or wiring analysis.</li>
 </ul>
 `;
 } else {
+html += `<h4>G&T Logical Classification</h4>`;
 if(faultType === 'green_lh_off'){
 html += `
-<p><b>ATA 32 Logic:</b> Single LH indication failure usually points to an individual LH branch rather than a common feed.</p>
+<p>Single LH indication failure usually points to an individual LH branch rather than a common feed.</p>
+<h4>Physical Location</h4>
 <ul>
 <li>Go to the LH wheel well.</li>
 <li>Locate the LH downlock switch.</li>
 <li>Verify switch identification and connector.</li>
-<li>Measure continuity at the LH downlock switch with gear down and locked.</li>
-<li>Inspect support rigidity and switch adjustment before making corrections.</li>
 </ul>
-<p><b>Most likely suspects:</b> LH downlock switch out of adjustment, open wire in LH branch, socket/contact issue, poor ground return.</p>
+<h4>Next Action</h4>
+<ul>
+<li>Measure continuity at the LH downlock switch with gear down and locked.</li>
+<li>Inspect connector, wire condition and local ground return.</li>
+</ul>
+<h4>Main Suspects</h4>
+<ul>
+<li>LH downlock switch out of adjustment</li>
+<li>Open wire in LH branch</li>
+<li>Socket/contact issue</li>
+<li>Poor ground return</li>
+</ul>
+<h4>Root Cause Review</h4>
+<ul>
+<li>Check support rigidity</li>
+<li>Check vibration / looseness</li>
+<li>Check evidence of previous incorrect adjustment</li>
+</ul>
 `;
 } else if(faultType === 'green_rh_off'){
 html += `
-<p><b>ATA 32 Logic:</b> Single RH indication failure points first to the RH indication branch.</p>
+<p>Single RH indication failure points first to the RH indication branch.</p>
+<h4>Physical Location</h4>
 <ul>
 <li>Go to the RH wheel well.</li>
 <li>Locate the RH downlock switch.</li>
+</ul>
+<h4>Next Action</h4>
+<ul>
 <li>Verify continuity and switch state with gear down and locked.</li>
 <li>Inspect connector, pin fit and local wiring condition.</li>
+</ul>
+<h4>Main Suspects</h4>
+<ul>
+<li>RH switch condition</li>
+<li>RH branch wiring</li>
+<li>Panel/socket issue isolated to RH channel</li>
 </ul>
 `;
 } else if(faultType === 'all_indication_fail'){
 html += `
-<p><b>ATA 32 Logic:</b> Multiple indication failure suggests common feed, common ground or panel issue.</p>
+<p>Multiple indication failure suggests common feed, common ground or panel issue.</p>
+<h4>Next Action</h4>
 <ul>
 <li>Recheck shared power feed.</li>
-<li>Verify annunciator/lamp test function.</li>
+<li>Verify annunciator / lamp test function.</li>
 <li>Inspect common connector or panel indication circuit.</li>
 <li>Only after that, split troubleshooting by gear leg.</li>
+</ul>
+<h4>Main Suspects</h4>
+<ul>
+<li>Common power feed</li>
+<li>Common ground</li>
+<li>Panel indication circuit</li>
 </ul>
 `;
 } else if(faultType === 'unsafe_indication'){
 html += `
-<p><b>ATA 32 Logic:</b> Unsafe indication requires confirmation of real landing gear position before electrical troubleshooting.</p>
+<p>Unsafe indication requires confirmation of real landing gear position before electrical troubleshooting.</p>
+<h4>Next Action</h4>
 <ul>
 <li>Confirm actual gear mechanical condition first.</li>
 <li>Do not rely on indication only.</li>
-<li>Inspect uplock/downlock switch logic and warning circuit.</li>
+<li>Inspect uplock/downlock logic and warning circuit.</li>
 </ul>
 `;
 }
@@ -956,7 +891,6 @@ document.getElementById('resultBox').style.display = 'block';
 /* draggable window */
 const dragWindow = document.getElementById('diagWindow');
 const dragHeader = document.getElementById('dragHeader');
-
 let isDragging = false;
 let offsetX = 0;
 let offsetY = 0;
@@ -970,13 +904,11 @@ dragWindow.style.left = rect.left + 'px';
 dragWindow.style.top = rect.top + 'px';
 dragWindow.style.transform = 'none';
 });
-
 document.addEventListener('mousemove', function(e){
 if(!isDragging) return;
 dragWindow.style.left = (e.clientX - offsetX) + 'px';
 dragWindow.style.top = (e.clientY - offsetY) + 'px';
 });
-
 document.addEventListener('mouseup', function(){
 isDragging = false;
 });
