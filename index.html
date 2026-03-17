@@ -2,94 +2,412 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G&T Aircraft Troubleshooting</title>
 
 <style>
-body {
-margin: 0;
-font-family: Arial;
-background: #f2f5f9;
+*{
+box-sizing:border-box;
+margin:0;
+padding:0;
 }
 
-.header {
-display: flex;
-justify-content: space-between;
-padding: 15px 30px;
-background: white;
-font-weight: bold;
+body{
+font-family: Arial, Helvetica, sans-serif;
+background:#e9edf3;
+color:#1f2b3a;
 }
 
-.hero {
-background: url('https://images.unsplash.com/photo-1542144582-1ba00456b5e3') center/cover;
-height: 300px;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-color: white;
-text-align: center;
+.page{
+max-width:1420px;
+margin:18px auto;
+background:#f4f7fb;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
 }
 
-.cta {
-margin-top: 20px;
-padding: 12px 25px;
-background: #1e90ff;
-border: none;
-color: white;
-font-size: 16px;
-cursor: pointer;
-border-radius: 5px;
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:24px 32px;
+background:#f4f7fb;
+border-bottom:1px solid #d8e2ef;
+gap:16px;
 }
 
-.section {
-display: flex;
-gap: 20px;
-padding: 30px;
+.brand{
+display:flex;
+align-items:center;
+gap:18px;
 }
 
-.card {
-background: white;
-padding: 20px;
-flex: 1;
-border-radius: 10px;
+.logo-box{
+width:72px;
+height:72px;
+border-radius:8px;
+background:linear-gradient(180deg,#d0deef,#6c8eb7);
+color:#224d88;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+font-size:26px;
+}
+
+.brand-text h1{
+font-size:28px;
+color:#224d88;
+margin-bottom:6px;
+}
+
+.brand-text p{
+font-size:14px;
+color:#526070;
+}
+
+.top-actions{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.user-meta{
+text-align:right;
+line-height:1.35;
+}
+
+.user-meta .name{
+font-size:15px;
+}
+
+.user-meta .sub{
+font-size:12px;
+color:#6e7b8c;
+}
+
+.pill-group{
+display:flex;
+border:1px solid #d8e2ef;
+border-radius:10px;
+overflow:hidden;
+background:white;
+}
+
+.pill-group div{
+padding:12px 16px;
+min-width:86px;
+text-align:center;
+border-right:1px solid #d8e2ef;
+font-size:14px;
+color:#384659;
+}
+
+.pill-group div:last-child{
+border-right:none;
+min-width:56px;
+}
+
+.hero-wrap{
+position:relative;
+min-height:600px;
+background:#dbe6f2;
+}
+
+.hero{
+position:relative;
+min-height:600px;
+padding:46px 34px 30px;
+background-image:
+linear-gradient(rgba(223,232,244,.20), rgba(223,232,244,.20)),
+url('https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?auto=format&fit=crop&w=1600&q=80');
+background-size:cover;
+background-position:center;
+}
+
+.hero::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(90deg, rgba(236,242,248,.08) 0%, rgba(215,226,241,.05) 42%, rgba(215,226,241,.02) 100%);
+pointer-events:none;
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+max-width:58%;
+padding-top:64px;
+padding-left:60px;
+}
+
+.hero-title{
+color:white;
+text-shadow:0 2px 8px rgba(0,0,0,.2);
+font-size:36px;
+line-height:1.15;
+margin-bottom:18px;
+font-weight:700;
+}
+
+.hero-sub{
+color:#edf4ff;
+font-size:21px;
+margin-bottom:34px;
+text-shadow:0 2px 8px rgba(0,0,0,.16);
+}
+
+.cta{
+background:linear-gradient(180deg,#4f8de0,#2c67b8);
+color:white;
+border:none;
+padding:18px 52px;
+border-radius:12px;
+font-weight:700;
+letter-spacing:.3px;
+cursor:pointer;
+box-shadow:0 10px 20px rgba(46,103,184,.25);
+font-size:18px;
+}
+
+.side-panel{
+position:absolute;
+top:54px;
+right:38px;
+width:320px;
+background:rgba(250,252,255,.94);
+border:1px solid #d8e2ef;
+border-radius:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+z-index:3;
+overflow:hidden;
+}
+
+.side-panel h3{
+font-size:24px;
+color:#2a3340;
+padding:24px 24px 12px;
+}
+
+.side-section{
+padding:0 24px 10px;
+}
+
+.item{
+padding:16px 0;
+border-top:1px solid #d8e2ef;
+color:#364253;
+font-size:15px;
+}
+
+.item small{
+display:block;
+color:#8a96a6;
+margin-top:4px;
+}
+
+.recent-title{
+font-size:18px;
+font-weight:700;
+color:#2a3340;
+padding:10px 24px 0;
+}
+
+.recent-list{
+padding:10px 24px 24px;
+}
+
+.recent-list p{
+padding:13px 0;
+border-top:1px solid #d8e2ef;
+color:#364253;
+font-size:15px;
+}
+
+.modules{
+position:relative;
+z-index:4;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin:-42px 32px 18px;
+}
+
+.module{
+background:rgba(249,251,255,.95);
+border:1px solid #d8e2ef;
+border-radius:16px;
+padding:26px 22px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+min-height:220px;
+}
+
+.module h4{
+font-size:19px;
+color:#243247;
+margin-bottom:12px;
+}
+
+.module p{
+font-size:14px;
+color:#556273;
+line-height:1.6;
+}
+
+.mini-bar{
+margin-top:22px;
+width:124px;
+height:18px;
+border-radius:7px;
+background:linear-gradient(180deg,#73a3e3,#4c80c6);
+}
+
+.tip{
+margin-top:18px;
+padding:16px;
+border:1px solid #cad7e6;
+border-radius:10px;
+background:#f8fbff;
+color:#425063;
+font-size:14px;
+line-height:1.5;
+}
+
+.tip b{
+color:#27456d;
+}
+
+.footer{
+text-align:center;
+color:#6b7787;
+font-size:13px;
+padding:8px 20px 24px;
+}
+
+@media (max-width: 1020px){
+.page{
+margin:0;
+border-radius:0;
+}
+
+.topbar{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.hero{
+min-height:460px;
+}
+
+.hero-content{
+max-width:100%;
+padding-left:0;
+text-align:center;
+}
+
+.hero-title{
+margin-left:auto;
+margin-right:auto;
+}
+
+.side-panel{
+position:static;
+width:auto;
+margin:18px 20px 0;
+}
+
+.modules{
+grid-template-columns:1fr;
+margin:20px;
+}
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-<div>G&T Aircraft Troubleshooting</div>
-<div>User: Rodrigo Tapia | Aircraft: King Air</div>
+<div class="page">
+<header class="topbar">
+<div class="brand">
+<div class="logo-box">G&T</div>
+<div class="brand-text">
+<h1>AIRCRAFT TROUBLESHOOTING</h1>
+<p>AI Assisted Diagnostic Platform for Aircraft Maintenance</p>
+</div>
 </div>
 
+<div class="top-actions">
+<div class="user-meta">
+<div class="name">User: Rodrigo Tapia</div>
+<div class="sub">Aircraft: King Air 200</div>
+</div>
+
+<div class="pill-group">
+<div>King Air 200</div>
+<div>EN</div>
+</div>
+</div>
+</header>
+
+<section class="hero-wrap">
 <div class="hero">
-<h1>Aircraft Diagnostic System</h1>
+<div class="hero-content">
+<div class="hero-title">G&amp;T AIRCRAFT<br>TROUBLESHOOTING</div>
+<div class="hero-sub">Aircraft Diagnostic System</div>
 <button class="cta" onclick="startDiagnostic()">START DIAGNOSTIC</button>
 </div>
-
-<div class="section">
-
-<div class="card">
-<h3>Start Troubleshooting</h3>
-<p>Begin guided diagnostic session</p>
 </div>
 
-<div class="card">
-<h3>Technical Library</h3>
-<p>AMM | WDM | IPC</p>
+<div class="side-panel">
+<h3>Quick Access</h3>
+
+<div class="side-section">
+<div class="item">Aircraft Maintenance Manual <small>(AMM)</small></div>
+<div class="item">Wiring Diagram Manual <small>(WDM)</small></div>
+<div class="item">Illustrated Parts Catalog <small>(IPC)</small></div>
+<div class="item">Structural Repair Manual <small>(SRM)</small></div>
 </div>
 
-<div class="card">
-<h3>Case Experience</h3>
-<p>Review real troubleshooting cases</p>
+<div class="recent-title">Recent Diagnoses</div>
+<div class="recent-list">
+<p>ATA 32 Landing Gear Indication</p>
+<p>ATA 21 Pressurization Fault</p>
+<p>ATA 24 Electrical Power Issue</p>
+</div>
+</div>
+</section>
+
+<section class="modules">
+<div class="module">
+<h4>Start Troubleshooting</h4>
+<p>Begin a guided diagnostic session to troubleshoot aircraft systems.</p>
+<div class="mini-bar"></div>
 </div>
 
+<div class="module">
+<h4>Technical Library</h4>
+<p>Access ATA systems, wiring diagrams, and technical manuals.</p>
+</div>
+
+<div class="module">
+<h4>Case Experience</h4>
+<p>Review past troubleshooting cases, and practical tips.</p>
+<div class="tip">
+<b>System Tip:</b><br>
+Before troubleshooting gear indication, always perform a lamp test.
+</div>
+</div>
+</section>
+
+<div class="footer">
+G&amp;T Aircraft Troubleshooting | Safety Notice | Technical Data Responsibility | Support
+</div>
 </div>
 
 <script>
 function startDiagnostic() {
-alert("Bienvenido Rodrigo ✈️\n\nSistema de diagnóstico activado.\n\nPróximo paso: login + troubleshooting inteligente.");
+alert("Bienvenido Rodrigo ✈️\\n\\nMañana conectamos esta portada con el login real y el sistema de diagnóstico.");
 }
 </script>
 
