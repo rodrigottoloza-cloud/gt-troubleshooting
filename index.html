@@ -1,229 +1,309 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>G&T Troubleshooting</title>
+const express = require("express");
+const cors = require("cors");
+const multer = require("multer");
+const sqlite3 = require("sqlite3").verbose();
+const path = require("path");
+const fs = require("fs");
 
-<style>
-body{
-font-family: Arial;
-background:#eef2f7;
-margin:0;
+const app = express();
+const PORT = 3000;
+
+// Rutas base
+const dataDir = path.join(__dirname, "data");
+const uploadsDir = path.join(__dirname, "uploads");
+const dbPath = path.join(dataDir, "gt.sqlite");
+
+// Asegurar carpetas
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
+if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+
+// Middlewares
+app.use(cors());
+app.use(express.json());
+app.use("/uploads", express.static(uploadsDir));
+
+// Base de datos
+const db = new sqlite3.Database(dbPath, (err) => {
+if (err) {
+console.error("Error abriendo SQLite:", err.message);
+} else {
+console.log("SQLite conectado en:", dbPath);
+}
+});
+
+// Crear tablas
+db.serialize(() => {
+db.run(`
+CREATE TABLE IF NOT EXISTS users (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+email TEXT UNIQUE NOT NULL,
+password TEXT NOT NULL,
+name TEXT NOT NULL
+)
+`);
+
+db.run(`
+CREATE TABLE IF NOT EXISTS cases (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+aircraft_model TEXT,
+serial_number TEXT,
+ata TEXT,
+fault_type TEXT,
+reported_fault TEXT,
+result_summary TEXT,
+active_technical_data_name TEXT,
+created_at TEXT DEFAULT CURRENT_TIMESTAMP
+)
+`);
+
+db.run(`
+CREATE TABLE IF NOT EXISTS uploads (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+label TEXT,
+original_name TEXT,
+stored_name TEXT,
+mime_type TEXT,
+size INTEGER,
+created_at TEXT DEFAULT CURRENT_TIMESTAMP
+)
+`);
+
+// Usuario inicial
+db.run(
+`
+INSERT OR IGNORE INTO users (email, password, name)
+VALUES (?, ?, ?)
+`,
+["rodrigo@gt-troubleshooting.com", "1234", "Rodrigo Tapia"]
+);
+});
+
+// Multer
+const storage = multer.diskStorage({
+destination: function (req, file, cb) {
+cb(null, uploadsDir);
+},
+filename: function (req, file, cb) {
+const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`;
+cb(null, uniqueName);
+}
+});
+
+const upload = multer({ storage });
+
+// Health check
+app.get("/", (req, res) => {
+res.json({
+ok: true,
+message: "G&T backend funcionando"
+});
+});
+
+// Login simple
+app.post("/login", (req, res) => {
+const { email, password } = req.body;
+
+if (!email || !password) {
+return res.status(400).json({
+ok: false,
+message: "Email y contraseña son obligatorios"
+});
 }
 
-/* PORTADA */
-.hero{
-height:100vh;
-background:url('https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=1600&q=80');
-background-size:cover;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-color:white;
-text-align:center;
+db.get(
+`SELECT id, email, name FROM users WHERE email = ? AND password = ?`,
+[email, password],
+(err, row) => {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "Error en base de datos"
+});
 }
 
-.hero h1{
-font-size:40px;
+if (!row) {
+return res.status(401).json({
+ok: false,
+message: "Credenciales inválidas"
+});
 }
 
-button{
-padding:14px 25px;
-border:none;
-border-radius:10px;
-background:#2c67b8;
-color:white;
-cursor:pointer;
-font-weight:bold;
+res.json({
+ok: true,
+user: row
+});
+}
+);
+});
+
+// Guardar caso
+app.post("/cases", (req, res) => {
+const {
+aircraft_model,
+serial_number,
+ata,
+fault_type,
+reported_fault,
+result_summary,
+active_technical_data_name
+} = req.body;
+
+db.run(
+`
+INSERT INTO cases (
+aircraft_model,
+serial_number,
+ata,
+fault_type,
+reported_fault,
+result_summary,
+active_technical_data_name
+) VALUES (?, ?, ?, ?, ?, ?, ?)
+`,
+[
+aircraft_model || "",
+serial_number || "",
+ata || "",
+fault_type || "",
+reported_fault || "",
+result_summary || "",
+active_technical_data_name || ""
+],
+function (err) {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "No se pudo guardar el caso"
+});
 }
 
-/* LOGIN */
-.modal{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.7);
-justify-content:center;
-align-items:center;
+res.json({
+ok: true,
+id: this.lastID,
+message: "Caso guardado correctamente"
+});
+}
+);
+});
+
+// Listar casos
+app.get("/cases", (req, res) => {
+db.all(
+`SELECT * FROM cases ORDER BY id DESC`,
+[],
+(err, rows) => {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "No se pudieron obtener los casos"
+});
 }
 
-.modal-box{
-background:white;
-padding:25px;
-border-radius:12px;
-width:300px;
+res.json({
+ok: true,
+cases: rows
+});
+}
+);
+});
+
+// Eliminar caso
+app.delete("/cases/:id", (req, res) => {
+const { id } = req.params;
+
+db.run(`DELETE FROM cases WHERE id = ?`, [id], function (err) {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "No se pudo eliminar el caso"
+});
 }
 
-input{
-width:100%;
-padding:10px;
-margin:10px 0;
+res.json({
+ok: true,
+deleted: this.changes > 0
+});
+});
+});
+
+// Subir archivo
+app.post("/upload", upload.single("file"), (req, res) => {
+const label = req.body.label || "OTROS";
+
+if (!req.file) {
+return res.status(400).json({
+ok: false,
+message: "No se recibió archivo"
+});
 }
 
-/* APP */
-.app{
-display:none;
-padding:20px;
+db.run(
+`
+INSERT INTO uploads (
+label,
+original_name,
+stored_name,
+mime_type,
+size
+) VALUES (?, ?, ?, ?, ?)
+`,
+[
+label,
+req.file.originalname,
+req.file.filename,
+req.file.mimetype,
+req.file.size
+],
+function (err) {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "Archivo subido pero no registrado en base de datos"
+});
 }
 
-.chat{
-border:1px solid #ccc;
-height:300px;
-overflow:auto;
-padding:10px;
-background:white;
+res.json({
+ok: true,
+file: {
+id: this.lastID,
+label,
+original_name: req.file.originalname,
+stored_name: req.file.filename,
+mime_type: req.file.mimetype,
+size: req.file.size,
+url: `/uploads/${req.file.filename}`
+}
+});
+}
+);
+});
+
+// Listar archivos
+app.get("/uploads-list", (req, res) => {
+db.all(
+`SELECT * FROM uploads ORDER BY id DESC`,
+[],
+(err, rows) => {
+if (err) {
+return res.status(500).json({
+ok: false,
+message: "No se pudieron obtener los archivos"
+});
 }
 
-.msg{
-margin:10px 0;
+const files = rows.map((row) => ({
+...row,
+url: `/uploads/${row.stored_name}`
+}));
+
+res.json({
+ok: true,
+files
+});
 }
+);
+});
 
-.user{
-text-align:right;
-}
-
-.bot{
-text-align:left;
-}
-
-/* BOTONES DECISION */
-.quick{
-margin-top:10px;
-}
-
-.quick button{
-margin:5px;
-background:#eee;
-color:black;
-}
-
-</style>
-</head>
-
-<body>
-
-<!-- PORTADA -->
-<div class="hero">
-<h1>G&T Aircraft Troubleshooting</h1>
-<p>Sistema de diagnóstico aeronáutico</p>
-<button onclick="openLogin()">Start Diagnostic</button>
-</div>
-
-<!-- LOGIN -->
-<div class="modal" id="login">
-<div class="modal-box">
-<h3>Ingreso</h3>
-<input id="user" placeholder="Usuario">
-<input id="pass" type="password" placeholder="Contraseña">
-<button onclick="login()">Entrar</button>
-</div>
-</div>
-
-<!-- APP -->
-<div class="app" id="app">
-
-<h2>Diagnóstico</h2>
-
-<input id="aircraft" placeholder="Modelo aeronave">
-<input id="fault" placeholder="Falla">
-
-<button onclick="start()">Ejecutar diagnóstico</button>
-
-<h3>Chat G&T</h3>
-
-<div class="chat" id="chat"></div>
-
-<input id="input" placeholder="Escribe aquí">
-<button onclick="send()">Enviar</button>
-
-<div class="quick">
-<button onclick="quick('sí')">Sí</button>
-<button onclick="quick('no')">No</button>
-<button onclick="quick('tengo voltaje')">Voltaje</button>
-<button onclick="quick('no tengo voltaje')">No voltaje</button>
-<button onclick="quick('continuidad ok')">Continuidad</button>
-<button onclick="quick('sin continuidad')">Sin continuidad</button>
-<button onclick="quick('siguiente paso')">Siguiente</button>
-</div>
-
-</div>
-
-<script>
-
-function openLogin(){
-document.getElementById("login").style.display="flex"
-}
-
-function login(){
-let u=document.getElementById("user").value
-let p=document.getElementById("pass").value
-
-if(u==="Rodrigo" && p==="1234"){
-document.getElementById("login").style.display="none"
-document.querySelector(".hero").style.display="none"
-document.getElementById("app").style.display="block"
-}else{
-alert("Datos incorrectos")
-}
-}
-
-function start(){
-addBot("Perfecto Rodrigo. Vamos al grano.\n\nPrimero:\n¿Tienes voltaje en el circuito?")
-}
-
-function send(){
-let val=document.getElementById("input").value
-addUser(val)
-process(val)
-document.getElementById("input").value=""
-}
-
-function quick(txt){
-addUser(txt)
-process(txt)
-}
-
-function addUser(t){
-let div=document.createElement("div")
-div.className="msg user"
-div.innerText=t
-chat.appendChild(div)
-}
-
-function addBot(t){
-let div=document.createElement("div")
-div.className="msg bot"
-div.innerText=t
-chat.appendChild(div)
-}
-
-function process(t){
-
-t=t.toLowerCase()
-
-if(t.includes("no voltaje")){
-addBot("Ok. Dirígete al breaker correspondiente y verifica alimentación.")
-}
-else if(t.includes("voltaje")){
-addBot("Perfecto. Ahora mide continuidad desde el switch.")
-}
-else if(t.includes("sin continuidad")){
-addBot("Falla en cableado o switch. Revisa conector.")
-}
-else if(t.includes("continuidad")){
-addBot("Entonces el problema puede ser indicación o lámpara.")
-}
-else if(t.includes("siguiente")){
-addBot("Vamos al siguiente paso. ¿Qué observas ahora?")
-}
-else{
-addBot("Entendido. Sigue contándome qué ves.")
-}
-}
-
-</script>
-
-</body>
-</html>
+app.listen(PORT, () => {
+console.log(`Servidor G&T corriendo en http://localhost:${PORT}`);
+});
