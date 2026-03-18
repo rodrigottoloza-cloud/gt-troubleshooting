@@ -1,309 +1,1409 @@
-const express = require("express");
-const cors = require("cors");
-const multer = require("multer");
-const sqlite3 = require("sqlite3").verbose();
-const path = require("path");
-const fs = require("fs");
-
-const app = express();
-const PORT = 3000;
-
-// Rutas base
-const dataDir = path.join(__dirname, "data");
-const uploadsDir = path.join(__dirname, "uploads");
-const dbPath = path.join(dataDir, "gt.sqlite");
-
-// Asegurar carpetas
-if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-
-// Middlewares
-app.use(cors());
-app.use(express.json());
-app.use("/uploads", express.static(uploadsDir));
-
-// Base de datos
-const db = new sqlite3.Database(dbPath, (err) => {
-if (err) {
-console.error("Error abriendo SQLite:", err.message);
-} else {
-console.log("SQLite conectado en:", dbPath);
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>G&T Aircraft Troubleshooting</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:#e9edf3;
+color:#1f2b3a;
 }
-});
+.page{
+max-width:1440px;
+margin:18px auto;
+background:#f4f7fb;
+border-radius:20px;
+overflow:hidden;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+}
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px 28px;
+background:#f4f7fb;
+border-bottom:1px solid #d8e2ef;
+gap:16px;
+}
+.brand{
+display:flex;
+align-items:center;
+gap:16px;
+}
+.logo-box{
+width:68px;
+height:68px;
+border-radius:10px;
+background:linear-gradient(180deg,#d0deef,#6c8eb7);
+color:#224d88;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+font-size:24px;
+}
+.brand-text h1{
+font-size:27px;
+color:#224d88;
+margin-bottom:4px;
+}
+.brand-text p{
+font-size:14px;
+color:#526070;
+}
+.top-actions{
+display:flex;
+align-items:center;
+gap:14px;
+}
+.user-meta{
+text-align:right;
+line-height:1.35;
+}
+.user-meta .name{font-size:15px}
+.user-meta .sub{font-size:12px;color:#6e7b8c}
+.lang-group{
+display:flex;
+border:1px solid #d8e2ef;
+border-radius:10px;
+overflow:hidden;
+background:#fff;
+}
+.lang-group button{
+padding:11px 16px;
+min-width:64px;
+border:none;
+border-right:1px solid #d8e2ef;
+background:#fff;
+cursor:pointer;
+color:#384659;
+font-weight:700;
+}
+.lang-group button:last-child{border-right:none}
+.lang-group button.active{background:#eef3f9}
 
-// Crear tablas
-db.serialize(() => {
-db.run(`
-CREATE TABLE IF NOT EXISTS users (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-email TEXT UNIQUE NOT NULL,
-password TEXT NOT NULL,
-name TEXT NOT NULL
-)
-`);
+.hero-wrap{
+position:relative;
+min-height:600px;
+background:#dbe6f2;
+}
+.hero{
+position:relative;
+min-height:600px;
+padding:46px 34px 30px;
+background-image:
+linear-gradient(rgba(223,232,244,.18), rgba(223,232,244,.18)),
+url('https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=1600&q=80');
+background-size:cover;
+background-position:center;
+}
+.hero::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(90deg, rgba(236,242,248,.08) 0%, rgba(215,226,241,.05) 42%, rgba(215,226,241,.02) 100%);
+pointer-events:none;
+}
+.hero-content{
+position:relative;
+z-index:2;
+max-width:58%;
+padding-top:64px;
+padding-left:60px;
+}
+.hero-title{
+color:#fff;
+text-shadow:0 2px 8px rgba(0,0,0,.22);
+font-size:38px;
+line-height:1.12;
+margin-bottom:16px;
+font-weight:700;
+}
+.hero-sub{
+color:#edf4ff;
+font-size:21px;
+margin-bottom:30px;
+text-shadow:0 2px 8px rgba(0,0,0,.16);
+}
+.cta{
+background:linear-gradient(180deg,#4f8de0,#2c67b8);
+color:#fff;
+border:none;
+padding:18px 50px;
+border-radius:12px;
+font-weight:700;
+cursor:pointer;
+box-shadow:0 10px 20px rgba(46,103,184,.25);
+font-size:18px;
+}
 
-db.run(`
-CREATE TABLE IF NOT EXISTS cases (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-aircraft_model TEXT,
-serial_number TEXT,
-ata TEXT,
-fault_type TEXT,
-reported_fault TEXT,
-result_summary TEXT,
-active_technical_data_name TEXT,
-created_at TEXT DEFAULT CURRENT_TIMESTAMP
-)
-`);
+.side-panel{
+position:absolute;
+top:50px;
+right:34px;
+width:390px;
+background:rgba(250,252,255,.95);
+border:1px solid #d8e2ef;
+border-radius:18px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+z-index:3;
+overflow:hidden;
+}
+.side-panel h3{
+font-size:24px;
+color:#2a3340;
+padding:22px 22px 12px;
+}
+.side-section{padding:0 22px 10px}
+.upload-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin:10px 0 8px;
+}
+.upload-btn{
+background:#eef3f9;
+border:1px solid #d8e2ef;
+border-radius:10px;
+padding:10px;
+text-align:center;
+cursor:pointer;
+font-size:13px;
+font-weight:700;
+color:#304155;
+}
+.upload-btn:hover{background:#e4edf8}
+.upload-list{
+margin-top:10px;
+background:#fbfdff;
+border:1px solid #d8e2ef;
+border-radius:10px;
+padding:10px;
+font-size:12px;
+color:#526070;
+min-height:96px;
+}
+.file-item{
+padding:8px 0;
+border-bottom:1px solid #eef3f8;
+}
+.file-item:last-child{border-bottom:none}
+.file-name{
+font-weight:700;
+margin-bottom:6px;
+word-break:break-word;
+}
+.file-badge{
+display:inline-block;
+margin-left:8px;
+font-size:11px;
+background:#2c67b8;
+color:#fff;
+border-radius:999px;
+padding:2px 8px;
+vertical-align:middle;
+}
+.file-actions{
+display:flex;
+flex-wrap:wrap;
+gap:6px;
+}
+.small-btn{
+padding:6px 10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-size:12px;
+background:#eef3f9;
+color:#304155;
+}
+.small-btn.primary{
+background:#2c67b8;
+color:#fff;
+}
+.recent-title{
+font-size:18px;
+font-weight:700;
+color:#2a3340;
+padding:10px 22px 0;
+}
+.recent-list{padding:10px 22px 22px}
+.recent-list p{
+padding:12px 0;
+border-top:1px solid #d8e2ef;
+color:#364253;
+font-size:14px;
+}
 
-db.run(`
-CREATE TABLE IF NOT EXISTS uploads (
-id INTEGER PRIMARY KEY AUTOINCREMENT,
-label TEXT,
-original_name TEXT,
-stored_name TEXT,
-mime_type TEXT,
-size INTEGER,
-created_at TEXT DEFAULT CURRENT_TIMESTAMP
-)
-`);
+.modules{
+position:relative;
+z-index:4;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:18px;
+margin:-42px 32px 18px;
+}
+.module{
+background:rgba(249,251,255,.95);
+border:1px solid #d8e2ef;
+border-radius:16px;
+padding:24px 22px;
+box-shadow:0 10px 30px rgba(0,0,0,.08);
+min-height:220px;
+}
+.module h4{
+font-size:19px;
+color:#243247;
+margin-bottom:10px;
+}
+.module p{
+font-size:14px;
+color:#556273;
+line-height:1.6;
+}
+.tip{
+margin-top:16px;
+padding:16px;
+border:1px solid #cad7e6;
+border-radius:10px;
+background:#f8fbff;
+color:#425063;
+font-size:14px;
+line-height:1.5;
+}
 
-// Usuario inicial
-db.run(
-`
-INSERT OR IGNORE INTO users (email, password, name)
-VALUES (?, ?, ?)
-`,
-["rodrigo@gt-troubleshooting.com", "1234", "Rodrigo Tapia"]
-);
-});
+.overlay{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(8,18,34,.62);
+z-index:2000;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+.modal{
+width:100%;
+max-width:460px;
+background:#fff;
+border-radius:18px;
+box-shadow:0 20px 50px rgba(0,0,0,.25);
+overflow:hidden;
+}
+.modal-header{
+padding:18px 22px;
+background:#f4f7fb;
+border-bottom:1px solid #d8e2ef;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.modal-header h2{
+color:#224d88;
+font-size:22px;
+}
+.modal-body{padding:22px}
+.field{margin-bottom:14px}
+.field label{
+display:block;
+margin-bottom:6px;
+font-size:13px;
+font-weight:700;
+color:#334254;
+}
+.field input,
+.field select,
+.field textarea{
+width:100%;
+padding:12px 13px;
+border:1px solid #ced8e5;
+border-radius:10px;
+font-size:14px;
+}
+.field textarea{
+min-height:90px;
+resize:vertical;
+}
+.modal-actions{
+display:flex;
+gap:10px;
+margin-top:16px;
+flex-wrap:wrap;
+}
+.blue-btn{
+background:linear-gradient(180deg,#4f8de0,#2c67b8);
+color:#fff;
+border:none;
+border-radius:10px;
+padding:13px 18px;
+cursor:pointer;
+font-weight:700;
+}
+.soft-btn{
+background:#eef3f9;
+color:#304155;
+border:none;
+border-radius:10px;
+padding:13px 18px;
+cursor:pointer;
+font-weight:700;
+}
+.error-box{
+margin-top:14px;
+padding:12px;
+border:1px solid #f3c3be;
+background:#fff7f6;
+border-radius:10px;
+color:#7a271f;
+font-size:13px;
+display:none;
+}
 
-// Multer
-const storage = multer.diskStorage({
-destination: function (req, file, cb) {
-cb(null, uploadsDir);
+.draggable-window{
+position:fixed;
+top:80px;
+left:50%;
+transform:translateX(-50%);
+width:min(1320px, calc(100vw - 40px));
+background:#fff;
+border-radius:18px;
+box-shadow:0 20px 50px rgba(0,0,0,.28);
+z-index:3000;
+overflow:hidden;
+display:none;
+}
+.drag-header{
+background:#f4f7fb;
+border-bottom:1px solid #d8e2ef;
+padding:16px 20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+cursor:move;
+}
+.drag-header h2{
+color:#224d88;
+font-size:22px;
+}
+.window-body{
+padding:22px;
+max-height:82vh;
+overflow:auto;
+}
+.three-col{
+display:grid;
+grid-template-columns:1.05fr .7fr .85fr;
+gap:18px;
+}
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+.full{grid-column:1 / -1}
+.inline-note{
+font-size:12px;
+color:#6e7b8c;
+margin-top:6px;
+}
+.warn{
+margin-top:16px;
+padding:14px;
+border:1px solid #f3c3be;
+background:#fff7f6;
+border-radius:12px;
+color:#7a271f;
+font-size:13px;
+line-height:1.5;
+}
+.result-box,
+.step-box,
+.case-history,
+.chat-panel{
+border:1px solid #d8e2ef;
+border-radius:14px;
+background:#fbfdff;
+}
+.result-box,
+.case-history{padding:18px}
+.result-box h3,
+.case-history h3,
+.step-box h3,
+.chat-header h3{
+color:#224d88;
+margin-bottom:12px;
+}
+.result-box h4{
+color:#243247;
+margin:14px 0 8px;
+}
+.result-box p{
+line-height:1.6;
+margin-bottom:10px;
+}
+.result-box ul{
+margin-left:18px;
+line-height:1.6;
+}
+
+.step-box{
+padding:18px;
+min-height:420px;
+}
+.step-status{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+gap:8px;
+flex-wrap:wrap;
+}
+.status-pill{
+padding:7px 12px;
+border-radius:999px;
+background:#eef3f9;
+font-size:12px;
+font-weight:700;
+color:#304155;
+}
+.step-card{
+border:1px solid #d8e2ef;
+border-radius:12px;
+background:#fff;
+padding:14px;
+margin-bottom:12px;
+}
+.step-card h4{
+color:#243247;
+margin-bottom:8px;
+}
+.decision-group{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:10px;
+}
+
+.case-card{
+border:1px solid #d8e2ef;
+border-radius:12px;
+padding:12px;
+margin-top:10px;
+background:#fff;
+}
+.case-card-title{
+font-weight:700;
+margin-bottom:6px;
+}
+.case-card-meta{
+font-size:13px;
+color:#5b6776;
+margin-bottom:8px;
+}
+.case-card-actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+}
+
+.chat-panel{
+display:flex;
+flex-direction:column;
+min-height:720px;
+}
+.chat-header{
+padding:16px 18px;
+border-bottom:1px solid #d8e2ef;
+background:#f4f7fb;
+}
+.chat-header p{
+font-size:13px;
+color:#667384;
+}
+.chat-messages{
+flex:1;
+padding:16px;
+overflow:auto;
+background:#fcfdff;
+}
+.chat-msg{
+margin-bottom:12px;
+display:flex;
+}
+.chat-msg.user{justify-content:flex-end}
+.chat-msg.assistant{justify-content:flex-start}
+.chat-bubble{
+max-width:88%;
+padding:12px 14px;
+border-radius:14px;
+line-height:1.5;
+font-size:14px;
+white-space:pre-line;
+}
+.chat-msg.user .chat-bubble{
+background:#2c67b8;
+color:#fff;
+}
+.chat-msg.assistant .chat-bubble{
+background:#eef3f9;
+color:#1f2b3a;
+}
+.chat-tools{
+padding:12px 16px;
+border-top:1px solid #d8e2ef;
+background:#fff;
+}
+.chat-tools-top{
+display:flex;
+gap:8px;
+margin-bottom:8px;
+flex-wrap:wrap;
+}
+.quick-replies{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-bottom:10px;
+}
+.chat-input-row{
+display:flex;
+gap:8px;
+}
+.chat-input-row input{
+flex:1;
+padding:12px 13px;
+border:1px solid #ced8e5;
+border-radius:10px;
+font-size:14px;
+}
+
+.preview-modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.75);
+z-index:4000;
+align-items:center;
+justify-content:center;
+padding:20px;
+}
+.preview-box{
+background:#fff;
+border-radius:16px;
+max-width:90vw;
+max-height:90vh;
+overflow:auto;
+padding:16px;
+}
+.preview-box img{
+max-width:100%;
+height:auto;
+display:block;
+border-radius:10px;
+}
+.preview-box iframe{
+width:80vw;
+height:80vh;
+border:none;
+}
+.preview-title{
+font-weight:700;
+margin-bottom:12px;
+color:#224d88;
+}
+
+@media (max-width:1280px){
+.three-col{grid-template-columns:1fr}
+.chat-panel{min-height:520px}
+.step-box{min-height:auto}
+}
+@media (max-width:1020px){
+.page{margin:0;border-radius:0}
+.topbar{flex-direction:column;align-items:flex-start}
+.hero{min-height:460px}
+.hero-content{max-width:100%;padding-left:0;text-align:center}
+.hero-title{margin-left:auto;margin-right:auto}
+.side-panel{position:static;width:auto;margin:18px 20px 0}
+.modules{grid-template-columns:1fr;margin:20px}
+.grid{grid-template-columns:1fr}
+.draggable-window{
+top:20px;
+left:20px;
+right:20px;
+width:auto;
+transform:none;
+}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+<header class="topbar">
+<div class="brand">
+<div class="logo-box">G&T</div>
+<div class="brand-text">
+<h1 id="t_title">AIRCRAFT TROUBLESHOOTING</h1>
+<p id="t_subtitle">AI Assisted Diagnostic Platform for Aircraft Maintenance</p>
+</div>
+</div>
+
+<div class="top-actions">
+<div class="user-meta">
+<div class="name" id="t_user">Usuario: Rodrigo Tapia</div>
+<div class="sub" id="t_aircraft">Aeronave: King Air 200</div>
+</div>
+
+<div class="lang-group">
+<button id="lang-es" class="active" onclick="setLanguage('es')">ES</button>
+<button id="lang-en" onclick="setLanguage('en')">EN</button>
+</div>
+</div>
+</header>
+
+<section class="hero-wrap">
+<div class="hero">
+<div class="hero-content">
+<div class="hero-title" id="t_hero_title">G&T AIRCRAFT<br>TROUBLESHOOTING</div>
+<div class="hero-sub" id="t_hero_sub">Sistema de diagnóstico aeronáutico</div>
+<button class="cta" id="t_start_btn" onclick="openLogin()">INICIAR DIAGNÓSTICO</button>
+</div>
+</div>
+
+<div class="side-panel">
+<h3 id="t_quick_access">Quick Access</h3>
+<div class="side-section">
+<div class="upload-grid">
+<label class="upload-btn" id="label-amm" for="ammInput">Cargar AMM</label>
+<label class="upload-btn" id="label-wdm" for="wdmInput">Cargar WDM</label>
+<label class="upload-btn" id="label-ipc" for="ipcInput">Cargar IPC</label>
+<label class="upload-btn" id="label-srm" for="srmInput">Cargar SRM</label>
+<label class="upload-btn" id="label-photo" for="photoInput">Cargar Foto</label>
+<label class="upload-btn" id="label-other" for="otherInput">Otros Datos</label>
+</div>
+
+<input type="file" id="ammInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+<input type="file" id="wdmInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+<input type="file" id="ipcInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+<input type="file" id="srmInput" hidden accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+<input type="file" id="photoInput" hidden accept=".jpg,.jpeg,.png,.webp">
+<input type="file" id="otherInput" hidden accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png">
+
+<div class="upload-list" id="uploadList">
+<div id="t_no_files">No hay data técnica cargada.</div>
+</div>
+</div>
+
+<div class="recent-title" id="t_recent">Diagnósticos recientes</div>
+<div class="recent-list" id="recentList"></div>
+</div>
+</section>
+
+<section class="modules">
+<div class="module">
+<h4 id="t_mod1_title">Inicio Troubleshooting</h4>
+<p id="t_mod1_text">Comienza una sesión guiada para diagnosticar sistemas de la aeronave.</p>
+</div>
+
+<div class="module">
+<h4 id="t_mod2_title">Biblioteca técnica</h4>
+<p id="t_mod2_text">Accede a sistemas ATA, diagramas y manuales técnicos.</p>
+</div>
+
+<div class="module">
+<h4 id="t_mod3_title">Experiencia de caso</h4>
+<p id="t_mod3_text">Revisa casos previos de troubleshooting y tips prácticos.</p>
+<div class="tip">
+<b id="t_tip_title">Tip del sistema:</b><br>
+<span id="t_tip_text">Antes de diagnosticar indicación de tren, realiza siempre un lamp test.</span>
+</div>
+</div>
+</section>
+</div>
+
+<div class="overlay" id="loginOverlay">
+<div class="modal">
+<div class="modal-header">
+<h2 id="t_login_title">Ingreso técnico</h2>
+<button class="soft-btn" id="t_close_login" onclick="closeLogin()">Cerrar</button>
+</div>
+
+<div class="modal-body">
+<div class="field">
+<label id="t_login_user_label">Usuario / Correo</label>
+<input id="loginUser" type="text" placeholder="Ejemplo: rodrigo@gt-troubleshooting.com">
+</div>
+
+<div class="field">
+<label id="t_login_pass_label">Contraseña</label>
+<input id="loginPass" type="password" placeholder="Ingresa tu contraseña">
+</div>
+
+<div class="modal-actions">
+<button class="blue-btn" id="t_enter_system" onclick="loginSystem()">Entrar al sistema</button>
+<button class="soft-btn" id="t_cancel_login" onclick="closeLogin()">Cancelar</button>
+</div>
+
+<div class="error-box" id="loginError">Usuario o contraseña incorrectos.</div>
+</div>
+</div>
+</div>
+
+<div class="draggable-window" id="diagWindow">
+<div class="drag-header" id="dragHeader">
+<h2 id="t_diag_title">Módulo de diagnóstico guiado</h2>
+<button class="soft-btn" id="t_close_diag" onclick="closeDiagnostic()">Cerrar</button>
+</div>
+
+<div class="window-body">
+<div class="three-col">
+<div>
+<div class="grid">
+<div class="field">
+<label id="t_aircraft_model">Modelo de aeronave</label>
+<input id="aircraftModel" type="text" placeholder="Ejemplo: King Air 200">
+</div>
+
+<div class="field">
+<label id="t_serial_number">Número de serie</label>
+<input id="serialNumber" type="text" placeholder="Ejemplo: BB-143">
+</div>
+
+<div class="field">
+<label id="t_ata_label">ATA</label>
+<select id="ataSelect"></select>
+<div class="inline-note" id="t_note_blank">No hay información precargada. Ingresa los datos reales del caso.</div>
+</div>
+
+<div class="field">
+<label id="t_fault_type">Tipo de falla</label>
+<select id="faultType"></select>
+</div>
+
+<div class="field">
+<label id="t_cb_label">¿Circuit breaker revisado?</label>
+<select id="cbCheck"></select>
+</div>
+
+<div class="field">
+<label id="t_lamp_label">¿Lamp test realizado?</label>
+<select id="lampTest"></select>
+</div>
+
+<div class="field">
+<label id="t_bulb_label">¿Ampolleta revisada?</label>
+<select id="bulbCheck"></select>
+</div>
+
+<div class="field">
+<label id="t_socket_label">¿Socket revisado?</label>
+<select id="socketCheck"></select>
+</div>
+
+<div class="field full">
+<label id="t_fault_desc">Falla reportada</label>
+<textarea id="reportedFault" placeholder="Describe aquí la falla reportada por el técnico..."></textarea>
+</div>
+</div>
+
+<div class="warn" id="t_warning_box">
+<b>WARNING – RESPONSABILIDAD DE DATA TÉCNICA</b><br>
+El técnico debe validar que la documentación cargada corresponda exactamente al modelo, serial y configuración de la aeronave antes de continuar con el diagnóstico.
+</div>
+
+<div class="modal-actions">
+<button class="blue-btn" id="t_run_diag" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
+<button class="soft-btn" id="t_clear_diag" onclick="clearDiagnostic()">Limpiar</button>
+<button class="soft-btn" id="t_save_case" onclick="saveCase()">Guardar caso</button>
+</div>
+
+<div class="result-box" id="resultBox" style="margin-top:18px;display:none;">
+<h3 id="t_result_title">Guía de diagnóstico</h3>
+<div id="resultContent"></div>
+</div>
+
+<div class="case-history" style="margin-top:18px;">
+<h3 id="t_case_history">Historial de casos</h3>
+<div id="caseHistoryList"></div>
+</div>
+</div>
+
+<div class="step-box">
+<div class="step-status">
+<h3 id="t_step_title">Diagnóstico guiado</h3>
+<div class="status-pill" id="stepStatusPill">Paso 0</div>
+</div>
+
+<div class="step-card">
+<h4 id="t_current_phase">Fase actual</h4>
+<p id="guidedPhaseText">Completa el caso y ejecuta el diagnóstico para comenzar.</p>
+</div>
+
+<div class="step-card">
+<h4 id="t_next_action">Siguiente acción</h4>
+<p id="guidedNextAction">Esperando diagnóstico...</p>
+</div>
+
+<div class="step-card">
+<h4 id="t_interpretation">Interpretación rápida</h4>
+<p id="guidedInterpretation">Sin datos todavía.</p>
+<div class="decision-group">
+<button class="small-btn primary" onclick="guidedDecision('done')">Medición realizada</button>
+<button class="small-btn" onclick="guidedDecision('next')">Siguiente paso</button>
+<button class="small-btn" onclick="guidedDecision('back')">Paso anterior</button>
+</div>
+</div>
+</div>
+
+<div class="chat-panel">
+<div class="chat-header">
+<h3 id="t_chat_title">Chat G&T</h3>
+<p id="t_chat_sub">Asistente técnico basado en el caso activo.</p>
+</div>
+
+<div class="chat-messages" id="chatMessages">
+<div class="chat-msg assistant">
+<div class="chat-bubble" id="chatWelcome">Hola Rodrigo. Carga el caso y dime qué observaste. Yo seguiré la lógica G&T.</div>
+</div>
+</div>
+
+<div class="chat-tools">
+<div class="chat-tools-top">
+<button class="small-btn primary" id="t_use_context" onclick="useCaseContext()">Usar contexto del caso</button>
+<button class="small-btn" id="t_clear_chat" onclick="clearChat()">Limpiar chat</button>
+</div>
+
+<div class="quick-replies">
+<button class="small-btn" onclick="quickReply('sí')">Sí</button>
+<button class="small-btn" onclick="quickReply('no')">No</button>
+<button class="small-btn" onclick="quickReply('tengo continuidad')">Tengo continuidad</button>
+<button class="small-btn" onclick="quickReply('no tengo continuidad')">No tengo continuidad</button>
+<button class="small-btn" onclick="quickReply('tengo voltaje')">Tengo voltaje</button>
+<button class="small-btn" onclick="quickReply('no tengo voltaje')">No tengo voltaje</button>
+<button class="small-btn" onclick="quickReply('qué mido ahora')">¿Qué mido ahora?</button>
+<button class="small-btn" onclick="quickReply('resumen')">Resumen</button>
+</div>
+
+<div class="chat-input-row">
+<input id="chatInput" type="text" placeholder="Escribe tu mensaje técnico...">
+<button class="blue-btn" id="t_send_chat" onclick="sendChat()">Enviar</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div class="preview-modal" id="previewModal">
+<div class="preview-box">
+<div class="modal-actions" style="justify-content:space-between;margin-bottom:12px;">
+<div class="preview-title" id="previewTitle">Vista previa</div>
+<button class="soft-btn" id="previewCloseBtn" onclick="closePreview()">Cerrar</button>
+</div>
+<div id="previewContent"></div>
+</div>
+</div>
+
+<script>
+let currentLang = "es";
+let uploadedFiles = [];
+let activeTechnicalData = null;
+let latestDiagnosticSummary = "";
+let currentGuidedStep = 0;
+let guidedSteps = [];
+let savedCases = JSON.parse(localStorage.getItem("gt_saved_cases_v2") || "[]");
+
+const texts = {
+es: {
+title:"AIRCRAFT TROUBLESHOOTING",
+subtitle:"AI Assisted Diagnostic Platform for Aircraft Maintenance",
+user:"Usuario: Rodrigo Tapia",
+aircraft:"Aeronave: King Air 200",
+heroTitle:"G&T AIRCRAFT<br>TROUBLESHOOTING",
+heroSub:"Sistema de diagnóstico aeronáutico",
+startBtn:"INICIAR DIAGNÓSTICO",
+quickAccess:"Quick Access",
+noFiles:"No hay data técnica cargada. Los archivos se mantienen mientras esta pestaña esté abierta.",
+ammBtn:"Cargar AMM",
+wdmBtn:"Cargar WDM",
+ipcBtn:"Cargar IPC",
+srmBtn:"Cargar SRM",
+photoBtn:"Cargar Foto",
+otherBtn:"Otros Datos",
+recent:"Diagnósticos recientes",
+mod1Title:"Inicio Troubleshooting",
+mod1Text:"Comienza una sesión guiada para diagnosticar sistemas de la aeronave.",
+mod2Title:"Biblioteca técnica",
+mod2Text:"Accede a sistemas ATA, diagramas y manuales técnicos.",
+mod3Title:"Experiencia de caso",
+mod3Text:"Revisa casos previos de troubleshooting y tips prácticos.",
+tipTitle:"Tip del sistema:",
+tipText:"Antes de diagnosticar indicación de tren, realiza siempre un lamp test.",
+loginTitle:"Ingreso técnico",
+close:"Cerrar",
+loginUser:"Usuario / Correo",
+loginPass:"Contraseña",
+enterSystem:"Entrar al sistema",
+cancel:"Cancelar",
+loginError:"Usuario o contraseña incorrectos.",
+diagTitle:"Módulo de diagnóstico guiado",
+aircraftModel:"Modelo de aeronave",
+serialNumber:"Número de serie",
+ataLabel:"ATA",
+noteBlank:"No hay información precargada. Ingresa los datos reales del caso.",
+faultType:"Tipo de falla",
+cbLabel:"¿Circuit breaker revisado?",
+lampLabel:"¿Lamp test realizado?",
+bulbLabel:"¿Ampolleta revisada?",
+socketLabel:"¿Socket revisado?",
+faultDesc:"Falla reportada",
+warning:"<b>WARNING – RESPONSABILIDAD DE DATA TÉCNICA</b><br>El técnico debe validar que la documentación cargada corresponda exactamente al modelo, serial y configuración de la aeronave antes de continuar con el diagnóstico.",
+runDiag:"Ejecutar diagnóstico",
+clear:"Limpiar",
+saveCase:"Guardar caso",
+resultTitle:"Guía de diagnóstico",
+caseHistory:"Historial de casos",
+noCases:"No hay casos guardados todavía.",
+reopen:"Reabrir",
+delete:"Eliminar",
+selectAta:"Selecciona ATA",
+selectFault:"Selecciona tipo de falla",
+select:"Selecciona",
+yes:"Sí",
+no:"No",
+preview:"Vista previa",
+view:"Ver",
+use:"Usar",
+remove:"Eliminar",
+active:"ACTIVO",
+completeFields:"Completa todos los campos requeridos antes de ejecutar el diagnóstico.",
+noDeep:"Conclusión inicial G&T",
+noDeepText:[
+"No continúes a troubleshooting profundo todavía.",
+"Completa primero los básicos: circuit breaker, lamp test, ampolleta y socket.",
+"Confirma la condición real de la aeronave después de esos básicos.",
+"Solo después entra a switch, conector o cableado."
+],
+logicalClassification:"Clasificación lógica G&T",
+physicalLocation:"Ubicación física",
+nextAction:"Siguiente acción",
+firstMeasurement:"Primera medición sugerida",
+resultMeaning:"Qué significa el resultado",
+suspects:"Sospechas principales",
+rootCause:"Causa basal a revisar",
+fileUsed:"Data técnica seleccionada para este caso",
+activeDataNone:"Ninguna seleccionada",
+faultLabel:"Falla",
+aircraftLabel:"Aeronave",
+serialLabel:"Serial",
+useHint:'Selecciona un archivo en Quick Access y presiónalo en "Usar" para dejarlo activo.',
+savedOk:"Caso guardado correctamente.",
+chatTitle:"Chat G&T",
+chatSub:"Asistente técnico basado en el caso activo.",
+chatWelcome:"Hola Rodrigo. Carga el caso y dime qué observaste. Yo seguiré la lógica G&T.",
+useContext:"Usar contexto del caso",
+clearChat:"Limpiar chat",
+send:"Enviar",
+chatPlaceholder:"Escribe tu mensaje técnico...",
+contextLoaded:"Contexto del caso cargado. Ya puedo responder usando aeronave, ATA, falla, resultado y data técnica activa.",
+chatEmpty:"Escribe una pregunta o comentario técnico.",
+stepTitle:"Diagnóstico guiado",
+currentPhase:"Fase actual",
+nextActionTitle:"Siguiente acción",
+interpretation:"Interpretación rápida"
 },
-filename: function (req, file, cb) {
-const uniqueName = `${Date.now()}-${file.originalname.replace(/\s+/g, "_")}`;
-cb(null, uniqueName);
-}
-});
-
-const upload = multer({ storage });
-
-// Health check
-app.get("/", (req, res) => {
-res.json({
-ok: true,
-message: "G&T backend funcionando"
-});
-});
-
-// Login simple
-app.post("/login", (req, res) => {
-const { email, password } = req.body;
-
-if (!email || !password) {
-return res.status(400).json({
-ok: false,
-message: "Email y contraseña son obligatorios"
-});
-}
-
-db.get(
-`SELECT id, email, name FROM users WHERE email = ? AND password = ?`,
-[email, password],
-(err, row) => {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "Error en base de datos"
-});
-}
-
-if (!row) {
-return res.status(401).json({
-ok: false,
-message: "Credenciales inválidas"
-});
-}
-
-res.json({
-ok: true,
-user: row
-});
-}
-);
-});
-
-// Guardar caso
-app.post("/cases", (req, res) => {
-const {
-aircraft_model,
-serial_number,
-ata,
-fault_type,
-reported_fault,
-result_summary,
-active_technical_data_name
-} = req.body;
-
-db.run(
-`
-INSERT INTO cases (
-aircraft_model,
-serial_number,
-ata,
-fault_type,
-reported_fault,
-result_summary,
-active_technical_data_name
-) VALUES (?, ?, ?, ?, ?, ?, ?)
-`,
-[
-aircraft_model || "",
-serial_number || "",
-ata || "",
-fault_type || "",
-reported_fault || "",
-result_summary || "",
-active_technical_data_name || ""
+en: {
+title:"AIRCRAFT TROUBLESHOOTING",
+subtitle:"AI Assisted Diagnostic Platform for Aircraft Maintenance",
+user:"User: Rodrigo Tapia",
+aircraft:"Aircraft: King Air 200",
+heroTitle:"G&T AIRCRAFT<br>TROUBLESHOOTING",
+heroSub:"Aircraft Diagnostic System",
+startBtn:"START DIAGNOSTIC",
+quickAccess:"Quick Access",
+noFiles:"No technical data uploaded yet. Files remain while this tab stays open.",
+ammBtn:"Upload AMM",
+wdmBtn:"Upload WDM",
+ipcBtn:"Upload IPC",
+srmBtn:"Upload SRM",
+photoBtn:"Upload Photo",
+otherBtn:"Other Data",
+recent:"Recent Diagnoses",
+mod1Title:"Start Troubleshooting",
+mod1Text:"Begin a guided diagnostic session to troubleshoot aircraft systems.",
+mod2Title:"Technical Library",
+mod2Text:"Access ATA systems, diagrams and technical manuals.",
+mod3Title:"Case Experience",
+mod3Text:"Review previous troubleshooting cases and practical tips.",
+tipTitle:"System Tip:",
+tipText:"Before troubleshooting gear indication, always perform a lamp test.",
+loginTitle:"Technician Login",
+close:"Close",
+loginUser:"User / Email",
+loginPass:"Password",
+enterSystem:"Enter System",
+cancel:"Cancel",
+loginError:"Incorrect user or password.",
+diagTitle:"Guided diagnostic module",
+aircraftModel:"Aircraft Model",
+serialNumber:"Serial Number",
+ataLabel:"ATA",
+noteBlank:"No information is preloaded. Enter the real case data.",
+faultType:"Fault Type",
+cbLabel:"Circuit breaker checked?",
+lampLabel:"Lamp test checked?",
+bulbLabel:"Bulb checked?",
+socketLabel:"Socket checked?",
+faultDesc:"Reported Fault",
+warning:"<b>WARNING – TECHNICAL DATA RESPONSIBILITY</b><br>The technician must validate that the uploaded documentation matches the exact aircraft model, serial and configuration before continuing.",
+runDiag:"Run Diagnostic",
+clear:"Clear",
+saveCase:"Save Case",
+resultTitle:"Diagnostic Guidance",
+caseHistory:"Case History",
+noCases:"No saved cases yet.",
+reopen:"Reopen",
+delete:"Delete",
+selectAta:"Select ATA",
+selectFault:"Select fault type",
+select:"Select",
+yes:"Yes",
+no:"No",
+preview:"Preview",
+view:"View",
+use:"Use",
+remove:"Remove",
+active:"ACTIVE",
+completeFields:"Complete all required fields before running the diagnostic.",
+noDeep:"Initial G&T Conclusion",
+noDeepText:[
+"Do not continue to deep troubleshooting yet.",
+"Complete basic checks first: circuit breaker, lamp test, bulb and socket.",
+"Confirm actual aircraft condition after those checks.",
+"Only then continue to switch, connector or wiring analysis."
 ],
-function (err) {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "No se pudo guardar el caso"
+logicalClassification:"G&T Logical Classification",
+physicalLocation:"Physical Location",
+nextAction:"Next Action",
+firstMeasurement:"First suggested measurement",
+resultMeaning:"What the result means",
+suspects:"Main Suspects",
+rootCause:"Root Cause Review",
+fileUsed:"Technical data selected for this case",
+activeDataNone:"None selected",
+faultLabel:"Fault",
+aircraftLabel:"Aircraft",
+serialLabel:"Serial",
+useHint:'Select a file in Quick Access and click "Use" to make it active.',
+savedOk:"Case saved successfully.",
+chatTitle:"G&T Chat",
+chatSub:"Technical assistant based on the active case.",
+chatWelcome:"Hi Rodrigo. Load the case and tell me what you observed. I will follow G&T logic.",
+useContext:"Use case context",
+clearChat:"Clear chat",
+send:"Send",
+chatPlaceholder:"Write your technical message...",
+contextLoaded:"Case context loaded. I can now answer using aircraft, ATA, fault, result and active technical data.",
+chatEmpty:"Write a technical question or comment.",
+stepTitle:"Guided diagnosis",
+currentPhase:"Current phase",
+nextActionTitle:"Next action",
+interpretation:"Quick interpretation"
+}
+};
+
+function setLanguage(lang){
+currentLang = lang;
+const t = texts[lang];
+document.getElementById("lang-es").classList.toggle("active", lang === "es");
+document.getElementById("lang-en").classList.toggle("active", lang === "en");
+
+document.getElementById("t_title").textContent = t.title;
+document.getElementById("t_subtitle").textContent = t.subtitle;
+document.getElementById("t_user").textContent = t.user;
+document.getElementById("t_aircraft").textContent = t.aircraft;
+document.getElementById("t_hero_title").innerHTML = t.heroTitle;
+document.getElementById("t_hero_sub").textContent = t.heroSub;
+document.getElementById("t_start_btn").textContent = t.startBtn;
+document.getElementById("t_quick_access").textContent = t.quickAccess;
+document.getElementById("label-amm").textContent = t.ammBtn;
+document.getElementById("label-wdm").textContent = t.wdmBtn;
+document.getElementById("label-ipc").textContent = t.ipcBtn;
+document.getElementById("label-srm").textContent = t.srmBtn;
+document.getElementById("label-photo").textContent = t.photoBtn;
+document.getElementById("label-other").textContent = t.otherBtn;
+document.getElementById("t_recent").textContent = t.recent;
+document.getElementById("t_mod1_title").textContent = t.mod1Title;
+document.getElementById("t_mod1_text").textContent = t.mod1Text;
+document.getElementById("t_mod2_title").textContent = t.mod2Title;
+document.getElementById("t_mod2_text").textContent = t.mod2Text;
+document.getElementById("t_mod3_title").textContent = t.mod3Title;
+document.getElementById("t_mod3_text").textContent = t.mod3Text;
+document.getElementById("t_tip_title").textContent = t.tipTitle;
+document.getElementById("t_tip_text").textContent = t.tipText;
+document.getElementById("t_login_title").textContent = t.loginTitle;
+document.getElementById("t_close_login").textContent = t.close;
+document.getElementById("t_login_user_label").textContent = t.loginUser;
+document.getElementById("t_login_pass_label").textContent = t.loginPass;
+document.getElementById("t_enter_system").textContent = t.enterSystem;
+document.getElementById("t_cancel_login").textContent = t.cancel;
+document.getElementById("loginError").textContent = t.loginError;
+document.getElementById("t_diag_title").textContent = t.diagTitle;
+document.getElementById("t_close_diag").textContent = t.close;
+document.getElementById("t_aircraft_model").textContent = t.aircraftModel;
+document.getElementById("t_serial_number").textContent = t.serialNumber;
+document.getElementById("t_ata_label").textContent = t.ataLabel;
+document.getElementById("t_note_blank").textContent = t.noteBlank;
+document.getElementById("t_fault_type").textContent = t.faultType;
+document.getElementById("t_cb_label").textContent = t.cbLabel;
+document.getElementById("t_lamp_label").textContent = t.lampLabel;
+document.getElementById("t_bulb_label").textContent = t.bulbLabel;
+document.getElementById("t_socket_label").textContent = t.socketLabel;
+document.getElementById("t_fault_desc").textContent = t.faultDesc;
+document.getElementById("t_warning_box").innerHTML = t.warning;
+document.getElementById("t_run_diag").textContent = t.runDiag;
+document.getElementById("t_clear_diag").textContent = t.clear;
+document.getElementById("t_save_case").textContent = t.saveCase;
+document.getElementById("t_result_title").textContent = t.resultTitle;
+document.getElementById("t_case_history").textContent = t.caseHistory;
+document.getElementById("t_chat_title").textContent = t.chatTitle;
+document.getElementById("t_chat_sub").textContent = t.chatSub;
+document.getElementById("chatWelcome").textContent = t.chatWelcome;
+document.getElementById("t_use_context").textContent = t.useContext;
+document.getElementById("t_clear_chat").textContent = t.clearChat;
+document.getElementById("t_send_chat").textContent = t.send;
+document.getElementById("chatInput").placeholder = t.chatPlaceholder;
+document.getElementById("previewTitle").textContent = t.preview;
+document.getElementById("previewCloseBtn").textContent = t.close;
+document.getElementById("t_step_title").textContent = t.stepTitle;
+document.getElementById("t_current_phase").textContent = t.currentPhase;
+document.getElementById("t_next_action").textContent = t.nextActionTitle;
+document.getElementById("t_interpretation").textContent = t.interpretation;
+
+refreshSelectTexts();
+renderUploads();
+renderCases();
+renderGuidedStep();
+}
+
+function refreshSelectTexts(){
+const t = texts[currentLang];
+document.getElementById("ataSelect").innerHTML = `
+<option value="">${t.selectAta}</option>
+<option value="ATA 32 - Landing Gear Indication">ATA 32 - Landing Gear Indication</option>
+<option value="ATA 21 - Pressurization">ATA 21 - Pressurization</option>
+<option value="ATA 24 - Electrical Power">ATA 24 - Electrical Power</option>
+`;
+document.getElementById("faultType").innerHTML = currentLang === "es" ? `
+<option value="">${t.selectFault}</option>
+<option value="green_lh_off">Luz verde LH apagada</option>
+<option value="green_rh_off">Luz verde RH apagada</option>
+<option value="all_indication_fail">Todas las luces fallan</option>
+<option value="unsafe_indication">Indicación unsafe</option>
+<option value="cabin_not_pressurizing">Cabina no presuriza</option>
+<option value="cabin_climb_high">Cabin climb alta</option>
+<option value="bleed_issue">Posible problema bleed air</option>
+` : `
+<option value="">${t.selectFault}</option>
+<option value="green_lh_off">LH green light off</option>
+<option value="green_rh_off">RH green light off</option>
+<option value="all_indication_fail">All green lights fail</option>
+<option value="unsafe_indication">Unsafe indication</option>
+<option value="cabin_not_pressurizing">Cabin not pressurizing</option>
+<option value="cabin_climb_high">High cabin climb</option>
+<option value="bleed_issue">Possible bleed air issue</option>
+`;
+["cbCheck","lampTest","bulbCheck","socketCheck"].forEach(id=>{
+document.getElementById(id).innerHTML = `
+<option value="">${t.select}</option>
+<option value="yes">${t.yes}</option>
+<option value="no">${t.no}</option>
+`;
 });
 }
 
-res.json({
-ok: true,
-id: this.lastID,
-message: "Caso guardado correctamente"
-});
-}
-);
-});
-
-// Listar casos
-app.get("/cases", (req, res) => {
-db.all(
-`SELECT * FROM cases ORDER BY id DESC`,
-[],
-(err, rows) => {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "No se pudieron obtener los casos"
-});
+function openLogin(){
+document.getElementById("loginOverlay").style.display = "flex";
+document.getElementById("loginError").style.display = "none";
 }
 
-res.json({
-ok: true,
-cases: rows
-});
-}
-);
-});
-
-// Eliminar caso
-app.delete("/cases/:id", (req, res) => {
-const { id } = req.params;
-
-db.run(`DELETE FROM cases WHERE id = ?`, [id], function (err) {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "No se pudo eliminar el caso"
-});
+function closeLogin(){
+document.getElementById("loginOverlay").style.display = "none";
 }
 
-res.json({
-ok: true,
-deleted: this.changes > 0
-});
-});
-});
+function loginSystem(){
+const user = document.getElementById("loginUser").value.trim();
+const pass = document.getElementById("loginPass").value.trim();
 
-// Subir archivo
-app.post("/upload", upload.single("file"), (req, res) => {
-const label = req.body.label || "OTROS";
-
-if (!req.file) {
-return res.status(400).json({
-ok: false,
-message: "No se recibió archivo"
-});
+if(user === "rodrigo@gt-troubleshooting.com" && pass === "1234"){
+closeLogin();
+openDiagnostic();
+} else {
+document.getElementById("loginError").style.display = "block";
+}
 }
 
-db.run(
-`
-INSERT INTO uploads (
-label,
-original_name,
-stored_name,
-mime_type,
-size
-) VALUES (?, ?, ?, ?, ?)
-`,
-[
-label,
-req.file.originalname,
-req.file.filename,
-req.file.mimetype,
-req.file.size
-],
-function (err) {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "Archivo subido pero no registrado en base de datos"
-});
+function openDiagnostic(){
+document.getElementById("diagWindow").style.display = "block";
 }
 
-res.json({
-ok: true,
-file: {
-id: this.lastID,
-label,
-original_name: req.file.originalname,
-stored_name: req.file.filename,
-mime_type: req.file.mimetype,
-size: req.file.size,
-url: `/uploads/${req.file.filename}`
-}
-});
-}
-);
-});
-
-// Listar archivos
-app.get("/uploads-list", (req, res) => {
-db.all(
-`SELECT * FROM uploads ORDER BY id DESC`,
-[],
-(err, rows) => {
-if (err) {
-return res.status(500).json({
-ok: false,
-message: "No se pudieron obtener los archivos"
-});
+function closeDiagnostic(){
+document.getElementById("diagWindow").style.display = "none";
 }
 
-const files = rows.map((row) => ({
-...row,
-url: `/uploads/${row.stored_name}`
-}));
-
-res.json({
-ok: true,
-files
-});
+function clearDiagnostic(){
+document.getElementById("aircraftModel").value = "";
+document.getElementById("serialNumber").value = "";
+document.getElementById("ataSelect").value = "";
+document.getElementById("faultType").value = "";
+document.getElementById("cbCheck").value = "";
+document.getElementById("lampTest").value = "";
+document.getElementById("bulbCheck").value = "";
+document.getElementById("socketCheck").value = "";
+document.getElementById("reportedFault").value = "";
+document.getElementById("resultBox").style.display = "none";
+latestDiagnosticSummary = "";
+guidedSteps = [];
+currentGuidedStep = 0;
+renderGuidedStep();
 }
-);
-});
 
-app.listen(PORT, () => {
-console.log(`Servidor G&T corriendo en http://localhost:${PORT}`);
-});
+function buildDiagnosticData(){
+return {
+faultType: document.getElementById("faultType").value,
+cbCheck: document.getElementById("cbCheck").value,
+lampTest: document.getElementById("lampTest").value,
+bulbCheck: document.getElementById("bulbCheck").value,
+socketCheck: document.getElementById("socketCheck").value,
+aircraft: document.getElementById("aircraftModel").value || (currentLang==="es" ? "No ingresado" : "Not entered"),
+serial: document.getElementById("serialNumber").value || (currentLang==="es" ? "No ingresado" : "Not entered"),
+ata: document.getElementById("ataSelect").value || (currentLang==="es" ? "No seleccionado" : "Not selected"),
+fault: document.getElementById("reportedFault").value || (currentLang==="es" ? "Sin descripción" : "No description")
+};
+}
+
+function buildGuidedSteps(d){
+if(!d.ata || !d.faultType) return [];
+
+if(d.ata.includes("ATA 32")){
+if(d.cbCheck === "no" || d.lampTest === "no" || d.bulbCheck === "no" || d.socketCheck === "no"){
+return [{
+phase: currentLang==="es" ? "Básicos incompletos" : "Basic checks incomplete",
+next: currentLang==="es" ? "Completar circuit breaker, lamp test, ampolleta y socket." : "Complete circuit breaker, lamp test, bulb and socket.",
+meaning: currentLang==="es" ? "No se debe profundizar el diagnóstico todavía." : "Do not deepen the diagnosis yet."
+}];
+}
+
+if(d.faultType === "green_lh_off"){
+return [
+{
+phase: currentLang==="es" ? "Clasificación inicial LH" : "LH initial classification",
+next: currentLang==="es" ? "Tratar la falla como rama LH individual." : "Treat the fault as an individual LH branch.",
+meaning: currentLang==="es" ? "Una sola luz LH apagada apunta primero a rama LH." : "A single LH light out points first to the LH branch."
+},
+{
+phase: currentLang==="es" ? "Ubicación física" : "Physical location",
+next: currentLang==="es" ? "Ir al pozo del tren izquierdo y localizar downlock switch LH." : "Go to LH wheel well and locate LH downlock switch.",
+meaning: currentLang==="es" ? "Confirma switch y conector correctos." : "Confirm correct switch and connector."
+},
+{
+phase: currentLang==="es" ? "Primera medición" : "First measurement",
+next: currentLang==="es" ? "Medir continuidad del downlock switch LH con tren abajo y asegurado." : "Measure LH downlock switch continuity with gear down and locked.",
+meaning: currentLang==="es" ? "Esto separa switch/ajuste de rama/panel." : "This separates switch/adjustment from branch/panel."
+},
+{
+phase: currentLang==="es" ? "Interpretación" : "Interpretation",
+next: currentLang==="es" ? "Si la continuidad es correcta, seguir con cableado, socket o panel." : "If continuity is correct, continue with wiring, socket or panel.",
+meaning: currentLang==="es" ? "Si no hay continuidad, sospecha switch, ajuste o condición mecánica local." : "If there is no continuity, suspect switch, adjustment or local mechanical condition."
+}
+];
+}
+
+if(d.faultType === "green_rh_off"){
+return [
+{
+phase: currentLang==="es" ? "Clasificación inicial RH" : "RH initial classification",
+next: currentLang==="es" ? "Tratar la falla como rama RH individual." : "Treat the fault as an individual RH branch.",
+meaning: currentLang==="es" ? "No asumir problema común al inicio." : "Do not assume a common issue first."
+},
+{
+phase: currentLang==="es" ? "Ubicación física" : "Physical location",
+next: currentLang==="es" ? "Ir al pozo del tren derecho y localizar downlock switch RH." : "Go to RH wheel well and locate RH downlock switch.",
+meaning: currentLang==="es" ? "Verifica identificación antes de medir." : "Verify identification before measuring."
+},
+{
+phase: currentLang==="es" ? "Primera medición" : "First measurement",
+next: currentLang==="es" ? "Medir continuidad del downlock switch RH." : "Measure RH downlock switch continuity.",
+meaning: currentLang==="es" ? "Si es correcta, avanzar a rama RH." : "If correct, move to RH branch."
+}
+];
+}
+
+if(d.faultType === "all_indication_fail"){
+return [
+{
+phase: currentLang==="es" ? "Clasificación común" : "Common classification",
+next: currentLang==="es" ? "Tratar la falla como alimentación común, tierra común o panel." : "Treat the fault as common feed, common ground or panel.",
+meaning: currentLang==="es" ? "No partir por una sola pata del tren." : "Do not start with one gear leg only."
+},
+{
+phase: currentLang==="es" ? "Primera medición" : "First measurement",
+next: currentLang==="es" ? "Verificar alimentación general y función de lamp test." : "Verify general feed and lamp test function.",
+meaning: currentLang==="es" ? "Esto separa problema común de problema por rama." : "This separates common from branch issues."
+}
+];
+}
+
+if(d.faultType === "unsafe_indication"){
+return [
+{
+phase: currentLang==="es" ? "Confirmación mecánica" : "Mechanical confirmation",
+next: currentLang==="es" ? "Confirmar primero condición mecánica real del tren." : "Confirm actual mechanical gear condition first.",
+meaning: currentLang==="es" ? "La indicación unsafe podría ser correcta." : "The unsafe indication may be correct."
+}
+];
+}
+}
+
+if(d.ata.includes("ATA 21")){
+return [
+{
+phase: currentLang==="es" ? "Confirmación inicial de presurización" : "Initial pressurization confirmation",
+next: currentLang==="es" ? "Confirmar si el problema es pérdida total, baja diferencial o cabin climb alta." : "Confirm whether the issue is total loss, low differential or high cabin climb.",
+meaning: currentLang==="es" ? "No mezclar outflow, bleed y sensing sin separar la falla." : "Do not mix outflow, bleed and sensing before separating the fault."
+},
+{
+phase: currentLang==="es" ? "Primera revisión lógica" : "First logical review",
+next: currentLang==="es" ? "Revisar bleed air disponible, posición de controles y condición de sellado básico." : "Check bleed air availability, control positions and basic sealing condition.",
+meaning: currentLang==="es" ? "Si no hay bleed suficiente, el sistema no presurizará correctamente." : "If there is not enough bleed air, the system will not pressurize correctly."
+},
+{
+phase: currentLang==="es" ? "Separación del sistema" : "System separation",
+next: currentLang==="es" ? "Separar si la falla apunta a bleed source, controller, outflow valve o leak." : "Separate whether the fault points to bleed source, controller, outflow valve or leak.",
+meaning: currentLang==="es" ? "La lógica correcta evita cambiar componentes sin base." : "Correct logic avoids unnecessary component changes."
+}
+];
+}
+
+return [];
+}
+
+function renderGuidedStep(){
+const step = guidedSteps[currentGuidedStep];
+document.getElementById("stepStatusPill").textContent = `Paso ${guidedSteps.length ? currentGuidedStep + 1 : 0}`;
+
+if(!step){
+document.getElementById("guidedPhaseText").textContent = currentLang==="es"
+? "Completa el caso y ejecuta el diagnóstico para comenzar."
+: "Complete the case and run the diagnostic to begin.";
+document.getElementById("guidedNextAction").textContent = currentLang==="es"
+? "Esperando diagnóstico..."
+: "Waiting for diagnosis...";
+document.getElementById("guidedInterpretation").textContent = currentLang==="es"
+? "Sin datos todavía."
+: "No data yet.";
+return;
+}
