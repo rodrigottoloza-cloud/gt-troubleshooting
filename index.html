@@ -106,13 +106,15 @@ position:absolute;
 inset:0;
 background:linear-gradient(90deg, rgba(20,40,70,.35) 0%, rgba(20,40,70,.18) 45%, rgba(20,40,70,.05) 100%);
 pointer-events:none;
+z-index:1;
 }
 .hero-content{
 position:relative;
-z-index:2;
+z-index:20;
 max-width:58%;
 padding-top:64px;
 padding-left:60px;
+pointer-events:auto;
 }
 .hero-title{
 color:#fff;
@@ -129,6 +131,9 @@ margin-bottom:30px;
 text-shadow:0 2px 8px rgba(0,0,0,.16);
 }
 .cta{
+position:relative;
+z-index:30;
+pointer-events:auto;
 background:linear-gradient(180deg,#4f8de0,#2c67b8);
 color:#fff;
 border:none;
@@ -149,7 +154,7 @@ background:rgba(250,252,255,.96);
 border:1px solid #d8e2ef;
 border-radius:18px;
 box-shadow:0 10px 30px rgba(0,0,0,.08);
-z-index:3;
+z-index:5;
 overflow:hidden;
 }
 .side-panel h3{
@@ -669,7 +674,7 @@ transform:none;
 <div class="hero-content">
 <div class="hero-title" id="t_hero_title">G&T AIRCRAFT<br>TROUBLESHOOTING</div>
 <div class="hero-sub" id="t_hero_sub">Sistema de diagnóstico aeronáutico</div>
-<button class="cta" id="t_start_btn" onclick="openLogin()">INICIAR DIAGNÓSTICO</button>
+<button class="cta" id="t_start_btn" type="button" onclick="forceOpenLogin()">INICIAR DIAGNÓSTICO</button>
 </div>
 </div>
 
@@ -728,7 +733,7 @@ transform:none;
 <div class="modal">
 <div class="modal-header">
 <h2 id="t_login_title">Ingreso técnico</h2>
-<button class="soft-btn" id="t_close_login" onclick="closeLogin()">Cerrar</button>
+<button class="soft-btn" id="t_close_login" type="button" onclick="closeLogin()">Cerrar</button>
 </div>
 
 <div class="modal-body">
@@ -743,8 +748,8 @@ transform:none;
 </div>
 
 <div class="modal-actions">
-<button class="blue-btn" id="t_enter_system" onclick="loginSystem()">Entrar al sistema</button>
-<button class="soft-btn" id="t_cancel_login" onclick="closeLogin()">Cancelar</button>
+<button class="blue-btn" id="t_enter_system" type="button" onclick="loginSystem()">Entrar al sistema</button>
+<button class="soft-btn" id="t_cancel_login" type="button" onclick="closeLogin()">Cancelar</button>
 </div>
 
 <div class="error-box" id="loginError">Usuario o contraseña incorrectos.</div>
@@ -755,7 +760,7 @@ transform:none;
 <div class="draggable-window" id="diagWindow">
 <div class="drag-header" id="dragHeader">
 <h2 id="t_diag_title">Módulo de diagnóstico guiado</h2>
-<button class="soft-btn" id="t_close_diag" onclick="closeDiagnostic()">Cerrar</button>
+<button class="soft-btn" id="t_close_diag" type="button" onclick="closeDiagnostic()">Cerrar</button>
 </div>
 
 <div class="window-body">
@@ -815,9 +820,9 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 </div>
 
 <div class="modal-actions">
-<button class="blue-btn" id="t_run_diag" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
-<button class="soft-btn" id="t_clear_diag" onclick="clearDiagnostic()">Limpiar</button>
-<button class="soft-btn" id="t_save_case" onclick="saveCase()">Guardar caso</button>
+<button class="blue-btn" id="t_run_diag" type="button" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
+<button class="soft-btn" id="t_clear_diag" type="button" onclick="clearDiagnostic()">Limpiar</button>
+<button class="soft-btn" id="t_save_case" type="button" onclick="saveCase()">Guardar caso</button>
 </div>
 
 <div class="result-box" id="resultBox" style="margin-top:18px;display:none;">
@@ -851,9 +856,9 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 <h4 id="t_interpretation">Interpretación rápida</h4>
 <p id="guidedInterpretation">Sin datos todavía.</p>
 <div class="decision-group">
-<button class="small-btn primary" onclick="guidedDecision('done')">Medición realizada</button>
-<button class="small-btn" onclick="guidedDecision('next')">Siguiente paso</button>
-<button class="small-btn" onclick="guidedDecision('back')">Paso anterior</button>
+<button class="small-btn primary" type="button" onclick="guidedDecision('done')">Medición realizada</button>
+<button class="small-btn" type="button" onclick="guidedDecision('next')">Siguiente paso</button>
+<button class="small-btn" type="button" onclick="guidedDecision('back')">Paso anterior</button>
 </div>
 </div>
 </div>
@@ -872,24 +877,24 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 
 <div class="chat-tools">
 <div class="chat-tools-top">
-<button class="small-btn primary" id="t_use_context" onclick="useCaseContext()">Usar contexto del caso</button>
-<button class="small-btn" id="t_clear_chat" onclick="clearChat()">Limpiar chat</button>
+<button class="small-btn primary" id="t_use_context" type="button" onclick="useCaseContext()">Usar contexto del caso</button>
+<button class="small-btn" id="t_clear_chat" type="button" onclick="clearChat()">Limpiar chat</button>
 </div>
 
 <div class="quick-replies">
-<button class="small-btn" onclick="quickReply('sí')">Sí</button>
-<button class="small-btn" onclick="quickReply('no')">No</button>
-<button class="small-btn" onclick="quickReply('tengo continuidad')">Tengo continuidad</button>
-<button class="small-btn" onclick="quickReply('no tengo continuidad')">No tengo continuidad</button>
-<button class="small-btn" onclick="quickReply('tengo voltaje')">Tengo voltaje</button>
-<button class="small-btn" onclick="quickReply('no tengo voltaje')">No tengo voltaje</button>
-<button class="small-btn" onclick="quickReply('qué mido ahora')">¿Qué mido ahora?</button>
-<button class="small-btn" onclick="quickReply('resumen')">Resumen</button>
+<button class="small-btn" type="button" onclick="quickReply('sí')">Sí</button>
+<button class="small-btn" type="button" onclick="quickReply('no')">No</button>
+<button class="small-btn" type="button" onclick="quickReply('tengo continuidad')">Tengo continuidad</button>
+<button class="small-btn" type="button" onclick="quickReply('no tengo continuidad')">No tengo continuidad</button>
+<button class="small-btn" type="button" onclick="quickReply('tengo voltaje')">Tengo voltaje</button>
+<button class="small-btn" type="button" onclick="quickReply('no tengo voltaje')">No tengo voltaje</button>
+<button class="small-btn" type="button" onclick="quickReply('qué mido ahora')">¿Qué mido ahora?</button>
+<button class="small-btn" type="button" onclick="quickReply('resumen')">Resumen</button>
 </div>
 
 <div class="chat-input-row">
 <input id="chatInput" type="text" placeholder="Escribe tu mensaje técnico...">
-<button class="blue-btn" id="t_send_chat" onclick="sendChat()">Enviar</button>
+<button class="blue-btn" id="t_send_chat" type="button" onclick="sendChat()">Enviar</button>
 </div>
 </div>
 </div>
@@ -901,7 +906,7 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 <div class="preview-box">
 <div class="modal-actions" style="justify-content:space-between;margin-bottom:12px;">
 <div class="preview-title" id="previewTitle">Vista previa</div>
-<button class="soft-btn" id="previewCloseBtn" onclick="closePreview()">Cerrar</button>
+<button class="soft-btn" id="previewCloseBtn" type="button" onclick="closePreview()">Cerrar</button>
 </div>
 <div id="previewContent"></div>
 </div>
@@ -914,7 +919,7 @@ let activeTechnicalData = null;
 let latestDiagnosticSummary = "";
 let currentGuidedStep = 0;
 let guidedSteps = [];
-let savedCases = JSON.parse(localStorage.getItem("gt_saved_cases_v3") || "[]");
+let savedCases = JSON.parse(localStorage.getItem("gt_saved_cases_v4") || "[]");
 
 const texts = {
 es: {
@@ -1113,6 +1118,15 @@ interpretation:"Quick interpretation"
 }
 };
 
+function forceOpenLogin(){
+const overlay = document.getElementById("loginOverlay");
+if (overlay) {
+overlay.style.display = "flex";
+const errorBox = document.getElementById("loginError");
+if (errorBox) errorBox.style.display = "none";
+}
+}
+
 function setLanguage(lang){
 currentLang = lang;
 const t = texts[lang];
@@ -1224,8 +1238,7 @@ document.getElementById(id).innerHTML = `
 }
 
 function openLogin(){
-document.getElementById("loginOverlay").style.display = "flex";
-document.getElementById("loginError").style.display = "none";
+forceOpenLogin();
 }
 
 function closeLogin(){
@@ -1616,11 +1629,10 @@ return html;
 }
 
 function runDiagnostic(){
-const d = buildDiagnosticData();
 const html = buildDiagnosticHtml();
 document.getElementById("resultContent").innerHTML = html;
 document.getElementById("resultBox").style.display = "block";
-guidedSteps = buildGuidedSteps(d);
+guidedSteps = buildGuidedSteps(buildDiagnosticData());
 currentGuidedStep = 0;
 renderGuidedStep();
 }
@@ -1641,7 +1653,7 @@ resultSummary: latestDiagnosticSummary
 };
 
 savedCases.unshift(caseData);
-localStorage.setItem("gt_saved_cases_v3", JSON.stringify(savedCases));
+localStorage.setItem("gt_saved_cases_v4", JSON.stringify(savedCases));
 renderCases();
 alert(t.savedOk);
 }
@@ -1669,8 +1681,8 @@ div.innerHTML = `
 <div class="case-card-title">${c.ata || "ATA"} - ${c.reportedFault || "-"}</div>
 <div class="case-card-meta">${t.aircraftLabel}: ${c.aircraftModel || "-"} | ${t.serialLabel}: ${c.serialNumber || "-"} | ${c.createdAt}</div>
 <div class="case-card-actions">
-<button class="small-btn primary" onclick="reopenCase(${c.id})">${t.reopen}</button>
-<button class="small-btn" onclick="deleteCase(${c.id})">${t.delete}</button>
+<button class="small-btn primary" type="button" onclick="reopenCase(${c.id})">${t.reopen}</button>
+<button class="small-btn" type="button" onclick="deleteCase(${c.id})">${t.delete}</button>
 </div>
 `;
 box.appendChild(div);
@@ -1700,7 +1712,7 @@ runDiagnostic();
 
 function deleteCase(id){
 savedCases = savedCases.filter(x => x.id !== id);
-localStorage.setItem("gt_saved_cases_v3", JSON.stringify(savedCases));
+localStorage.setItem("gt_saved_cases_v4", JSON.stringify(savedCases));
 renderCases();
 }
 
@@ -1723,9 +1735,9 @@ ${item.label}: ${item.name}
 ${activeTechnicalData && activeTechnicalData.id === item.id ? `<span class="file-badge">${t.active}</span>` : ""}
 </div>
 <div class="file-actions">
-<button class="small-btn" onclick="previewFile('${item.id}')">${t.view}</button>
-<button class="small-btn primary" onclick="useFile('${item.id}')">${t.use}</button>
-<button class="small-btn" onclick="removeFile('${item.id}')">${t.remove}</button>
+<button class="small-btn" type="button" onclick="previewFile('${item.id}')">${t.view}</button>
+<button class="small-btn primary" type="button" onclick="useFile('${item.id}')">${t.use}</button>
+<button class="small-btn" type="button" onclick="removeFile('${item.id}')">${t.remove}</button>
 </div>
 `;
 list.appendChild(div);
@@ -1929,8 +1941,13 @@ const response = buildChatResponse(text);
 setTimeout(()=>addChatMessage("assistant", response), 120);
 }
 
-document.getElementById("chatInput").addEventListener("keydown", function(e){
+document.addEventListener("DOMContentLoaded", function(){
+const chatInput = document.getElementById("chatInput");
+if (chatInput) {
+chatInput.addEventListener("keydown", function(e){
 if(e.key === "Enter") sendChat();
+});
+}
 });
 
 const dragWindow = document.getElementById("diagWindow");
