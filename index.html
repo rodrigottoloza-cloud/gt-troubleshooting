@@ -87,15 +87,15 @@ font-weight:700;
 
 .hero-wrap{
 position:relative;
-min-height:600px;
+min-height:560px;
 background:#dbe6f2;
 }
 .hero{
 position:relative;
-min-height:600px;
+min-height:560px;
 padding:46px 34px 30px;
 background-image:
-linear-gradient(rgba(20,40,70,.28), rgba(20,40,70,.28)),
+linear-gradient(rgba(20,40,70,.30), rgba(20,40,70,.30)),
 url('https://images.unsplash.com/photo-1517479149777-5f3b1511d5ad?auto=format&fit=crop&w=1600&q=80');
 background-size:cover;
 background-position:center;
@@ -104,7 +104,7 @@ background-position:center;
 content:"";
 position:absolute;
 inset:0;
-background:linear-gradient(90deg, rgba(20,40,70,.35) 0%, rgba(20,40,70,.18) 45%, rgba(20,40,70,.05) 100%);
+background:linear-gradient(90deg, rgba(20,40,70,.38) 0%, rgba(20,40,70,.18) 46%, rgba(20,40,70,.05) 100%);
 pointer-events:none;
 z-index:1;
 }
@@ -114,7 +114,6 @@ z-index:20;
 max-width:58%;
 padding-top:64px;
 padding-left:60px;
-pointer-events:auto;
 }
 .hero-title{
 color:#fff;
@@ -133,7 +132,6 @@ text-shadow:0 2px 8px rgba(0,0,0,.16);
 .cta{
 position:relative;
 z-index:30;
-pointer-events:auto;
 background:linear-gradient(180deg,#4f8de0,#2c67b8);
 color:#fff;
 border:none;
@@ -189,8 +187,19 @@ border-radius:10px;
 padding:10px;
 font-size:12px;
 color:#526070;
-min-height:96px;
+min-height:120px;
+max-height:190px;
+overflow:auto;
 }
+.file-block-title{
+font-size:12px;
+font-weight:700;
+color:#224d88;
+margin:8px 0 4px;
+padding-top:4px;
+border-top:1px solid #edf2f8;
+}
+.file-block-title:first-child{border-top:none;padding-top:0}
 .file-item{
 padding:8px 0;
 border-bottom:1px solid #eef3f8;
@@ -329,7 +338,7 @@ border-radius:10px;
 font-size:14px;
 }
 .field textarea{
-min-height:90px;
+min-height:96px;
 resize:vertical;
 }
 .modal-actions{
@@ -372,7 +381,7 @@ position:fixed;
 top:80px;
 left:50%;
 transform:translateX(-50%);
-width:min(1320px, calc(100vw - 40px));
+width:min(1380px, calc(100vw - 30px));
 background:#fff;
 border-radius:18px;
 box-shadow:0 20px 50px rgba(0,0,0,.28);
@@ -400,7 +409,7 @@ overflow:auto;
 }
 .three-col{
 display:grid;
-grid-template-columns:1.05fr .7fr .85fr;
+grid-template-columns:1.1fr .8fr .9fr;
 gap:18px;
 }
 .grid{
@@ -456,7 +465,7 @@ line-height:1.6;
 
 .step-box{
 padding:18px;
-min-height:420px;
+min-height:480px;
 }
 .step-status{
 display:flex;
@@ -491,6 +500,9 @@ flex-wrap:wrap;
 gap:8px;
 margin-top:10px;
 }
+.decision-group .small-btn{
+font-size:12px;
+}
 
 .case-card{
 border:1px solid #d8e2ef;
@@ -517,7 +529,7 @@ flex-wrap:wrap;
 .chat-panel{
 display:flex;
 flex-direction:column;
-min-height:720px;
+min-height:780px;
 }
 .chat-header{
 padding:16px 18px;
@@ -674,7 +686,7 @@ transform:none;
 <div class="hero-content">
 <div class="hero-title" id="t_hero_title">G&T AIRCRAFT<br>TROUBLESHOOTING</div>
 <div class="hero-sub" id="t_hero_sub">Sistema de diagnóstico aeronáutico</div>
-<button class="cta" id="t_start_btn" type="button" onclick="forceOpenLogin()">INICIAR DIAGNÓSTICO</button>
+<button class="cta" type="button" onclick="forceOpenLogin()" id="t_start_btn">INICIAR DIAGNÓSTICO</button>
 </div>
 </div>
 
@@ -733,9 +745,8 @@ transform:none;
 <div class="modal">
 <div class="modal-header">
 <h2 id="t_login_title">Ingreso técnico</h2>
-<button class="soft-btn" id="t_close_login" type="button" onclick="closeLogin()">Cerrar</button>
+<button class="soft-btn" type="button" onclick="closeLogin()" id="t_close_login">Cerrar</button>
 </div>
-
 <div class="modal-body">
 <div class="field">
 <label id="t_login_user_label">Usuario / Correo</label>
@@ -748,8 +759,8 @@ transform:none;
 </div>
 
 <div class="modal-actions">
-<button class="blue-btn" id="t_enter_system" type="button" onclick="loginSystem()">Entrar al sistema</button>
-<button class="soft-btn" id="t_cancel_login" type="button" onclick="closeLogin()">Cancelar</button>
+<button class="blue-btn" type="button" onclick="loginSystem()" id="t_enter_system">Entrar al sistema</button>
+<button class="soft-btn" type="button" onclick="closeLogin()" id="t_cancel_login">Cancelar</button>
 </div>
 
 <div class="error-box" id="loginError">Usuario o contraseña incorrectos.</div>
@@ -760,7 +771,7 @@ transform:none;
 <div class="draggable-window" id="diagWindow">
 <div class="drag-header" id="dragHeader">
 <h2 id="t_diag_title">Módulo de diagnóstico guiado</h2>
-<button class="soft-btn" id="t_close_diag" type="button" onclick="closeDiagnostic()">Cerrar</button>
+<button class="soft-btn" type="button" onclick="closeDiagnostic()" id="t_close_diag">Cerrar</button>
 </div>
 
 <div class="window-body">
@@ -820,9 +831,9 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 </div>
 
 <div class="modal-actions">
-<button class="blue-btn" id="t_run_diag" type="button" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
-<button class="soft-btn" id="t_clear_diag" type="button" onclick="clearDiagnostic()">Limpiar</button>
-<button class="soft-btn" id="t_save_case" type="button" onclick="saveCase()">Guardar caso</button>
+<button class="blue-btn" type="button" onclick="runDiagnostic()" id="t_run_diag">Ejecutar diagnóstico</button>
+<button class="soft-btn" type="button" onclick="clearDiagnostic()" id="t_clear_diag">Limpiar</button>
+<button class="soft-btn" type="button" onclick="saveCase()" id="t_save_case">Guardar caso</button>
 </div>
 
 <div class="result-box" id="resultBox" style="margin-top:18px;display:none;">
@@ -832,6 +843,9 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 
 <div class="case-history" style="margin-top:18px;">
 <h3 id="t_case_history">Historial de casos</h3>
+<div class="field">
+<input id="caseSearchInput" type="text" placeholder="Buscar en historial..." oninput="renderCases()">
+</div>
 <div id="caseHistoryList"></div>
 </div>
 </div>
@@ -855,10 +869,22 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 <div class="step-card">
 <h4 id="t_interpretation">Interpretación rápida</h4>
 <p id="guidedInterpretation">Sin datos todavía.</p>
-<div class="decision-group">
+<div class="decision-group" id="guidedDecisionButtons">
 <button class="small-btn primary" type="button" onclick="guidedDecision('done')">Medición realizada</button>
 <button class="small-btn" type="button" onclick="guidedDecision('next')">Siguiente paso</button>
 <button class="small-btn" type="button" onclick="guidedDecision('back')">Paso anterior</button>
+</div>
+</div>
+
+<div class="step-card">
+<h4>Resultado de medición</h4>
+<div class="decision-group" id="measurementButtons">
+<button class="small-btn" type="button" onclick="applyMeasurement('continuity_ok')">Continuidad OK</button>
+<button class="small-btn" type="button" onclick="applyMeasurement('continuity_fail')">Sin continuidad</button>
+<button class="small-btn" type="button" onclick="applyMeasurement('voltage_ok')">Voltaje OK</button>
+<button class="small-btn" type="button" onclick="applyMeasurement('no_voltage')">Sin voltaje</button>
+<button class="small-btn" type="button" onclick="applyMeasurement('lamp_ok')">Lamp test OK</button>
+<button class="small-btn" type="button" onclick="applyMeasurement('lamp_fail')">Lamp test FAIL</button>
 </div>
 </div>
 </div>
@@ -877,8 +903,8 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 
 <div class="chat-tools">
 <div class="chat-tools-top">
-<button class="small-btn primary" id="t_use_context" type="button" onclick="useCaseContext()">Usar contexto del caso</button>
-<button class="small-btn" id="t_clear_chat" type="button" onclick="clearChat()">Limpiar chat</button>
+<button class="small-btn primary" type="button" onclick="useCaseContext()" id="t_use_context">Usar contexto del caso</button>
+<button class="small-btn" type="button" onclick="clearChat()" id="t_clear_chat">Limpiar chat</button>
 </div>
 
 <div class="quick-replies">
@@ -894,7 +920,7 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 
 <div class="chat-input-row">
 <input id="chatInput" type="text" placeholder="Escribe tu mensaje técnico...">
-<button class="blue-btn" id="t_send_chat" type="button" onclick="sendChat()">Enviar</button>
+<button class="blue-btn" type="button" onclick="sendChat()" id="t_send_chat">Enviar</button>
 </div>
 </div>
 </div>
@@ -906,7 +932,7 @@ El técnico debe validar que la documentación cargada corresponda exactamente a
 <div class="preview-box">
 <div class="modal-actions" style="justify-content:space-between;margin-bottom:12px;">
 <div class="preview-title" id="previewTitle">Vista previa</div>
-<button class="soft-btn" id="previewCloseBtn" type="button" onclick="closePreview()">Cerrar</button>
+<button class="soft-btn" type="button" onclick="closePreview()" id="previewCloseBtn">Cerrar</button>
 </div>
 <div id="previewContent"></div>
 </div>
@@ -919,7 +945,14 @@ let activeTechnicalData = null;
 let latestDiagnosticSummary = "";
 let currentGuidedStep = 0;
 let guidedSteps = [];
-let savedCases = JSON.parse(localStorage.getItem("gt_saved_cases_v4") || "[]");
+let savedCases = JSON.parse(localStorage.getItem("gt_saved_cases_v5") || "[]");
+
+const caseState = {
+contextLoaded: false,
+askedQuestions: [],
+measurements: {},
+activeCase: null
+};
 
 const texts = {
 es: {
@@ -1119,17 +1152,38 @@ interpretation:"Quick interpretation"
 };
 
 function forceOpenLogin(){
-const overlay = document.getElementById("loginOverlay");
-if (overlay) {
-overlay.style.display = "flex";
-const errorBox = document.getElementById("loginError");
-if (errorBox) errorBox.style.display = "none";
+document.getElementById("loginOverlay").style.display = "flex";
+document.getElementById("loginError").style.display = "none";
 }
+
+function closeLogin(){
+document.getElementById("loginOverlay").style.display = "none";
+}
+
+function loginSystem(){
+const user = document.getElementById("loginUser").value.trim();
+const pass = document.getElementById("loginPass").value.trim();
+
+if(user === "rodrigo@gt-troubleshooting.com" && pass === "1234"){
+closeLogin();
+openDiagnostic();
+} else {
+document.getElementById("loginError").style.display = "block";
+}
+}
+
+function openDiagnostic(){
+document.getElementById("diagWindow").style.display = "block";
+}
+
+function closeDiagnostic(){
+document.getElementById("diagWindow").style.display = "none";
 }
 
 function setLanguage(lang){
 currentLang = lang;
 const t = texts[lang];
+
 document.getElementById("lang-es").classList.toggle("active", lang === "es");
 document.getElementById("lang-en").classList.toggle("active", lang === "en");
 
@@ -1215,6 +1269,8 @@ document.getElementById("faultType").innerHTML = currentLang === "es" ? `
 <option value="green_rh_off">Luz verde RH apagada</option>
 <option value="all_indication_fail">Todas las luces fallan</option>
 <option value="unsafe_indication">Indicación unsafe</option>
+<option value="transit_light_on">Luz de tránsito encendida</option>
+<option value="warning_horn">Bocina de warning</option>
 <option value="cabin_not_pressurizing">Cabina no presuriza</option>
 <option value="cabin_climb_high">Cabin climb alta</option>
 <option value="bleed_issue">Posible problema bleed air</option>
@@ -1224,6 +1280,8 @@ document.getElementById("faultType").innerHTML = currentLang === "es" ? `
 <option value="green_rh_off">RH green light off</option>
 <option value="all_indication_fail">All green lights fail</option>
 <option value="unsafe_indication">Unsafe indication</option>
+<option value="transit_light_on">Transit light on</option>
+<option value="warning_horn">Warning horn</option>
 <option value="cabin_not_pressurizing">Cabin not pressurizing</option>
 <option value="cabin_climb_high">High cabin climb</option>
 <option value="bleed_issue">Possible bleed air issue</option>
@@ -1235,34 +1293,6 @@ document.getElementById(id).innerHTML = `
 <option value="no">${t.no}</option>
 `;
 });
-}
-
-function openLogin(){
-forceOpenLogin();
-}
-
-function closeLogin(){
-document.getElementById("loginOverlay").style.display = "none";
-}
-
-function loginSystem(){
-const user = document.getElementById("loginUser").value.trim();
-const pass = document.getElementById("loginPass").value.trim();
-
-if(user === "rodrigo@gt-troubleshooting.com" && pass === "1234"){
-closeLogin();
-openDiagnostic();
-} else {
-document.getElementById("loginError").style.display = "block";
-}
-}
-
-function openDiagnostic(){
-document.getElementById("diagWindow").style.display = "block";
-}
-
-function closeDiagnostic(){
-document.getElementById("diagWindow").style.display = "none";
 }
 
 function clearDiagnostic(){
@@ -1279,6 +1309,10 @@ document.getElementById("resultBox").style.display = "none";
 latestDiagnosticSummary = "";
 guidedSteps = [];
 currentGuidedStep = 0;
+caseState.contextLoaded = false;
+caseState.askedQuestions = [];
+caseState.measurements = {};
+caseState.activeCase = null;
 renderGuidedStep();
 }
 
@@ -1311,19 +1345,24 @@ meaning: currentLang==="es" ? "No se debe profundizar el diagnóstico todavía."
 if(d.faultType === "green_lh_off"){
 return [
 {
-phase: currentLang==="es" ? "Clasificación inicial LH" : "LH initial classification",
-next: currentLang==="es" ? "Tratar la falla como rama LH individual." : "Treat the fault as an individual LH branch.",
-meaning: currentLang==="es" ? "Una sola luz LH apagada apunta primero a rama LH." : "A single LH light out points first to the LH branch."
+phase:"Clasificación inicial LH",
+next:"Tratar la falla como rama LH individual y no como alimentación común.",
+meaning:"Una sola luz LH apagada apunta primero a rama LH."
 },
 {
-phase: currentLang==="es" ? "Ubicación física" : "Physical location",
-next: currentLang==="es" ? "Ir al pozo del tren izquierdo y localizar downlock switch LH." : "Go to LH wheel well and locate LH downlock switch.",
-meaning: currentLang==="es" ? "Confirma switch y conector correctos." : "Confirm correct switch and connector."
+phase:"Ubicación física",
+next:"Ir al pozo del tren izquierdo y localizar downlock switch LH.",
+meaning:"Confirmar switch y conector correctos."
 },
 {
-phase: currentLang==="es" ? "Primera medición" : "First measurement",
-next: currentLang==="es" ? "Medir continuidad del downlock switch LH con tren abajo y asegurado." : "Measure LH downlock switch continuity with gear down and locked.",
-meaning: currentLang==="es" ? "Esto separa switch/ajuste de rama/panel." : "This separates switch/adjustment from branch/panel."
+phase:"Primera medición",
+next:"Medir continuidad del downlock switch LH con tren abajo y asegurado.",
+meaning:"Esto separa switch/ajuste de rama/panel."
+},
+{
+phase:"Segunda medición",
+next:"Si el switch está bien, medir voltaje en socket o punto de indicación asociado.",
+meaning:"Esto separa rama local de panel/alim."
 }
 ];
 }
@@ -1331,14 +1370,19 @@ meaning: currentLang==="es" ? "Esto separa switch/ajuste de rama/panel." : "This
 if(d.faultType === "green_rh_off"){
 return [
 {
-phase: currentLang==="es" ? "Clasificación inicial RH" : "RH initial classification",
-next: currentLang==="es" ? "Tratar la falla como rama RH individual." : "Treat the fault as an individual RH branch.",
-meaning: currentLang==="es" ? "No asumir problema común al inicio." : "Do not assume a common issue first."
+phase:"Clasificación inicial RH",
+next:"Tratar la falla como rama RH individual.",
+meaning:"No asumir problema común al inicio."
 },
 {
-phase: currentLang==="es" ? "Ubicación física" : "Physical location",
-next: currentLang==="es" ? "Ir al pozo del tren derecho y localizar downlock switch RH." : "Go to RH wheel well and locate RH downlock switch.",
-meaning: currentLang==="es" ? "Verifica identificación antes de medir." : "Verify identification before measuring."
+phase:"Ubicación física",
+next:"Ir al pozo del tren derecho y localizar downlock switch RH.",
+meaning:"Verificar identificación antes de medir."
+},
+{
+phase:"Primera medición",
+next:"Medir continuidad del downlock switch RH.",
+meaning:"Esto separa switch/ajuste de rama RH."
 }
 ];
 }
@@ -1346,9 +1390,14 @@ meaning: currentLang==="es" ? "Verifica identificación antes de medir." : "Veri
 if(d.faultType === "all_indication_fail"){
 return [
 {
-phase: currentLang==="es" ? "Clasificación común" : "Common classification",
-next: currentLang==="es" ? "Tratar la falla como alimentación común, tierra común o panel." : "Treat the fault as common feed, common ground or panel.",
-meaning: currentLang==="es" ? "No partir por una sola pata del tren." : "Do not start with one gear leg only."
+phase:"Clasificación común",
+next:"Tratar la falla como alimentación común, tierra común o panel.",
+meaning:"No partir por una sola pata del tren."
+},
+{
+phase:"Primera revisión",
+next:"Verificar alimentación general y función de lamp test / annunciator.",
+meaning:"Si todo falla, primero revisar común."
 }
 ];
 }
@@ -1356,9 +1405,44 @@ meaning: currentLang==="es" ? "No partir por una sola pata del tren." : "Do not 
 if(d.faultType === "unsafe_indication"){
 return [
 {
-phase: currentLang==="es" ? "Confirmación mecánica" : "Mechanical confirmation",
-next: currentLang==="es" ? "Confirmar primero condición mecánica real del tren." : "Confirm actual mechanical gear condition first.",
-meaning: currentLang==="es" ? "La indicación unsafe podría ser correcta." : "The unsafe indication may be correct."
+phase:"Confirmación mecánica",
+next:"Confirmar condición mecánica real del tren antes de eléctrico.",
+meaning:"La indicación unsafe puede ser correcta."
+},
+{
+phase:"Separación lógica",
+next:"Después separar si la falla es de indicación o de posición real.",
+meaning:"No mezclar sistema mecánico con panel."
+}
+];
+}
+
+if(d.faultType === "transit_light_on"){
+return [
+{
+phase:"Estado intermedio",
+next:"Confirmar si el tren está realmente en tránsito o si la luz quedó pegada.",
+meaning:"La luz de tránsito puede deberse a switch intermedio o lógica de indicación."
+},
+{
+phase:"Primera revisión",
+next:"Revisar switch de posición y condición real del mecanismo.",
+meaning:"Separar mecánico de eléctrico."
+}
+];
+}
+
+if(d.faultType === "warning_horn"){
+return [
+{
+phase:"Bocina de warning",
+next:"Separar si la bocina corresponde a tren, potencia o configuración de vuelo.",
+meaning:"No asumir de inmediato que es falla del tren."
+},
+{
+phase:"Primera revisión",
+next:"Confirmar condición de tren, palancas y lógica que dispara la bocina.",
+meaning:"Hay que identificar el disparador real."
 }
 ];
 }
@@ -1367,14 +1451,19 @@ meaning: currentLang==="es" ? "La indicación unsafe podría ser correcta." : "T
 if(d.ata.includes("ATA 21")){
 return [
 {
-phase: currentLang==="es" ? "Confirmación inicial de presurización" : "Initial pressurization confirmation",
-next: currentLang==="es" ? "Confirmar si el problema es pérdida total, baja diferencial o cabin climb alta." : "Confirm whether the issue is total loss, low differential or high cabin climb.",
-meaning: currentLang==="es" ? "No mezclar outflow, bleed y sensing sin separar la falla." : "Do not mix outflow, bleed and sensing before separating the fault."
+phase:"Confirmación inicial de presurización",
+next:"Confirmar si el problema es pérdida total, baja diferencial o cabin climb alta.",
+meaning:"No mezclar outflow, bleed y sensing sin separar la falla."
 },
 {
-phase: currentLang==="es" ? "Primera revisión lógica" : "First logical review",
-next: currentLang==="es" ? "Revisar bleed air disponible, posición de controles y condición de sellado básico." : "Check bleed air availability, control positions and basic sealing condition.",
-meaning: currentLang==="es" ? "Si no hay bleed suficiente, el sistema no presurizará correctamente." : "If there is not enough bleed air, the system will not pressurize correctly."
+phase:"Primera revisión lógica",
+next:"Revisar bleed air disponible, posición de controles y condición de sellado básico.",
+meaning:"Si no hay bleed suficiente, el sistema no presurizará correctamente."
+},
+{
+phase:"Separación del sistema",
+next:"Separar si la falla apunta a bleed source, controller, outflow valve o leak.",
+meaning:"La lógica correcta evita cambiar componentes sin base."
 }
 ];
 }
@@ -1406,7 +1495,6 @@ document.getElementById("guidedInterpretation").textContent = step.meaning;
 
 function guidedDecision(action){
 if(!guidedSteps.length) return;
-
 if(action === "next" && currentGuidedStep < guidedSteps.length - 1){
 currentGuidedStep++;
 } else if(action === "back" && currentGuidedStep > 0){
@@ -1416,14 +1504,13 @@ if(currentGuidedStep < guidedSteps.length - 1){
 currentGuidedStep++;
 addChatMessage("assistant", currentLang==="es"
 ? "Perfecto. Avanzamos al siguiente paso guiado."
-: "Perfect. Moving to the next guided step.");
+: "Perfect. Moving to next guided step.");
 } else {
 addChatMessage("assistant", currentLang==="es"
-? "Ya estás en el último paso guiado actual. Ahora necesito tu resultado de medición."
-: "You are already at the last guided step. I now need your measurement result.");
+? "Ya estás en el último paso actual. Ahora necesito el resultado de tu medición."
+: "You are already at the last current step. I now need your measurement result.");
 }
 }
-
 renderGuidedStep();
 }
 
@@ -1458,16 +1545,14 @@ if(d.cbCheck === "no" || d.lampTest === "no" || d.bulbCheck === "no" || d.socket
 html += `<h4>${t.noDeep}</h4><ul>`;
 t.noDeepText.forEach(line => html += `<li>${line}</li>`);
 html += `</ul>`;
-latestDiagnosticSummary = currentLang === "es"
-? "No continuar profundo. Completar básicos primero."
-: "Do not continue deep. Complete basic checks first.";
+latestDiagnosticSummary = "No continuar profundo. Completar básicos primero.";
 return html;
 }
 
 html += `<h4>${t.logicalClassification}</h4>`;
 
 if(d.faultType === "green_lh_off"){
-html += currentLang === "es" ? `
+html += `
 <p>Una falla individual de indicación LH normalmente apunta a una rama LH individual y no a una alimentación común.</p>
 <h4>${t.physicalLocation}</h4>
 <ul>
@@ -1478,17 +1563,12 @@ html += currentLang === "es" ? `
 <h4>${t.firstMeasurement}</h4>
 <ul>
 <li>Mide continuidad del downlock switch LH con tren abajo y asegurado.</li>
-<li>Si tienes acceso más conveniente, mide también en el conector asociado de la rama LH.</li>
+<li>Si la continuidad es correcta, mueve el foco a cableado LH, socket o panel.</li>
 </ul>
 <h4>${t.resultMeaning}</h4>
 <ul>
-<li>Si hay continuidad correcta, la falla puede estar más cerca del cableado, socket o panel.</li>
-<li>Si no hay continuidad, sospecha del switch, su ajuste o la condición mecánica local.</li>
-</ul>
-<h4>${t.nextAction}</h4>
-<ul>
-<li>Inspecciona conector, cableado local y retorno a tierra.</li>
-<li>Si cargaste WDM o foto, úsalo como referencia física.</li>
+<li>Continuidad correcta: switch menos sospechoso.</li>
+<li>Sin continuidad: switch, ajuste o condición mecánica local.</li>
 </ul>
 <h4>${t.suspects}</h4>
 <ul>
@@ -1497,94 +1577,56 @@ html += currentLang === "es" ? `
 <li>Problema de socket/contacto</li>
 <li>Retorno a tierra deficiente</li>
 </ul>
-` : `
-<p>A single LH indication failure usually points to an individual LH branch rather than a common feed.</p>
-<h4>${t.physicalLocation}</h4>
-<ul>
-<li>Go to the LH wheel well.</li>
-<li>Locate the LH downlock switch.</li>
-<li>Verify switch and connector identification.</li>
-</ul>
-<h4>${t.firstMeasurement}</h4>
-<ul>
-<li>Measure LH downlock switch continuity with gear down and locked.</li>
-<li>If easier, measure at the associated LH branch connector too.</li>
-</ul>
-<h4>${t.resultMeaning}</h4>
-<ul>
-<li>If continuity is correct, the fault may be closer to wiring, socket or panel.</li>
-<li>If there is no continuity, suspect the switch, its adjustment or the local mechanical condition.</li>
-</ul>
-<h4>${t.nextAction}</h4>
-<ul>
-<li>Inspect local connector, wiring and ground return.</li>
-<li>If you uploaded WDM or photo, use it as physical reference.</li>
-</ul>
-<h4>${t.suspects}</h4>
-<ul>
-<li>LH downlock switch out of adjustment</li>
-<li>Open wire in LH branch</li>
-<li>Socket/contact issue</li>
-<li>Poor ground return</li>
-</ul>
 `;
-latestDiagnosticSummary = currentLang === "es"
-? "ATA 32 LH only: tratar como rama individual LH. Primera medición: continuidad del downlock switch LH."
-: "ATA 32 LH only: treat as individual LH branch. First measurement: LH downlock switch continuity.";
+latestDiagnosticSummary = "ATA 32 LH only: tratar como rama individual LH. Primera medición: continuidad del downlock switch LH.";
 } else if(d.faultType === "green_rh_off"){
-html += currentLang === "es" ? `
+html += `
 <p>Una falla individual RH apunta primero a la rama RH de indicación.</p>
-<h4>${t.firstMeasurement}</h4>
 <ul>
 <li>Mide continuidad del downlock switch RH con tren abajo y asegurado.</li>
-</ul>
-` : `
-<p>A single RH indication failure points first to the RH indication branch.</p>
-<h4>${t.firstMeasurement}</h4>
-<ul>
-<li>Measure RH downlock switch continuity with gear down and locked.</li>
+<li>Si el switch está correcto, sigue con rama RH.</li>
 </ul>
 `;
-latestDiagnosticSummary = currentLang === "es"
-? "ATA 32 RH only: tratar como rama individual RH."
-: "ATA 32 RH only: treat as individual RH branch.";
+latestDiagnosticSummary = "ATA 32 RH only: tratar como rama individual RH.";
 } else if(d.faultType === "all_indication_fail"){
-html += currentLang === "es" ? `
+html += `
 <p>Una falla múltiple de indicación sugiere alimentación común, tierra común o circuito de panel.</p>
 <ul>
 <li>Verifica primero alimentación común hacia la indicación.</li>
 <li>Confirma función general de lamp test / annunciator.</li>
 </ul>
-` : `
-<p>Multiple indication failure suggests common feed, common ground or panel indication circuit.</p>
-<ul>
-<li>Check common feed to the indication system first.</li>
-<li>Confirm overall lamp test / annunciator function.</li>
-</ul>
 `;
-latestDiagnosticSummary = currentLang === "es"
-? "ATA 32 múltiples luces: empezar por alimentación común, tierra común o panel."
-: "ATA 32 multiple lights: start with common feed, common ground or panel.";
+latestDiagnosticSummary = "ATA 32 múltiples luces: empezar por alimentación común, tierra común o panel.";
 } else if(d.faultType === "unsafe_indication"){
-html += currentLang === "es" ? `
+html += `
 <p>La indicación unsafe obliga a confirmar primero la condición mecánica real del tren antes de hacer troubleshooting eléctrico.</p>
 <ul>
 <li>Confirmar condición mecánica real del tren.</li>
 <li>No confiar solo en la indicación.</li>
 </ul>
-` : `
-<p>Unsafe indication requires confirmation of actual gear position before electrical troubleshooting.</p>
+`;
+latestDiagnosticSummary = "ATA 32 unsafe: confirmar primero condición mecánica real.";
+} else if(d.faultType === "transit_light_on"){
+html += `
+<p>La luz de tránsito encendida obliga a separar si el tren realmente está en transición o si la indicación quedó falsa.</p>
 <ul>
-<li>Confirm actual gear mechanical condition.</li>
-<li>Do not rely on indication only.</li>
+<li>Confirmar condición mecánica real del tren.</li>
+<li>Revisar switch de transición o lógica intermedia.</li>
 </ul>
 `;
-latestDiagnosticSummary = currentLang === "es"
-? "ATA 32 unsafe: confirmar primero condición mecánica real."
-: "ATA 32 unsafe: confirm actual mechanical condition first.";
+latestDiagnosticSummary = "ATA 32 transit: separar condición real del tren de indicación falsa.";
+} else if(d.faultType === "warning_horn"){
+html += `
+<p>La bocina de warning debe separarse entre lógica de tren, potencia o configuración.</p>
+<ul>
+<li>Confirmar disparador real de la bocina.</li>
+<li>No asumir una sola causa sin separar entradas.</li>
+</ul>
+`;
+latestDiagnosticSummary = "ATA 32 warning horn: identificar disparador real antes de cambiar componentes.";
 }
 } else if(d.ata.includes("ATA 21")){
-html += currentLang === "es" ? `
+html += `
 <h4>${t.logicalClassification}</h4>
 <p>La falla de presurización debe separarse entre bleed source, control, outflow valve y fugas reales de cabina.</p>
 <h4>${t.nextAction}</h4>
@@ -1600,47 +1642,66 @@ html += currentLang === "es" ? `
 <li>Outflow valve</li>
 <li>Fugas estructurales o de sellado</li>
 </ul>
-` : `
-<h4>${t.logicalClassification}</h4>
-<p>The pressurization fault must be separated between bleed source, control, outflow valve and actual cabin leaks.</p>
-<h4>${t.nextAction}</h4>
-<ul>
-<li>Confirm bleed air availability.</li>
-<li>Check pressurization control condition.</li>
-<li>Separate whether the issue points to outflow, sensing or leak.</li>
-</ul>
-<h4>${t.suspects}</h4>
-<ul>
-<li>Low bleed air availability</li>
-<li>Pressurization control issue</li>
-<li>Outflow valve</li>
-<li>Structural or sealing leaks</li>
-</ul>
 `;
-latestDiagnosticSummary = currentLang === "es"
-? "ATA 21: separar bleed, control, outflow y leak antes de cambiar componentes."
-: "ATA 21: separate bleed, control, outflow and leak before changing components.";
+latestDiagnosticSummary = "ATA 21: separar bleed, control, outflow y leak antes de cambiar componentes.";
 } else {
-html += `<p>${currentLang === "es" ? "Lógica base disponible para este ATA en esta versión." : "Base logic available for this ATA in this version."}</p>`;
-latestDiagnosticSummary = currentLang === "es" ? "Diagnóstico base ejecutado." : "Base diagnostic executed.";
+html += `<p>Lógica base disponible para este ATA en esta versión.</p>`;
+latestDiagnosticSummary = "Diagnóstico base ejecutado.";
 }
 
 return html;
 }
 
 function runDiagnostic(){
+const d = buildDiagnosticData();
 const html = buildDiagnosticHtml();
+
 document.getElementById("resultContent").innerHTML = html;
 document.getElementById("resultBox").style.display = "block";
-guidedSteps = buildGuidedSteps(buildDiagnosticData());
+
+guidedSteps = buildGuidedSteps(d);
 currentGuidedStep = 0;
+caseState.contextLoaded = true;
+caseState.askedQuestions = [];
+caseState.measurements = {};
+caseState.activeCase = d;
+
 renderGuidedStep();
+
+addChatMessage("assistant", currentLang==="es"
+? "Diagnóstico principal ejecutado. Ya tengo contexto del caso. Ahora puedo guiarte con más precisión."
+: "Main diagnostic executed. I now have case context and can guide you more precisely.");
+}
+
+function applyMeasurement(type){
+caseState.measurements[type] = true;
+
+let response = "";
+if(type === "continuity_ok"){
+response = "Medición registrada: continuidad OK. Esto hace menos sospechoso al switch en ese punto.";
+} else if(type === "continuity_fail"){
+response = "Medición registrada: sin continuidad. Esto aumenta sospecha de switch, ajuste o corte local.";
+} else if(type === "voltage_ok"){
+response = "Medición registrada: voltaje OK. Eso mueve el foco hacia socket, lámpara o retorno.";
+} else if(type === "no_voltage"){
+response = "Medición registrada: sin voltaje. Eso mueve el foco aguas arriba.";
+} else if(type === "lamp_ok"){
+response = "Medición registrada: lamp test OK. Eso hace menos sospechosa la alimentación común.";
+} else if(type === "lamp_fail"){
+response = "Medición registrada: lamp test FAIL. Eso sube prioridad de alimentación común o panel.";
+}
+
+addChatMessage("assistant", response);
+
+if(guidedSteps.length && currentGuidedStep < guidedSteps.length - 1){
+currentGuidedStep++;
+renderGuidedStep();
+}
 }
 
 function saveCase(){
 const t = texts[currentLang];
 const d = buildDiagnosticData();
-
 const caseData = {
 id: Date.now(),
 createdAt: new Date().toLocaleString(),
@@ -1653,7 +1714,7 @@ resultSummary: latestDiagnosticSummary
 };
 
 savedCases.unshift(caseData);
-localStorage.setItem("gt_saved_cases_v4", JSON.stringify(savedCases));
+localStorage.setItem("gt_saved_cases_v5", JSON.stringify(savedCases));
 renderCases();
 alert(t.savedOk);
 }
@@ -1661,6 +1722,7 @@ alert(t.savedOk);
 function renderCases(){
 const box = document.getElementById("caseHistoryList");
 const recent = document.getElementById("recentList");
+const search = (document.getElementById("caseSearchInput")?.value || "").toLowerCase();
 const t = texts[currentLang];
 
 if(!savedCases.length){
@@ -1673,13 +1735,19 @@ recent.innerHTML = `
 return;
 }
 
-box.innerHTML = "";
-savedCases.forEach(c => {
+const filtered = savedCases.filter(c =>
+`${c.ata} ${c.aircraftModel} ${c.serialNumber} ${c.reportedFault} ${c.resultSummary}`.toLowerCase().includes(search)
+);
+
+box.innerHTML = filtered.length ? "" : `<p>${t.noCases}</p>`;
+
+filtered.forEach(c => {
 const div = document.createElement("div");
 div.className = "case-card";
 div.innerHTML = `
 <div class="case-card-title">${c.ata || "ATA"} - ${c.reportedFault || "-"}</div>
 <div class="case-card-meta">${t.aircraftLabel}: ${c.aircraftModel || "-"} | ${t.serialLabel}: ${c.serialNumber || "-"} | ${c.createdAt}</div>
+<div class="case-card-meta">Resumen: ${c.resultSummary || "-"}</div>
 <div class="case-card-actions">
 <button class="small-btn primary" type="button" onclick="reopenCase(${c.id})">${t.reopen}</button>
 <button class="small-btn" type="button" onclick="deleteCase(${c.id})">${t.delete}</button>
@@ -1712,26 +1780,36 @@ runDiagnostic();
 
 function deleteCase(id){
 savedCases = savedCases.filter(x => x.id !== id);
-localStorage.setItem("gt_saved_cases_v4", JSON.stringify(savedCases));
+localStorage.setItem("gt_saved_cases_v5", JSON.stringify(savedCases));
 renderCases();
 }
 
 function renderUploads(){
 const list = document.getElementById("uploadList");
 const t = texts[currentLang];
-
 if(uploadedFiles.length === 0){
 list.innerHTML = `<div>${t.noFiles}</div>`;
 return;
 }
 
+const groups = ["AMM","WDM","IPC","SRM","FOTO","OTROS"];
 list.innerHTML = "";
-uploadedFiles.forEach(item=>{
+
+groups.forEach(group=>{
+const items = uploadedFiles.filter(f=>f.label===group);
+if(!items.length) return;
+
+const title = document.createElement("div");
+title.className = "file-block-title";
+title.textContent = group;
+list.appendChild(title);
+
+items.forEach(item=>{
 const div = document.createElement("div");
 div.className = "file-item";
 div.innerHTML = `
 <div class="file-name">
-${item.label}: ${item.name}
+${item.name}
 ${activeTechnicalData && activeTechnicalData.id === item.id ? `<span class="file-badge">${t.active}</span>` : ""}
 </div>
 <div class="file-actions">
@@ -1741,6 +1819,7 @@ ${activeTechnicalData && activeTechnicalData.id === item.id ? `<span class="file
 </div>
 `;
 list.appendChild(div);
+});
 });
 }
 
@@ -1772,6 +1851,9 @@ bindUploadInput("otherInput", "OTROS");
 function useFile(id){
 activeTechnicalData = uploadedFiles.find(x => x.id === id) || null;
 renderUploads();
+if(activeTechnicalData){
+addChatMessage("assistant", `Data técnica activa: ${activeTechnicalData.label} - ${activeTechnicalData.name}`);
+}
 }
 
 function removeFile(id){
@@ -1821,6 +1903,7 @@ messages.scrollTop = messages.scrollHeight;
 function clearChat(){
 const messages = document.getElementById("chatMessages");
 messages.innerHTML = "";
+caseState.askedQuestions = [];
 addChatMessage("assistant", texts[currentLang].chatWelcome);
 }
 
@@ -1829,6 +1912,9 @@ const t = texts[currentLang];
 const d = buildDiagnosticData();
 const tech = activeTechnicalData ? `${activeTechnicalData.label}: ${activeTechnicalData.name}` : t.activeDataNone;
 
+caseState.contextLoaded = true;
+caseState.activeCase = d;
+
 const contextText = currentLang === "es"
 ? `Contexto del caso:\nAeronave: ${d.aircraft}\nSerial: ${d.serial}\nATA: ${d.ata}\nFalla: ${d.fault}\nResumen diagnóstico: ${latestDiagnosticSummary || "No ejecutado todavía"}\nData técnica activa: ${tech}`
 : `Case context:\nAircraft: ${d.aircraft}\nSerial: ${d.serial}\nATA: ${d.ata}\nFault: ${d.fault}\nDiagnostic summary: ${latestDiagnosticSummary || "Not run yet"}\nActive technical data: ${tech}`;
@@ -1836,88 +1922,125 @@ const contextText = currentLang === "es"
 addChatMessage("assistant", t.contextLoaded + "\n\n" + contextText);
 }
 
-function buildChatResponse(message){
+function askUnique(key, text){
+if(caseState.askedQuestions.includes(key)) return false;
+caseState.askedQuestions.push(key);
+return text;
+}
+
+function buildSmartChatResponse(message){
 const lower = message.toLowerCase();
 const d = buildDiagnosticData();
 
-if(!d.ata || d.ata === (currentLang==="es" ? "No seleccionado" : "Not selected")){
-return currentLang==="es"
-? "Primero selecciona ATA y carga los datos mínimos del caso."
-: "First select ATA and load the minimum case data.";
+if(!d.ata || d.ata === "No seleccionado" || d.ata === "Not selected"){
+return "Primero selecciona ATA y carga los datos mínimos del caso. Sin separar el sistema, no quiero adivinar.";
 }
 
-if(lower.includes("qué mido") || lower.includes("que mido")){
-if(d.ata.includes("ATA 32")){
-if(d.faultType === "green_lh_off"){
-return "Yo partiría por continuidad del downlock switch LH con tren abajo y asegurado. Si esa continuidad es correcta, movería el foco a cableado, socket o panel.";
-}
-if(d.faultType === "green_rh_off"){
-return "Yo partiría por continuidad del downlock switch RH con tren abajo y asegurado.";
-}
-if(d.faultType === "all_indication_fail"){
-return "Si fallan todas las luces, empieza por alimentación común, tierra común y lamp test general.";
-}
-if(d.faultType === "unsafe_indication"){
-return "Con unsafe, primero confirma condición mecánica real del tren antes de entrar a eléctrico.";
-}
-}
-
-if(d.ata.includes("ATA 21")){
-return "En ATA 21 yo separaría primero bleed air, control de presurización, outflow valve y leak. No cambiaría componentes sin separar esa lógica.";
-}
-}
-
-if(lower.includes("no tengo continuidad")){
-return currentLang==="es"
-? "Cuando no hay continuidad, necesito saber exactamente dónde mediste: switch, conector o rama."
-: "If there is no continuity, I need to know exactly where you measured: switch, connector or branch.";
-}
-
-if(lower.includes("tengo continuidad")){
-return currentLang==="es"
-? "Si la continuidad es correcta en el switch, el foco se mueve a cableado, socket, panel o retorno a tierra."
-: "If continuity is correct at the switch, move focus to wiring, socket, panel or ground return.";
-}
-
-if(lower.includes("tengo voltaje")){
-return currentLang==="es"
-? "Si tienes voltaje, ahora necesito saber dónde lo mediste y respecto a qué referencia."
-: "If you have voltage, I need to know where you measured it and against which reference.";
-}
-
-if(lower.includes("no tengo voltaje")){
-return currentLang==="es"
-? "Si no tienes voltaje en el punto esperado, eso sugiere un problema aguas arriba."
-: "If there is no voltage at the expected point, that suggests an upstream problem.";
+if(!caseState.contextLoaded){
+return "Ya puedo ayudarte, pero primero carga el contexto del caso o ejecuta el diagnóstico. Necesito saber ATA, falla, y estado básico.";
 }
 
 if(lower.includes("resumen")){
 return latestDiagnosticSummary
-? `Resumen actual: ${latestDiagnosticSummary}`
-: currentLang==="es" ? "Aún no has ejecutado el diagnóstico principal." : "You have not run the main diagnosis yet.";
+? `Resumen actual:\n${latestDiagnosticSummary}`
+: "Todavía no hay resumen principal cargado.";
 }
 
-if(lower.includes("manual") || lower.includes("wdm") || lower.includes("foto") || lower.includes("imagen")){
-return currentLang==="es"
-? 'Si cargaste un archivo, márcalo como ACTIVO con "Usar". Así trabajamos con una referencia concreta.'
-: 'If you uploaded a file, mark it as ACTIVE with "Use".';
+if(lower.includes("qué mido") || lower.includes("que mido ahora") || lower.includes("que mido")){
+if(d.ata.includes("ATA 32") && d.faultType === "green_lh_off"){
+if(caseState.measurements.continuity_ok){
+return "Como ya tienes continuidad OK, yo no seguiría culpando al switch LH como primera opción. Mi siguiente punto de medición sería voltaje en socket LH o en el punto de indicación asociado.";
+}
+if(caseState.measurements.continuity_fail){
+return "Como ya tienes sin continuidad, me quedaría en la zona del switch, su ajuste, el conector inmediato o la condición mecánica local.";
+}
+return "En ATA 32 LH only, partiría por continuidad del downlock switch LH con tren abajo y asegurado.";
+}
+
+if(d.ata.includes("ATA 32") && d.faultType === "all_indication_fail"){
+return "Si fallan todas las luces, no partiría por una sola rama. Yo mediría alimentación común, función general de lamp test y posible tierra común.";
+}
+
+if(d.ata.includes("ATA 21")){
+return "En ATA 21, antes de medir cualquier válvula, separaría si el problema apunta a bleed source, control, outflow o leak. Dime qué síntoma exacto tienes: no presuriza, cabin climb alta o diferencial baja.";
+}
+}
+
+if(lower.includes("tengo continuidad")){
+caseState.measurements.continuity_ok = true;
+const ask = askUnique("ask_voltage_after_continuity_ok",
+"Perfecto. Entonces el switch queda menos sospechoso. Ahora necesito que confirmes: ¿tienes voltaje en el socket o punto de indicación asociado?");
+return ask || "Perfecto. Con continuidad OK, mi foco sigue en cableado, socket, panel o retorno a tierra.";
+}
+
+if(lower.includes("no tengo continuidad") || lower.includes("sin continuidad")){
+caseState.measurements.continuity_fail = true;
+const ask = askUnique("ask_switch_point_after_continuity_fail",
+"Bien. Entonces necesito saber exactamente dónde mediste esa continuidad: ¿en el switch mismo o en el conector? Eso cambia la conclusión.");
+return ask || "Con continuidad FAIL, el foco se mueve a switch, ajuste, conector inmediato o condición mecánica local.";
+}
+
+if(lower.includes("tengo voltaje")){
+caseState.measurements.voltage_ok = true;
+return "Perfecto. Si tienes voltaje en el punto correcto, entonces el foco se mueve hacia socket, lámpara, contacto o retorno a tierra.";
+}
+
+if(lower.includes("no tengo voltaje") || lower.includes("sin voltaje")){
+caseState.measurements.no_voltage = true;
+return "Bien. Si no tienes voltaje en el punto esperado, eso sugiere problema aguas arriba: alimentación, cableado previo, panel o fuente común según el tipo de falla.";
+}
+
+if(lower.includes("lamp test ok") || lower.includes("lamp ok")){
+caseState.measurements.lamp_ok = true;
+return "Perfecto. Con lamp test OK, la alimentación general queda menos sospechosa y el foco baja a la rama específica.";
+}
+
+if(lower.includes("lamp test fail") || lower.includes("lamp fail")){
+caseState.measurements.lamp_fail = true;
+return "Si el lamp test falla, la prioridad sube hacia alimentación común, annunciator o circuito general de indicación.";
+}
+
+if(lower.includes("qué concluyes") || lower.includes("que concluyes")){
+if(caseState.measurements.continuity_fail){
+return "Mi conclusión parcial: la falla sigue muy cargada hacia switch, ajuste o condición local del punto medido.";
+}
+if(caseState.measurements.continuity_ok && caseState.measurements.no_voltage){
+return "Mi conclusión parcial: el switch pierde prioridad y el foco se mueve claramente aguas arriba.";
+}
+if(caseState.measurements.continuity_ok && caseState.measurements.voltage_ok){
+return "Mi conclusión parcial: el foco ya no está en switch ni en alimentación inmediata, sino más cerca de socket, contacto, lámpara o retorno.";
+}
+return "Todavía me faltan resultados de medición para concluir con más precisión.";
 }
 
 if(lower === "sí" || lower === "si"){
-return currentLang==="es"
-? "Perfecto. Dime exactamente qué confirmó ese sí."
-: "Perfect. Tell me exactly what that yes confirmed.";
+const ask = askUnique("generic_yes",
+"Perfecto. Dime exactamente qué confirmó ese sí: continuidad, voltaje, lamp test, condición mecánica o identificación del switch.");
+return ask || "Bien. Ahora necesito saber exactamente qué parte del sistema quedó confirmada.";
 }
 
 if(lower === "no"){
-return currentLang==="es"
-? "Bien. Dime exactamente qué fue negativo."
-: "Good. Tell me exactly what was negative.";
+const ask = askUnique("generic_no",
+"Bien. Dime exactamente qué fue negativo: continuidad, voltaje, lamp test, posición mecánica o bleed air.");
+return ask || "Ahora necesito saber qué variable te dio negativa.";
 }
 
-return currentLang==="es"
-? "Perfecto. Dame un dato técnico más específico: qué mediste, dónde lo mediste y qué condición confirmaste."
-: "Good. Give me a more specific technical detail: what you measured, where, and which condition you confirmed.";
+if(lower.includes("manual") || lower.includes("wdm") || lower.includes("amm") || lower.includes("foto") || lower.includes("imagen")){
+if(activeTechnicalData){
+return `La data técnica activa ahora es ${activeTechnicalData.label}: ${activeTechnicalData.name}. Si quieres, dame el punto exacto que quieres analizar sobre ese archivo.`;
+}
+return 'Primero selecciona un archivo en Quick Access con "Usar". Así trabajamos sobre una referencia concreta.';
+}
+
+if(d.ata.includes("ATA 32")){
+return "Perfecto. Para ayudarte como técnico, dime una de estas tres cosas: qué mediste, dónde lo mediste o qué condición del tren confirmaste.";
+}
+
+if(d.ata.includes("ATA 21")){
+return "Perfecto. En presurización necesito separar síntoma real. Dime una sola condición: no presuriza, cabin climb alta, diferencial baja o sospecha de bleed.";
+}
+
+return "Dame un dato técnico más específico y seguimos avanzando con lógica G&T.";
 }
 
 function sendChat(){
@@ -1931,23 +2054,21 @@ return;
 
 addChatMessage("user", text);
 input.value = "";
-const response = buildChatResponse(text);
+
+const response = buildSmartChatResponse(text);
 setTimeout(()=>addChatMessage("assistant", response), 180);
 }
 
 function quickReply(text){
 addChatMessage("user", text);
-const response = buildChatResponse(text);
+const response = buildSmartChatResponse(text);
 setTimeout(()=>addChatMessage("assistant", response), 120);
 }
 
 document.addEventListener("DOMContentLoaded", function(){
-const chatInput = document.getElementById("chatInput");
-if (chatInput) {
-chatInput.addEventListener("keydown", function(e){
+document.getElementById("chatInput").addEventListener("keydown", function(e){
 if(e.key === "Enter") sendChat();
 });
-}
 });
 
 const dragWindow = document.getElementById("diagWindow");
