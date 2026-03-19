@@ -3,21 +3,21 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>G&T Aircraft Troubleshooting - Nivel 2 Real</title>
+<title>G&T Aircraft Troubleshooting - Nivel 3</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:Arial,Helvetica,sans-serif;background:#e9edf3;color:#1f2b3a}
-.page{max-width:1460px;margin:18px auto;background:#f4f7fb;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08)}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;background:#f4f7fb;border-bottom:1px solid #d8e2ef;gap:16px}
+.page{max-width:1480px;margin:18px auto;background:#f4f7fb;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:20px 28px;border-bottom:1px solid #d8e2ef;background:#fff}
 .brand{display:flex;align-items:center;gap:16px}
-.logo-box{width:70px;height:70px;border-radius:12px;background:linear-gradient(180deg,#d0deef,#6c8eb7);color:#224d88;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:24px}
-.brand-text h1{font-size:28px;color:#224d88;margin-bottom:4px}
-.brand-text p{font-size:14px;color:#526070}
-.hero{padding:38px 28px;background:linear-gradient(135deg,#2b4f8c,#4f8de0);color:#fff}
+.logo{width:72px;height:72px;border-radius:12px;background:linear-gradient(180deg,#d0deef,#6c8eb7);display:flex;align-items:center;justify-content:center;color:#224d88;font-weight:700;font-size:24px}
+.brand h1{font-size:28px;color:#224d88}
+.brand p{font-size:14px;color:#526070;margin-top:4px}
+.hero{padding:34px 28px;background:linear-gradient(135deg,#284c87,#4f8de0);color:#fff}
 .hero h2{font-size:34px;line-height:1.15;margin-bottom:10px}
 .hero p{font-size:18px;opacity:.95}
-.cta{margin-top:20px;background:#fff;color:#224d88;border:none;padding:14px 24px;border-radius:12px;font-weight:700;cursor:pointer}
-.content{display:grid;grid-template-columns:1.1fr .95fr 1fr;gap:18px;padding:22px}
+.hero button{margin-top:18px;background:#fff;color:#224d88;border:none;border-radius:12px;padding:14px 24px;font-weight:700;cursor:pointer}
+.content{display:grid;grid-template-columns:1.05fr .95fr 1fr;gap:18px;padding:22px}
 .card{background:#fff;border:1px solid #d8e2ef;border-radius:14px;padding:18px}
 .card h3{color:#224d88;margin-bottom:12px}
 .field{margin-bottom:12px}
@@ -32,53 +32,54 @@ button{border:none;border-radius:10px;padding:12px 16px;cursor:pointer;font-weig
 .small{padding:8px 10px;font-size:12px}
 .muted{font-size:12px;color:#6e7b8c}
 .warn{margin-top:14px;padding:12px;border:1px solid #f3c3be;background:#fff7f6;border-radius:10px;color:#7a271f;font-size:13px;line-height:1.5}
-.chat{display:flex;flex-direction:column;min-height:700px}
+.result p,.result ul{margin-bottom:10px;line-height:1.55}
+.result ul{margin-left:18px}
+.history-item{border:1px solid #d8e2ef;border-radius:10px;padding:10px;margin-top:10px;background:#fff}
+.path{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.node{background:#eef3f9;border:1px solid #d8e2ef;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:#304155}
+.arrow{color:#2c67b8;font-weight:700}
+.scroll{max-height:240px;overflow:auto;border:1px solid #d8e2ef;border-radius:10px;padding:10px;background:#fbfdff}
+.rank-item{border:1px solid #d8e2ef;border-radius:10px;padding:10px;background:#fff;margin-bottom:8px}
+.pill{display:inline-block;background:#eef3f9;color:#304155;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px;margin-bottom:6px}
+.chat{display:flex;flex-direction:column;min-height:760px}
 .chat-box{flex:1;overflow:auto;background:#fcfdff;border:1px solid #d8e2ef;border-radius:12px;padding:14px;margin-bottom:10px}
 .msg{margin-bottom:10px;display:flex}
 .msg.user{justify-content:flex-end}
 .bubble{max-width:88%;padding:11px 13px;border-radius:14px;white-space:pre-line;line-height:1.45;font-size:14px}
 .msg.user .bubble{background:#2c67b8;color:#fff}
 .msg.assistant .bubble{background:#eef3f9;color:#1f2b3a}
-.wdm-route{background:#f8fbff;border:1px solid #d8e2ef;border-radius:12px;padding:12px;margin:10px 0}
-.path{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.node{background:#eef3f9;border:1px solid #d8e2ef;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:#304155}
-.arrow{color:#2c67b8;font-weight:700}
-.scroll{max-height:260px;overflow:auto;border:1px solid #d8e2ef;border-radius:10px;padding:10px;background:#fbfdff}
-.result p,.result ul{margin-bottom:10px;line-height:1.5}
-.result ul{margin-left:18px}
-.pill{display:inline-block;background:#eef3f9;color:#304155;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-right:6px;margin-bottom:6px}
-.history-item{border:1px solid #d8e2ef;border-radius:10px;padding:10px;margin-top:10px;background:#fff}
 .overlay{display:none;position:fixed;inset:0;background:rgba(8,18,34,.62);z-index:2000;align-items:center;justify-content:center;padding:20px}
 .modal{width:100%;max-width:420px;background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.25)}
 .modal-head{padding:16px 18px;background:#f4f7fb;border-bottom:1px solid #d8e2ef;display:flex;justify-content:space-between;align-items:center}
 .modal-body{padding:18px}
 .error{display:none;margin-top:10px;padding:10px;border:1px solid #f3c3be;background:#fff7f6;border-radius:10px;color:#7a271f;font-size:13px}
-@media (max-width:1200px){.content{grid-template-columns:1fr}}
+@media (max-width:1220px){.content{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <div class="page">
 <div class="topbar">
 <div class="brand">
-<div class="logo-box">G&T</div>
-<div class="brand-text">
-<h1>AIRCRAFT TROUBLESHOOTING</h1>
-<p>Nivel 2 real: lectura de PDF WDM en navegador</p>
-</div>
-</div>
+<div class="logo">G&T</div>
 <div>
-<div style="text-align:right;font-size:15px;">Usuario: Rodrigo Tapia</div>
-<div class="muted" style="text-align:right;">Aeronave: King Air 200</div>
+<h1>AIRCRAFT TROUBLESHOOTING</h1>
+<p>Nivel 3: pines priorizados desde PDF WDM</p>
+</div>
+</div>
+<div style="text-align:right">
+<div style="font-size:15px;">Usuario: Rodrigo Tapia</div>
+<div class="muted">Aeronave: King Air 200</div>
 </div>
 </div>
 
 <div class="hero">
-<h2>WDM real en navegador</h2>
-<p>Sube un PDF WDM, extrae texto, busca conectores y cruza la falla con el documento.</p>
-<button class="cta" onclick="openLogin()">INICIAR DIAGNÓSTICO</button>
+<h2>Nivel 3 real</h2>
+<p>Lee un PDF WDM, encuentra conectores/pines y los prioriza según ATA, falla y lado LH/RH.</p>
+<button onclick="openLogin()">INICIAR DIAGNÓSTICO</button>
 </div>
 
 <div class="content">
+<div>
 <div class="card">
 <h3>Datos del caso</h3>
 
@@ -169,9 +170,9 @@ button{border:none;border-radius:10px;padding:12px 16px;cursor:pointer;font-weig
 </div>
 
 <div class="field">
-<label>WDM / documento técnico (PDF)</label>
+<label>PDF WDM real</label>
 <input id="wdmPdfInput" type="file" accept=".pdf">
-<div class="muted">Se leerá el texto del PDF en el navegador.</div>
+<div class="muted">Se extraerá texto con página para priorizar conectores y pines.</div>
 </div>
 
 <div class="btns">
@@ -186,13 +187,14 @@ button{border:none;border-radius:10px;padding:12px 16px;cursor:pointer;font-weig
 <b>WARNING – RESPONSABILIDAD DE DATA TÉCNICA</b><br>
 El técnico debe validar que el PDF cargado corresponda exactamente al modelo, serial y configuración de la aeronave.
 </div>
+</div>
 
-<div class="card result" style="margin-top:18px;padding:16px;">
+<div class="card result" style="margin-top:18px;">
 <h3>Resultado diagnóstico</h3>
 <div id="resultContent">Sin diagnóstico todavía.</div>
 </div>
 
-<div class="card" style="margin-top:18px;padding:16px;">
+<div class="card" style="margin-top:18px;">
 <h3>Historial de casos</h3>
 <div class="field">
 <input id="historySearch" placeholder="Buscar en historial..." oninput="renderHistory()">
@@ -203,31 +205,31 @@ El técnico debe validar que el PDF cargado corresponda exactamente al modelo, s
 
 <div>
 <div class="card">
-<h3>WDM detectado</h3>
+<h3>WDM priorizado</h3>
 <div id="wdmSummary">Sin WDM cargado.</div>
 
-<div class="wdm-route">
+<div style="margin-top:14px;">
 <b>Ruta lógica sugerida</b>
 <div id="wdmRoute" class="path" style="margin-top:8px;"></div>
 </div>
 
-<div class="card" style="padding:12px;margin-top:12px;">
-<h3 style="font-size:18px;">Puntos de medición sugeridos</h3>
-<div id="wdmPoints"></div>
+<div style="margin-top:14px;">
+<b>Plan de medición sugerido</b>
+<div id="measurementPlan" class="scroll" style="margin-top:8px;"></div>
 </div>
 
-<div class="card" style="padding:12px;margin-top:12px;">
-<h3 style="font-size:18px;">Conectores / pines encontrados</h3>
-<div id="wdmPins" class="scroll"></div>
+<div style="margin-top:14px;">
+<b>Top conectores / pines priorizados</b>
+<div id="topPins" class="scroll" style="margin-top:8px;"></div>
 </div>
 
-<div class="card" style="padding:12px;margin-top:12px;">
-<h3 style="font-size:18px;">Texto relevante del PDF</h3>
-<div id="wdmRelevant" class="scroll"></div>
+<div style="margin-top:14px;">
+<b>Líneas relevantes del PDF</b>
+<div id="relevantLines" class="scroll" style="margin-top:8px;"></div>
 </div>
 
-<div class="card" style="padding:12px;margin-top:12px;">
-<h3 style="font-size:18px;">Resultado de medición</h3>
+<div style="margin-top:14px;">
+<b>Resultado de medición</b>
 <div class="btns">
 <button class="soft small" onclick="applyMeasurement('continuity_ok')">Continuidad OK</button>
 <button class="soft small" onclick="applyMeasurement('continuity_fail')">Sin continuidad</button>
@@ -245,7 +247,7 @@ El técnico debe validar que el PDF cargado corresponda exactamente al modelo, s
 <div class="card chat">
 <h3>Chat G&T</h3>
 <div id="chatBox" class="chat-box">
-<div class="msg assistant"><div class="bubble">Hola Rodrigo. Sube un PDF WDM o escribe la falla. Yo cruzaré el caso con el texto del documento.</div></div>
+<div class="msg assistant"><div class="bubble">Hola Rodrigo. Sube un PDF WDM o escribe la falla. Yo priorizaré conectores y pines según el caso.</div></div>
 </div>
 
 <div class="btns" style="margin-bottom:10px;">
@@ -293,12 +295,13 @@ El técnico debe validar que el PDF cargado corresponda exactamente al modelo, s
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.js";
 
 const state = {
-pdfText: "",
-relevantLines: [],
+pdfPages: [],
 foundPins: [],
+rankedPins: [],
+relevantLines: [],
 contextLoaded: false,
 measurements: {},
-history: JSON.parse(localStorage.getItem("gt_nivel2_real_history") || "[]"),
+history: JSON.parse(localStorage.getItem("gt_nivel3_history") || "[]"),
 autoAta: "",
 autoFaultType: ""
 };
@@ -337,7 +340,7 @@ box.scrollTop = box.scrollHeight;
 
 function clearChat(){
 document.getElementById("chatBox").innerHTML =
-'<div class="msg assistant"><div class="bubble">Hola Rodrigo. Sube un PDF WDM o escribe la falla. Yo cruzaré el caso con el texto del documento.</div></div>';
+'<div class="msg assistant"><div class="bubble">Hola Rodrigo. Sube un PDF WDM o escribe la falla. Yo priorizaré conectores y pines según el caso.</div></div>';
 }
 
 function quickAsk(text){
@@ -360,14 +363,15 @@ if(e.key === "Enter") sendChat();
 
 function useContext(){
 state.contextLoaded = true;
+const d = buildDiagnosticData();
 addChat("assistant",
 `Contexto cargado.
-Aeronave: ${document.getElementById("aircraftModel").value || "No ingresado"}
-Serial: ${document.getElementById("serialNumber").value || "No ingresado"}
-ATA: ${document.getElementById("ataSelect").value || "No seleccionado"}
-Falla: ${document.getElementById("reportedFault").value || "Sin descripción"}
+Aeronave: ${d.aircraft}
+Serial: ${d.serial}
+ATA: ${d.ata}
+Falla: ${d.fault}
 Pins encontrados: ${state.foundPins.length}
-Líneas relevantes: ${state.relevantLines.length}`
+Pins priorizados: ${state.rankedPins.length}`
 );
 }
 
@@ -388,46 +392,22 @@ socketCheck: document.getElementById("socketCheck").value || ""
 function detectFromFreeText(text){
 const lower = text.toLowerCase();
 if(lower.includes("lh") && lower.includes("verde") && lower.includes("apag")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "green_lh_off",
-label: "Luz verde LH apagada"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_lh_off", label: "Luz verde LH apagada" };
 }
 if(lower.includes("rh") && lower.includes("verde") && lower.includes("apag")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "green_rh_off",
-label: "Luz verde RH apagada"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_rh_off", label: "Luz verde RH apagada" };
 }
 if((lower.includes("todas") && lower.includes("luces")) || lower.includes("all lights")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "all_indication_fail",
-label: "Todas las luces fallan"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "all_indication_fail", label: "Todas las luces fallan" };
 }
 if(lower.includes("unsafe")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "unsafe_indication",
-label: "Indicación unsafe"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "unsafe_indication", label: "Indicación unsafe" };
 }
 if(lower.includes("transit") || lower.includes("tránsito")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "transit_light_on",
-label: "Luz de tránsito encendida"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "transit_light_on", label: "Luz de tránsito encendida" };
 }
 if(lower.includes("horn") || lower.includes("bocina") || lower.includes("warning")){
-return {
-ata: "ATA 32 - Landing Gear Indication",
-faultType: "warning_horn",
-label: "Bocina de warning"
-};
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "warning_horn", label: "Bocina de warning" };
 }
 if(lower.includes("presur") || lower.includes("cabina") || lower.includes("bleed") || lower.includes("cabin climb")){
 return {
@@ -459,14 +439,11 @@ if(!text){
 addChat("assistant", "Primero escribe la falla reportada.");
 return;
 }
-
 const detected = detectFromFreeText(text);
 if(detected.ata) document.getElementById("ataSelect").value = detected.ata;
 if(detected.faultType) document.getElementById("faultType").value = detected.faultType;
-
 state.autoAta = detected.ata;
 state.autoFaultType = detected.faultType;
-
 renderWdmRoute();
 addChat("assistant",
 `Análisis automático completado.
@@ -485,86 +462,178 @@ return;
 const arrayBuffer = await file.arrayBuffer();
 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 
-let fullText = "";
+state.pdfPages = [];
 for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++){
 const page = await pdf.getPage(pageNum);
 const content = await page.getTextContent();
 const pageText = content.items.map(item => item.str).join(" ");
-fullText += "\n" + pageText;
+state.pdfPages.push({ page: pageNum, text: pageText });
 }
 
-state.pdfText = fullText;
 analyzePdfText();
-addChat("assistant", `PDF leído correctamente. Páginas: ${pdf.numPages}. Texto extraído y analizado.`);
-}
-
-function analyzePdfText(){
-const text = state.pdfText || "";
-const fault = (document.getElementById("reportedFault").value || "").toLowerCase();
-const ata = document.getElementById("ataSelect").value || state.autoAta || "";
-const faultType = document.getElementById("faultType").value || state.autoFaultType || "";
-
-const pinRegex = /\b(?:J|P|K|S|L|CB|TB)\s?-?\d+[A-Z0-9-]*\b|\bPIN\s?[A-Z0-9]+\b/gi;
-const pins = [...new Set((text.match(pinRegex) || []).slice(0, 80))];
-state.foundPins = pins;
-
-const lines = text.split(/\n+/).flatMap(line => line.split(/(?<=\.)\s+/));
-const keywords = buildKeywords(ata, faultType, fault);
-state.relevantLines = lines.filter(line => {
-const lower = line.toLowerCase();
-return keywords.some(k => lower.includes(k));
-}).slice(0, 20);
-
-renderPinResults();
-renderRelevantLines();
-renderWdmRoute();
+addChat("assistant", `PDF leído correctamente. Páginas: ${pdf.numPages}. Texto extraído y priorizado.`);
 }
 
 function buildKeywords(ata, faultType, fault){
-const base = [];
-if(ata.includes("ATA 32")) base.push("gear", "downlock", "unsafe", "transit", "horn", "annunciator", "indicator", "lamp");
-if(ata.includes("ATA 21")) base.push("pressur", "bleed", "outflow", "controller", "cabin");
-if(ata.includes("ATA 24")) base.push("bus", "relay", "contactor", "power", "load", "ground", "cb");
-if(ata.includes("ATA 27")) base.push("trim", "actuator", "control", "switch", "flap", "relay");
-if(faultType.includes("lh")) base.push("lh", "left");
-if(faultType.includes("rh")) base.push("rh", "right");
-fault.toLowerCase().split(/\s+/).forEach(w => { if(w.length > 2) base.push(w); });
-return [...new Set(base)];
+const keys = [];
+if(ata.includes("ATA 32")) keys.push("gear","downlock","unsafe","transit","horn","annunciator","indicator","lamp","gear warning");
+if(ata.includes("ATA 21")) keys.push("pressur","bleed","outflow","controller","cabin");
+if(ata.includes("ATA 24")) keys.push("bus","relay","contactor","power","load","ground","cb","coil");
+if(ata.includes("ATA 27")) keys.push("trim","actuator","control","switch","flap","relay","servo");
+if(faultType.includes("lh")) keys.push("lh","left");
+if(faultType.includes("rh")) keys.push("rh","right");
+if(faultType.includes("green")) keys.push("green","lamp","indicator");
+fault.toLowerCase().split(/\s+/).forEach(w => { if(w.length > 2) keys.push(w); });
+return [...new Set(keys)];
+}
+
+function analyzePdfText(){
+const d = buildDiagnosticData();
+const keywords = buildKeywords(d.ata, d.faultType, d.fault);
+
+const pinRegex = /\b(?:J|P|K|S|L|CB|TB)\s?-?\d+[A-Z0-9-]*\b|\bPIN\s?[A-Z0-9]+\b/gi;
+const lineResults = [];
+
+state.pdfPages.forEach(pageObj => {
+const chunks = pageObj.text.split(/(?<=[\.\;\:])\s+|\n+/);
+chunks.forEach(chunk => {
+const text = chunk.trim();
+if(!text) return;
+
+const pins = [...new Set(text.match(pinRegex) || [])];
+if(!pins.length) return;
+
+let score = 0;
+const lower = text.toLowerCase();
+
+keywords.forEach(k => {
+if(lower.includes(k)) score += 3;
+});
+
+if(d.faultType === "green_lh_off" && (lower.includes("lh") || lower.includes("left"))) score += 10;
+if(d.faultType === "green_rh_off" && (lower.includes("rh") || lower.includes("right"))) score += 10;
+if(d.ata.includes("ATA 32") && (lower.includes("downlock") || lower.includes("gear"))) score += 8;
+if(d.ata.includes("ATA 24") && (lower.includes("relay") || lower.includes("bus") || lower.includes("contactor"))) score += 8;
+if(d.ata.includes("ATA 27") && (lower.includes("trim") || lower.includes("actuator") || lower.includes("control"))) score += 8;
+if(d.ata.includes("ATA 21") && (lower.includes("bleed") || lower.includes("outflow") || lower.includes("controller"))) score += 8;
+
+lineResults.push({
+page: pageObj.page,
+text,
+pins,
+score
+});
+});
+});
+
+lineResults.sort((a,b) => b.score - a.score);
+state.relevantLines = lineResults.filter(x => x.score > 0).slice(0, 20);
+
+const pinMap = new Map();
+state.relevantLines.forEach(item => {
+item.pins.forEach(pin => {
+const prev = pinMap.get(pin) || { pin, score: 0, pages: new Set(), samples: [] };
+prev.score += item.score;
+prev.pages.add(item.page);
+if(prev.samples.length < 3) prev.samples.push(item.text);
+pinMap.set(pin, prev);
+});
+});
+
+state.foundPins = [...pinMap.keys()];
+state.rankedPins = [...pinMap.values()]
+.map(x => ({
+pin: x.pin,
+score: x.score,
+pages: [...x.pages],
+samples: x.samples
+}))
+.sort((a,b) => b.score - a.score)
+.slice(0, 20);
+
+renderPinResults();
+renderRelevantLines();
+renderMeasurementPlan();
+renderWdmRoute();
 }
 
 function renderPinResults(){
-const box = document.getElementById("wdmPins");
-if(!state.foundPins.length){
-box.innerHTML = "No se encontraron conectores o pines claros en el texto.";
+const box = document.getElementById("topPins");
+if(!state.rankedPins.length){
+box.innerHTML = "No se encontraron conectores o pines priorizados todavía.";
 return;
 }
-box.innerHTML = state.foundPins.map(p => `<span class="pill">${p}</span>`).join("");
+
+box.innerHTML = state.rankedPins.map(item => `
+<div class="rank-item">
+<div><b>${escapeHtml(item.pin)}</b> <span class="pill">score ${item.score}</span></div>
+<div class="muted">Páginas: ${item.pages.join(", ")}</div>
+<div style="margin-top:6px;">${escapeHtml(item.samples[0] || "")}</div>
+</div>
+`).join("");
 }
 
 function renderRelevantLines(){
-const box = document.getElementById("wdmRelevant");
+const box = document.getElementById("relevantLines");
 if(!state.relevantLines.length){
 box.innerHTML = "No se encontraron líneas relevantes todavía.";
 return;
 }
-box.innerHTML = state.relevantLines.map(l => `<div style="margin-bottom:8px;">• ${escapeHtml(l)}</div>`).join("");
+
+box.innerHTML = state.relevantLines.map(item => `
+<div style="margin-bottom:10px;">
+<div><span class="pill">pág. ${item.page}</span><span class="pill">score ${item.score}</span></div>
+<div>${escapeHtml(item.text)}</div>
+</div>
+`).join("");
+}
+
+function renderMeasurementPlan(){
+const d = buildDiagnosticData();
+const box = document.getElementById("measurementPlan");
+const plan = [];
+
+if(state.rankedPins.length){
+const top1 = state.rankedPins[0];
+const top2 = state.rankedPins[1];
+const top3 = state.rankedPins[2];
+
+plan.push(`Punto 1: revisar ${top1.pin} (prioridad más alta, páginas ${top1.pages.join(", ")}).`);
+if(top2) plan.push(`Punto 2: cruzar continuidad/voltaje con ${top2.pin}.`);
+if(top3) plan.push(`Punto 3: confirmar ruta hacia ${top3.pin}.`);
+}
+
+if(d.ata.includes("ATA 32") && d.faultType === "green_lh_off"){
+plan.push("Confirmar continuidad del downlock switch LH antes de culpar panel.");
+plan.push("Si continuidad OK, medir voltaje en el siguiente punto priorizado de la ruta LH.");
+}
+if(d.ata.includes("ATA 24")){
+plan.push("Separar feed → protection → relay → load → ground.");
+}
+if(d.ata.includes("ATA 27")){
+plan.push("Separar input → relay → actuator → ground.");
+}
+if(d.ata.includes("ATA 21")){
+plan.push("Separar bleed source → controller → outflow → leak.");
+}
+
+box.innerHTML = plan.length
+? plan.map(x => `<div style="margin-bottom:8px;">• ${escapeHtml(x)}</div>`).join("")
+: "Sin plan de medición todavía.";
 }
 
 function renderWdmRoute(){
 const d = buildDiagnosticData();
 const route = getSimulatedRoute(d.ata, d.faultType);
-const routeBox = document.getElementById("wdmRoute");
-routeBox.innerHTML = route.map((node, i) =>
+document.getElementById("wdmRoute").innerHTML = route.map((node, i) =>
 `<span class="node">${escapeHtml(node)}</span>${i < route.length - 1 ? '<span class="arrow">→</span>' : ''}`
 ).join("");
-
-const points = getSuggestedMeasurementPoints(d.ata, d.faultType);
-document.getElementById("wdmPoints").innerHTML = points.map(p => `<div style="margin-bottom:8px;">• ${escapeHtml(p)}</div>`).join("");
 
 document.getElementById("wdmSummary").innerHTML = `
 <p><b>ATA:</b> ${escapeHtml(d.ata || "No seleccionado")}</p>
 <p><b>Falla:</b> ${escapeHtml(d.fault || "Sin descripción")}</p>
-<p><b>Pins encontrados en PDF:</b> ${state.foundPins.length}</p>
+<p><b>Pins encontrados:</b> ${state.foundPins.length}</p>
+<p><b>Pins priorizados:</b> ${state.rankedPins.length}</p>
 `;
 }
 
@@ -596,80 +665,32 @@ return ["CONTROL INPUT","PROTECTION","RELAY","ACTUATOR","GROUND"];
 return ["SOURCE","CONTROL","LOAD","GROUND"];
 }
 
-function getSuggestedMeasurementPoints(ata, faultType){
-if(ata.includes("ATA 32") && faultType === "green_lh_off"){
-return [
-"Medir continuidad entre terminales del downlock switch LH.",
-"Medir voltaje en feed del socket LH respecto a ground confiable.",
-"Verificar retorno a tierra del indicador LH."
-];
-}
-if(ata.includes("ATA 24") && faultType === "relay_issue"){
-return [
-"Medir voltaje en entrada del relay.",
-"Medir activación de coil del relay.",
-"Medir salida del relay hacia la carga."
-];
-}
-if(ata.includes("ATA 24")){
-return [
-"Medir voltaje en feed principal del circuito.",
-"Medir salida después de la protección.",
-"Verificar ground en la carga."
-];
-}
-if(ata.includes("ATA 27")){
-return [
-"Confirmar input desde el control o switch.",
-"Verificar salida del relay o driver.",
-"Medir feed en el actuador."
-];
-}
-if(ata.includes("ATA 21")){
-return [
-"Confirmar bleed source disponible.",
-"Verificar comando del controller.",
-"Separar leak, outflow o control."
-];
-}
-return ["Separar fuente, control, carga y retorno."];
-}
-
 function buildAutomaticConclusion(d){
 const m = state.measurements;
-
 if(d.ata.includes("ATA 32")){
 if(m.continuity_fail) return "Conclusión automática: la falla queda cargada a switch, ajuste o conector inmediato.";
 if(m.continuity_ok && m.no_voltage) return "Conclusión automática: el switch pierde prioridad y el foco sube a cableado, feed o panel.";
 if(m.continuity_ok && m.voltage_ok) return "Conclusión automática: el foco baja a socket, indicador/lámpara o ground.";
 if(m.lamp_fail) return "Conclusión automática: sube prioridad de feed común, annunciator o panel.";
 }
-
 if(d.ata.includes("ATA 21")){
-if(m.mechanical_fail) return "Conclusión automática: primero corregir condición física o sellado antes de profundizar en control.";
 return "Conclusión automática: separar bleed source, outflow, controller y leak.";
 }
-
 if(d.ata.includes("ATA 24")){
 if(m.no_voltage) return "Conclusión automática: foco en feed, bus, CB, relay o protección.";
-if(m.voltage_ok) return "Conclusión automática: la energía llega; el foco baja a carga o ground.";
 if(m.relay_fail) return "Conclusión automática: relay/contactador sube como sospecha principal.";
+if(m.voltage_ok) return "Conclusión automática: la energía llega; el foco baja a carga o ground.";
 }
-
 if(d.ata.includes("ATA 27")){
 if(m.no_voltage) return "Conclusión automática: revisar input, relay o protección antes de culpar actuador.";
 if(m.voltage_ok) return "Conclusión automática: actuador o salida mecánica gana prioridad.";
 }
-
 return "Conclusión automática: se necesitan más mediciones para cerrar el caso con precisión.";
 }
 
 function runDiagnostic(){
 const d = buildDiagnosticData();
 const route = getSimulatedRoute(d.ata, d.faultType);
-const points = getSuggestedMeasurementPoints(d.ata, d.faultType);
-
-latestDiagnosticSummary = `${d.ata}: ${d.fault}`;
 
 document.getElementById("resultContent").innerHTML = `
 <p><b>Aeronave:</b> ${escapeHtml(d.aircraft)}</p>
@@ -677,28 +698,25 @@ document.getElementById("resultContent").innerHTML = `
 <p><b>ATA:</b> ${escapeHtml(d.ata)}</p>
 <p><b>Falla:</b> ${escapeHtml(d.fault)}</p>
 <p><b>Ruta lógica:</b> ${route.map(escapeHtml).join(" → ")}</p>
-<h4>Mediciones sugeridas</h4>
-<ul>${points.map(p => `<li>${escapeHtml(p)}</li>`).join("")}</ul>
+<p><b>Pin prioritario actual:</b> ${escapeHtml(state.rankedPins[0]?.pin || "Sin pin priorizado todavía")}</p>
 <h4>Conclusión automática actual</h4>
 <p>${escapeHtml(buildAutomaticConclusion(d))}</p>
 `;
 state.contextLoaded = true;
 renderWdmRoute();
-addChat("assistant", "Diagnóstico principal ejecutado. Ya tengo contexto del caso y ruta WDM activa.");
+renderMeasurementPlan();
+addChat("assistant", "Diagnóstico principal ejecutado. Ya tengo contexto del caso, ruta WDM y pines priorizados.");
 }
 
 function applyMeasurement(type){
 state.measurements[type] = true;
-
 let response = "";
 if(type === "continuity_ok") response = "Medición registrada: continuidad OK. El tramo medido queda menos sospechoso.";
 if(type === "continuity_fail") response = "Medición registrada: sin continuidad. El circuito está abierto en ese tramo o elemento.";
 if(type === "voltage_ok") response = "Medición registrada: voltaje OK. La alimentación llega a ese punto.";
 if(type === "no_voltage") response = "Medición registrada: sin voltaje. El problema está aguas arriba.";
-if(type === "lamp_ok") response = "Medición registrada: lamp test OK. La alimentación común pierde prioridad.";
-if(type === "lamp_fail") response = "Medición registrada: lamp test FAIL. Suben como sospecha el feed común, annunciator o panel.";
-if(type === "mechanical_ok") response = "Medición registrada: condición mecánica OK. La indicación eléctrica gana prioridad.";
-if(type === "mechanical_fail") response = "Medición registrada: condición mecánica FAIL. Primero corregir condición física.";
+if(type === "ground_ok") response = "Medición registrada: ground OK. El retorno en ese punto queda menos sospechoso.";
+if(type === "ground_fail") response = "Medición registrada: ground FAIL. El retorno sube como sospecha.";
 if(type === "relay_ok") response = "Medición registrada: relay OK. El relay pierde prioridad.";
 if(type === "relay_fail") response = "Medición registrada: relay FAIL. El relay/contactador sube como sospecha principal.";
 addChat("assistant", response);
@@ -707,27 +725,42 @@ const d = buildDiagnosticData();
 document.getElementById("resultContent").innerHTML += `<p><b>Actualización:</b> ${escapeHtml(buildAutomaticConclusion(d))}</p>`;
 }
 
+function getSuggestedPin(){
+if(state.rankedPins.length) return state.rankedPins[0];
+return null;
+}
+
 function buildSmartReply(message){
 const lower = message.toLowerCase();
 const d = buildDiagnosticData();
+const suggested = getSuggestedPin();
 
 if(!state.contextLoaded){
 return "Primero ejecuta el diagnóstico o usa el contexto del caso.";
 }
 
 if(lower.includes("pin sugerido")){
-if(state.foundPins.length) return `Primer pin/conector encontrado en PDF: ${state.foundPins[0]}`;
-return "Aún no hay pines encontrados en el PDF. Carga un PDF WDM y léelo.";
+if(suggested){
+return `Pin/conector sugerido principal: ${suggested.pin}
+Score: ${suggested.score}
+Páginas: ${suggested.pages.join(", ")}
+Contexto: ${suggested.samples[0] || "Sin muestra"}`;
+}
+return "Aún no hay pin sugerido. Carga un PDF WDM y léelo.";
 }
 
 if(lower.includes("qué mido") || lower.includes("que mido")){
-const points = getSuggestedMeasurementPoints(d.ata, d.faultType);
-return "Yo mediría en este orden:\n\n- " + points.join("\n- ");
+const steps = [];
+if(suggested) steps.push(`1. Revisar ${suggested.pin} porque es el pin mejor priorizado.`);
+if(state.rankedPins[1]) steps.push(`2. Cruzar con ${state.rankedPins[1].pin}.`);
+if(state.rankedPins[2]) steps.push(`3. Confirmar continuidad/voltaje hacia ${state.rankedPins[2].pin}.`);
+if(!steps.length) steps.push("1. Carga un PDF WDM o ejecuta el análisis para priorizar pines.");
+return "Yo mediría en este orden:\n\n- " + steps.join("\n- ");
 }
 
 if(lower.includes("tengo continuidad")){
 state.measurements.continuity_ok = true;
-return "Perfecto. Entonces el tramo medido queda menos sospechoso. Ahora necesito voltaje en el punto siguiente de la ruta.";
+return "Perfecto. Entonces el tramo medido queda menos sospechoso. Ahora necesito voltaje en el siguiente punto priorizado de la ruta.";
 }
 
 if(lower.includes("no tengo continuidad") || lower.includes("sin continuidad")){
@@ -749,24 +782,21 @@ if(lower.includes("qué concluyes") || lower.includes("que concluyes") || lower.
 return buildAutomaticConclusion(d);
 }
 
-if(lower.includes("wdm") || lower.includes("pdf") || lower.includes("pin") || lower.includes("conector")){
-if(!state.pdfText) return "Todavía no hay PDF leído. Primero carga un WDM en PDF y presiona 'Leer PDF WDM'.";
-return `Pins/conectores encontrados: ${state.foundPins.slice(0, 10).join(", ") || "ninguno"}.
+if(lower.includes("wdm") || lower.includes("pdf") || lower.includes("conector")){
+if(!state.pdfPages.length) return "Todavía no hay PDF leído. Primero carga un WDM en PDF y presiona 'Leer PDF WDM'.";
+return `Pins priorizados: ${state.rankedPins.slice(0,5).map(x => x.pin).join(", ") || "ninguno"}.
 Líneas relevantes: ${state.relevantLines.length}.`;
 }
 
 if(d.ata.includes("ATA 24")){
 return "En ATA 24 pienso así: feed → protection → relay → load → ground. Dime cuál de esas etapas ya mediste.";
 }
-
 if(d.ata.includes("ATA 27")){
 return "En ATA 27 pienso así: input → relay → actuator → ground. Dime si ya confirmaste input o alimentación.";
 }
-
 if(d.ata.includes("ATA 21")){
 return "En ATA 21 necesito separar bleed source, controller, outflow y leak. Dime cuál de esas ramas ya descartaste.";
 }
-
 return "Dame un dato técnico más específico: qué mediste, dónde lo mediste o qué condición confirmaste.";
 }
 
@@ -781,10 +811,10 @@ ata: d.ata,
 faultType: d.faultType,
 fault: d.fault,
 conclusion: buildAutomaticConclusion(d),
-foundPins: state.foundPins.slice(0, 10)
+topPins: state.rankedPins.slice(0,5).map(x => x.pin)
 };
 state.history.unshift(item);
-localStorage.setItem("gt_nivel2_real_history", JSON.stringify(state.history));
+localStorage.setItem("gt_nivel3_history", JSON.stringify(state.history));
 renderHistory();
 alert("Caso guardado correctamente.");
 }
@@ -793,19 +823,18 @@ function renderHistory(){
 const q = (document.getElementById("historySearch").value || "").toLowerCase();
 const box = document.getElementById("historyList");
 const filtered = state.history.filter(x =>
-`${x.ata} ${x.aircraft} ${x.serial} ${x.fault} ${x.conclusion} ${(x.foundPins || []).join(" ")}`.toLowerCase().includes(q)
+`${x.ata} ${x.aircraft} ${x.serial} ${x.fault} ${x.conclusion} ${(x.topPins || []).join(" ")}`.toLowerCase().includes(q)
 );
-
 if(!filtered.length){
 box.innerHTML = "No hay casos guardados todavía.";
 return;
 }
-
 box.innerHTML = filtered.map(x => `
 <div class="history-item">
 <div><b>${escapeHtml(x.ata)}</b> - ${escapeHtml(x.fault)}</div>
 <div class="muted">${escapeHtml(x.aircraft)} | ${escapeHtml(x.serial)} | ${escapeHtml(x.createdAt)}</div>
 <div style="margin-top:6px;">${escapeHtml(x.conclusion)}</div>
+<div style="margin-top:6px;">${(x.topPins || []).map(p => `<span class="pill">${escapeHtml(p)}</span>`).join("")}</div>
 </div>
 `).join("");
 }
@@ -824,12 +853,13 @@ document.getElementById("wdmPdfInput").value = "";
 document.getElementById("resultContent").innerHTML = "Sin diagnóstico todavía.";
 document.getElementById("wdmSummary").innerHTML = "Sin WDM cargado.";
 document.getElementById("wdmRoute").innerHTML = "";
-document.getElementById("wdmPoints").innerHTML = "";
-document.getElementById("wdmPins").innerHTML = "";
-document.getElementById("wdmRelevant").innerHTML = "";
-state.pdfText = "";
-state.relevantLines = [];
+document.getElementById("measurementPlan").innerHTML = "";
+document.getElementById("topPins").innerHTML = "";
+document.getElementById("relevantLines").innerHTML = "";
+state.pdfPages = [];
 state.foundPins = [];
+state.rankedPins = [];
+state.relevantLines = [];
 state.contextLoaded = false;
 state.measurements = {};
 state.autoAta = "";
@@ -850,3 +880,4 @@ renderHistory();
 </script>
 </body>
 </html>
+
