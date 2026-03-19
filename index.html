@@ -3,200 +3,762 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>G&T Aircraft Troubleshooting - Nivel 8</title>
+<title>G&T Aircraft Diagnostic</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#1f2b3a}
-.app{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
-.sidebar{background:#17365f;color:#fff;padding:20px 16px;display:flex;flex-direction:column;gap:18px}
-.brand{display:flex;gap:12px;align-items:center;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.12)}
-.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(180deg,#8fb4e8,#d9e7fa);color:#17365f;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:22px}
-.brand h1{font-size:20px;line-height:1.1}
-.brand p{font-size:12px;opacity:.82;margin-top:4px}
-.nav-group{display:flex;flex-direction:column;gap:8px}
-.nav-title{font-size:11px;letter-spacing:.5px;text-transform:uppercase;opacity:.72;margin-bottom:4px}
-.nav-btn{border:none;background:rgba(255,255,255,.06);color:#fff;padding:12px 14px;border-radius:12px;text-align:left;cursor:pointer;font-weight:700}
-.nav-btn:hover,.nav-btn.active{background:#2f67b8}
-.side-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px}
-.side-card h3{font-size:14px;margin-bottom:8px}
-.side-card p{font-size:12px;line-height:1.5;opacity:.92}
-.main{display:flex;flex-direction:column;min-width:0}
-.topbar{background:#fff;border-bottom:1px solid #d8e2ef;padding:16px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px}
-.topbar-left h2{font-size:24px;color:#224d88}
-.topbar-left p{font-size:13px;color:#647284;margin-top:4px}
-.topbar-right{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.pill{display:inline-block;background:#eef3f9;color:#304155;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:700}
-.btn{border:none;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:700}
-.btn-primary{background:linear-gradient(180deg,#4f8de0,#2c67b8);color:#fff}
-.btn-soft{background:#eef3f9;color:#304155}
-.btn-danger{background:#fff1ef;color:#8d2c1f;border:1px solid #f0c1b8}
-.workspace{padding:18px 22px;display:grid;gap:18px}
-.status-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.card{background:#fff;border:1px solid #d8e2ef;border-radius:16px;padding:16px}
-.status-card .label{font-size:11px;color:#6e7b8c;font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px}
-.status-card .value{font-size:14px;font-weight:700;line-height:1.45}
-.view{display:none}
-.view.active{display:block}
-.grid-2{display:grid;grid-template-columns:1.2fr 1fr;gap:18px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.field{margin-bottom:12px}
-.field label{display:block;margin-bottom:6px;font-size:13px;font-weight:700;color:#334254}
-.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #ced8e5;border-radius:10px;font-size:14px;background:#fff}
-.field textarea{min-height:110px;resize:vertical}
-.row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.scroll{border:1px solid #d8e2ef;border-radius:10px;background:#fbfdff;padding:10px;max-height:260px;overflow:auto;font-size:13px}
-.timeline-entry,.item-row,.alert-row{padding:8px 0;border-bottom:1px solid #edf2f8}
-.timeline-entry:last-child,.item-row:last-child,.alert-row:last-child{border-bottom:none}
-.path{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.node{background:#eef3f9;border:1px solid #d8e2ef;border-radius:999px;padding:7px 10px;font-size:12px;font-weight:700;color:#304155}
-.arrow{color:#2c67b8;font-weight:700}
-.score-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:10px}
-.bar{height:10px;background:#eef3f9;border-radius:999px;overflow:hidden}
-.bar-fill{height:100%;background:linear-gradient(90deg,#7da9ec,#2c67b8)}
-.case-card{border:1px solid #d8e2ef;border-radius:12px;padding:12px;background:#fff;margin-bottom:10px}
-.case-card h4{color:#224d88;margin-bottom:6px}
-.case-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.chat-layout{display:grid;grid-template-columns:1fr 380px;gap:18px}
-.chat-box{border:1px solid #d8e2ef;border-radius:12px;background:#fcfdff;padding:14px;min-height:420px;max-height:420px;overflow:auto}
-.msg{display:flex;margin-bottom:12px}
-.msg.user{justify-content:flex-end}
-.bubble{max-width:84%;padding:12px 14px;border-radius:14px;white-space:pre-line;line-height:1.5;font-size:14px}
-.msg.user .bubble{background:#2c67b8;color:#fff}
-.msg.assistant .bubble{background:#eef3f9;color:#1f2b3a}
-.chat-input{display:flex;gap:8px;margin-top:10px}
-.chat-input input{flex:1;padding:12px;border:1px solid #ced8e5;border-radius:10px}
-.toast-wrap{position:fixed;top:18px;right:18px;display:flex;flex-direction:column;gap:10px;z-index:5000}
-.toast{background:#17365f;color:#fff;padding:12px 14px;border-radius:12px;min-width:240px;box-shadow:0 10px 24px rgba(0,0,0,.15)}
-.toast small{display:block;opacity:.8;margin-top:4px}
-.muted{font-size:12px;color:#6e7b8c}
-.ok{color:#1f6b38}.warn{color:#8b5c00}.bad{color:#8d2c1f}
+:root{
+--bg:#07111f;
+--bg2:#0b1a2f;
+--panel:#0f1d33;
+--panel-2:#132642;
+--line:#264362;
+--soft:#8fa8c6;
+--text:#eaf2ff;
+--title:#ffffff;
+--accent:#39a0ff;
+--accent-2:#1d6fff;
+--ok:#1fc77a;
+--warn:#ffb020;
+--bad:#ff5f6d;
+--shadow:0 16px 40px rgba(0,0,0,.35);
+}
+
+body{
+font-family:Arial,Helvetica,sans-serif;
+background:
+radial-gradient(circle at 15% 20%, rgba(57,160,255,.18), transparent 22%),
+radial-gradient(circle at 85% 10%, rgba(29,111,255,.16), transparent 24%),
+linear-gradient(180deg,#05101d 0%, #07111f 100%);
+color:var(--text);
+min-height:100vh;
+}
+
+.app-shell{
+max-width:1560px;
+margin:18px auto;
+padding:0 16px 30px;
+}
+
+.top-hero{
+position:relative;
+overflow:hidden;
+border:1px solid rgba(116,154,199,.22);
+border-radius:26px;
+background:
+linear-gradient(135deg, rgba(13,28,48,.96) 0%, rgba(7,21,38,.94) 48%, rgba(14,43,84,.96) 100%);
+box-shadow:var(--shadow);
+min-height:260px;
+margin-bottom:18px;
+}
+
+.top-hero::before{
+content:"";
+position:absolute;
+inset:0;
+background:
+linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px),
+linear-gradient(180deg, rgba(255,255,255,.03) 1px, transparent 1px);
+background-size:32px 32px;
+opacity:.35;
+pointer-events:none;
+}
+
+.hero-content{
+position:relative;
+z-index:2;
+display:grid;
+grid-template-columns:1.1fr .9fr;
+gap:20px;
+padding:28px 28px 22px;
+min-height:260px;
+}
+
+.brand-row{
+display:flex;
+align-items:center;
+gap:14px;
+margin-bottom:18px;
+}
+
+.logo{
+width:68px;
+height:68px;
+border-radius:16px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:700;
+font-size:24px;
+color:#0f2441;
+background:linear-gradient(180deg,#d8e6fb,#7eb4ff);
+box-shadow:0 10px 26px rgba(57,160,255,.28);
+}
+
+.brand-row h1{
+font-size:34px;
+letter-spacing:.4px;
+color:var(--title);
+line-height:1.05;
+margin-bottom:4px;
+}
+
+.brand-row p{
+color:#a8bdd9;
+font-size:14px;
+}
+
+.hero-left h2{
+font-size:40px;
+line-height:1.02;
+margin-bottom:12px;
+color:#fff;
+max-width:700px;
+}
+
+.hero-left .subtitle{
+color:#b5c8e0;
+font-size:18px;
+line-height:1.55;
+max-width:760px;
+margin-bottom:18px;
+}
+
+.hero-badges{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.badge{
+border:1px solid rgba(111,157,214,.28);
+background:rgba(255,255,255,.05);
+color:#d7e8ff;
+padding:8px 12px;
+border-radius:999px;
+font-size:12px;
+font-weight:700;
+}
+
+.hero-right{
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+min-height:220px;
+}
+
+.hero-tech{
+width:100%;
+height:100%;
+border-radius:22px;
+border:1px solid rgba(113,157,215,.16);
+background:
+radial-gradient(circle at 30% 30%, rgba(57,160,255,.22), transparent 20%),
+radial-gradient(circle at 72% 52%, rgba(29,111,255,.20), transparent 18%),
+linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+position:relative;
+overflow:hidden;
+}
+
+.hero-tech svg{
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
+opacity:.95;
+}
+
+.hero-status{
+position:absolute;
+right:18px;
+top:18px;
+z-index:3;
+display:flex;
+flex-direction:column;
+gap:10px;
+width:260px;
+}
+
+.mini-box{
+background:rgba(8,18,34,.72);
+border:1px solid rgba(120,159,205,.2);
+border-radius:14px;
+padding:12px;
+backdrop-filter:blur(8px);
+}
+
+.mini-box .label{
+color:#7f9cc0;
+font-size:11px;
+text-transform:uppercase;
+font-weight:700;
+margin-bottom:6px;
+letter-spacing:.4px;
+}
+
+.mini-box .value{
+color:#eef5ff;
+font-size:14px;
+font-weight:700;
+line-height:1.4;
+}
+
+.grid-main{
+display:grid;
+grid-template-columns:1.1fr 1fr 1fr;
+gap:18px;
+margin-bottom:18px;
+}
+
+.panel{
+background:linear-gradient(180deg, rgba(16,31,52,.96), rgba(10,21,38,.98));
+border:1px solid rgba(116,154,199,.18);
+border-radius:22px;
+box-shadow:var(--shadow);
+overflow:hidden;
+}
+
+.panel-head{
+padding:18px 18px 14px;
+border-bottom:1px solid rgba(116,154,199,.12);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:12px;
+}
+
+.panel-head h3{
+font-size:24px;
+color:#fff;
+line-height:1.1;
+}
+
+.panel-head p{
+color:#8ba6c5;
+font-size:13px;
+margin-top:4px;
+}
+
+.panel-body{
+padding:18px;
+}
+
+.field{
+margin-bottom:12px;
+}
+
+.field label{
+display:block;
+margin-bottom:6px;
+font-size:13px;
+font-weight:700;
+color:#b8cde7;
+}
+
+.field input,
+.field select,
+.field textarea{
+width:100%;
+padding:12px 12px;
+border-radius:12px;
+border:1px solid rgba(115,154,202,.18);
+background:rgba(255,255,255,.04);
+color:#eef5ff;
+font-size:14px;
+outline:none;
+}
+
+.field input::placeholder,
+.field textarea::placeholder{
+color:#8ca5c0;
+}
+
+.field select option{
+color:#111;
+}
+
+.field textarea{
+resize:vertical;
+min-height:108px;
+}
+
+.row-2{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.btn-row{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:6px;
+}
+
+.btn{
+border:none;
+border-radius:12px;
+padding:12px 14px;
+font-weight:700;
+cursor:pointer;
+transition:.18s ease;
+}
+
+.btn:hover{
+transform:translateY(-1px);
+}
+
+.btn-primary{
+color:#fff;
+background:linear-gradient(180deg,var(--accent),var(--accent-2));
+box-shadow:0 12px 24px rgba(29,111,255,.22);
+}
+
+.btn-soft{
+color:#dcecff;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(120,159,205,.18);
+}
+
+.btn-ok{
+color:#fff;
+background:linear-gradient(180deg,#2cd48b,#16a861);
+}
+
+.btn-warn{
+color:#fff;
+background:linear-gradient(180deg,#ffbe3c,#db8b00);
+}
+
+.btn-bad{
+color:#fff;
+background:linear-gradient(180deg,#ff7382,#d94255);
+}
+
+.diagnostic-box{
+display:grid;
+gap:12px;
+}
+
+.info-card{
+border:1px solid rgba(116,154,199,.14);
+background:rgba(255,255,255,.03);
+border-radius:16px;
+padding:14px;
+}
+
+.info-card .title{
+font-size:12px;
+color:#7ea0c6;
+text-transform:uppercase;
+font-weight:700;
+margin-bottom:8px;
+letter-spacing:.4px;
+}
+
+.info-card .value{
+font-size:18px;
+color:#fff;
+line-height:1.35;
+font-weight:700;
+}
+
+.info-card .sub{
+margin-top:6px;
+font-size:14px;
+color:#b6cae3;
+line-height:1.5;
+}
+
+.tag-row{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.tag{
+font-size:11px;
+font-weight:700;
+padding:6px 10px;
+border-radius:999px;
+background:rgba(57,160,255,.14);
+color:#cfe4ff;
+border:1px solid rgba(57,160,255,.18);
+}
+
+.chat-shell{
+display:flex;
+flex-direction:column;
+min-height:100%;
+}
+
+.chat-box{
+flex:1;
+border:1px solid rgba(116,154,199,.14);
+background:rgba(255,255,255,.03);
+border-radius:16px;
+padding:12px;
+max-height:430px;
+min-height:430px;
+overflow:auto;
+}
+
+.msg{
+display:flex;
+margin-bottom:12px;
+}
+
+.msg.user{
+justify-content:flex-end;
+}
+
+.bubble{
+max-width:88%;
+padding:12px 14px;
+border-radius:16px;
+white-space:pre-line;
+line-height:1.5;
+font-size:14px;
+}
+
+.msg.assistant .bubble{
+background:rgba(255,255,255,.07);
+color:#eaf2ff;
+border:1px solid rgba(120,159,205,.12);
+}
+
+.msg.user .bubble{
+background:linear-gradient(180deg,var(--accent),var(--accent-2));
+color:#fff;
+}
+
+.chat-actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin:12px 0 10px;
+}
+
+.mini-btn{
+padding:8px 10px;
+border-radius:10px;
+border:1px solid rgba(120,159,205,.14);
+background:rgba(255,255,255,.04);
+color:#dcecff;
+font-size:12px;
+font-weight:700;
+cursor:pointer;
+}
+
+.chat-input-row{
+display:flex;
+gap:8px;
+}
+
+.chat-input-row input{
+flex:1;
+padding:12px;
+border-radius:12px;
+border:1px solid rgba(115,154,202,.18);
+background:rgba(255,255,255,.04);
+color:#eef5ff;
+font-size:14px;
+}
+
+.lower-grid{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:18px;
+margin-bottom:18px;
+}
+
+.scroll-box{
+border:1px solid rgba(116,154,199,.14);
+background:rgba(255,255,255,.03);
+border-radius:16px;
+padding:12px;
+max-height:280px;
+overflow:auto;
+font-size:13px;
+}
+
+.item{
+border-bottom:1px solid rgba(116,154,199,.1);
+padding:10px 0;
+}
+
+.item:last-child{
+border-bottom:none;
+}
+
+.item-title{
+font-size:13px;
+color:#fff;
+font-weight:700;
+margin-bottom:4px;
+}
+
+.item-sub{
+color:#a9bfd8;
+line-height:1.45;
+font-size:13px;
+}
+
+.score-row{
+display:grid;
+grid-template-columns:1fr auto;
+gap:10px;
+align-items:center;
+margin-bottom:12px;
+}
+
+.score-label{
+color:#dcecff;
+font-size:13px;
+font-weight:700;
+margin-bottom:5px;
+}
+
+.bar{
+width:100%;
+height:10px;
+border-radius:999px;
+background:rgba(255,255,255,.06);
+overflow:hidden;
+}
+
+.bar-fill{
+height:100%;
+border-radius:999px;
+background:linear-gradient(90deg,#6dc3ff,#1d6fff);
+}
+
+.metric{
+font-size:12px;
+color:#fff;
+font-weight:700;
+}
+
+.path{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+align-items:center;
+}
+
+.node{
+padding:7px 10px;
+border-radius:999px;
+background:rgba(255,255,255,.06);
+border:1px solid rgba(120,159,205,.14);
+font-size:12px;
+font-weight:700;
+color:#e9f2ff;
+}
+
+.arrow{
+color:#5daeff;
+font-weight:700;
+}
+
+.footer-strip{
+display:grid;
+grid-template-columns:1fr 1fr 1fr 1fr;
+gap:18px;
+}
+
+.status-tile{
+background:linear-gradient(180deg, rgba(16,31,52,.96), rgba(10,21,38,.98));
+border:1px solid rgba(116,154,199,.18);
+border-radius:18px;
+padding:16px;
+box-shadow:var(--shadow);
+}
+
+.status-tile .label{
+font-size:11px;
+text-transform:uppercase;
+letter-spacing:.4px;
+color:#7ea0c6;
+font-weight:700;
+margin-bottom:8px;
+}
+
+.status-tile .value{
+color:#fff;
+font-size:15px;
+line-height:1.45;
+font-weight:700;
+}
+
+.toast-wrap{
+position:fixed;
+top:18px;
+right:18px;
+display:flex;
+flex-direction:column;
+gap:10px;
+z-index:9000;
+}
+
+.toast{
+min-width:260px;
+max-width:360px;
+padding:12px 14px;
+border-radius:14px;
+color:#fff;
+background:linear-gradient(180deg,#17365f,#10233e);
+border:1px solid rgba(122,165,221,.25);
+box-shadow:0 16px 28px rgba(0,0,0,.28);
+}
+
+.toast small{
+display:block;
+opacity:.8;
+margin-top:6px;
+}
+
 @media (max-width:1300px){
-.status-grid,.grid-3{grid-template-columns:1fr 1fr}
-.grid-2,.chat-layout{grid-template-columns:1fr}
+.hero-content,
+.grid-main,
+.lower-grid,
+.footer-strip{
+grid-template-columns:1fr;
 }
+.hero-right{
+min-height:260px;
+}
+}
+
 @media (max-width:980px){
-.app{grid-template-columns:1fr}
-.sidebar{display:none}
+.row-2{
+grid-template-columns:1fr;
 }
+.hero-left h2{
+font-size:34px;
+}
+.brand-row h1{
+font-size:28px;
+}
+}
+
 @media (max-width:760px){
-.status-grid,.grid-3,.row-2{grid-template-columns:1fr}
-.topbar{flex-direction:column;align-items:flex-start}
+.app-shell{
+padding:0 10px 20px;
+}
+.hero-content{
+padding:18px;
+}
+.panel-head,
+.panel-body{
+padding:14px;
+}
+.hero-status{
+position:static;
+width:100%;
+margin-top:10px;
+}
+.brand-row{
+align-items:flex-start;
+}
 }
 </style>
 </head>
 <body>
 <div class="toast-wrap" id="toastWrap"></div>
 
-<div class="app">
-<aside class="sidebar">
-<div class="brand">
+<div class="app-shell">
+<section class="top-hero">
+<div class="hero-content">
+<div class="hero-left">
+<div class="brand-row">
 <div class="logo">G&T</div>
 <div>
-<h1>Troubleshooting</h1>
-<p>Nivel 8 · App shell profesional</p>
+<h1>AIRCRAFT TROUBLESHOOTING</h1>
+<p>Sistema inteligente de diagnóstico aeronáutico asistido por IA</p>
 </div>
 </div>
 
-<div class="nav-group">
-<div class="nav-title">Navegación</div>
-<button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard', this)">Dashboard</button>
-<button class="nav-btn" data-view="cases" onclick="showView('cases', this)">Casos</button>
-<button class="nav-btn" data-view="documents" onclick="showView('documents', this)">Documentos</button>
-<button class="nav-btn" data-view="diagnosis" onclick="showView('diagnosis', this)">Diagnóstico</button>
-<button class="nav-btn" data-view="logic" onclick="showView('logic', this)">Árbol lógico</button>
-<button class="nav-btn" data-view="chat" onclick="showView('chat', this)">Chat IA</button>
-<button class="nav-btn" data-view="settings" onclick="showView('settings', this)">Base local</button>
-</div>
+<h2>Diagnóstico aeronáutico con una identidad visual más seria, moderna y tecnológica</h2>
+<p class="subtitle">
+Diseñado para uso personal y de trabajo real en rampa. Carga la falla, analiza el WDM,
+prioriza conectores y toma decisiones con lógica de troubleshooting paso a paso.
+</p>
 
-<div class="side-card">
-<h3>Estado actual</h3>
-<p id="sideState">Sin caso activo.</p>
-</div>
-
-<div class="side-card">
-<h3>Siguiente paso</h3>
-<p id="sideNext">Define el caso para comenzar.</p>
-</div>
-</aside>
-
-<main class="main">
-<div class="topbar">
-<div class="topbar-left">
-<h2>G&T Aircraft Troubleshooting</h2>
-<p>Frontend profesional, local-first y preparado para backend futuro</p>
-</div>
-<div class="topbar-right">
-<span class="pill" id="topCaseState">ABIERTO</span>
-<span class="pill" id="topPin">Sin pin</span>
-<button class="btn btn-soft" onclick="newCase()">Nuevo caso</button>
-<button class="btn btn-primary" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
+<div class="hero-badges">
+<span class="badge">Uso personal</span>
+<span class="badge">Uso en empresa</span>
+<span class="badge">WDM inteligente</span>
+<span class="badge">Troubleshooting guiado</span>
 </div>
 </div>
 
-<div class="workspace">
-<div class="status-grid">
-<div class="card status-card">
-<div class="label">Caso activo</div>
-<div class="value" id="statusCase">Sin caso activo</div>
+<div class="hero-right">
+<div class="hero-tech">
+<svg viewBox="0 0 800 420" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<linearGradient id="g1" x1="0" x2="1">
+<stop offset="0%" stop-color="#53b4ff" stop-opacity="0.95"/>
+<stop offset="100%" stop-color="#1d6fff" stop-opacity="0.5"/>
+</linearGradient>
+<linearGradient id="g2" x1="0" x2="1">
+<stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
+<stop offset="100%" stop-color="#86c6ff" stop-opacity="0.55"/>
+</linearGradient>
+</defs>
+
+<path d="M40 320 L240 295 L360 210 L520 185 L730 135 L760 152 L548 228 L410 248 L566 338 L556 350 L370 286 L300 292 L210 350 L168 352 L244 290 L42 332 Z"
+fill="url(#g1)" opacity="0.88"/>
+<path d="M158 125 L226 146 L455 116 L642 72 L728 62 L744 72 L642 100 L454 138 L286 156 L204 142 L160 134 Z"
+fill="url(#g2)" opacity="0.82"/>
+<circle cx="612" cy="94" r="9" fill="#9bd4ff" opacity="0.8"/>
+<circle cx="642" cy="84" r="5" fill="#9bd4ff" opacity="0.45"/>
+<circle cx="676" cy="73" r="3" fill="#9bd4ff" opacity="0.35"/>
+
+<path d="M70 85 C180 70, 300 74, 430 88" stroke="#4eb3ff" stroke-width="2" fill="none" opacity="0.35"/>
+<path d="M110 360 C250 328, 420 326, 710 302" stroke="#4eb3ff" stroke-width="2" fill="none" opacity="0.28"/>
+<path d="M620 60 L706 28" stroke="#8fd2ff" stroke-width="1.5" opacity="0.35"/>
+<path d="M520 185 L558 112" stroke="#8fd2ff" stroke-width="1.5" opacity="0.25"/>
+</svg>
 </div>
-<div class="card status-card">
-<div class="label">Última acción</div>
-<div class="value" id="statusAction">Sistema listo</div>
+
+<div class="hero-status">
+<div class="mini-box">
+<div class="label">Estado del caso</div>
+<div class="value" id="statusCaseState">ABIERTO</div>
 </div>
-<div class="card status-card">
+<div class="mini-box">
 <div class="label">Pin prioritario</div>
-<div class="value" id="statusPin">Sin pin priorizado</div>
+<div class="value" id="statusPinTop">Sin pin priorizado</div>
 </div>
-<div class="card status-card">
+<div class="mini-box">
 <div class="label">Siguiente medición</div>
-<div class="value" id="statusNext">Sin sugerencia todavía</div>
+<div class="value" id="statusNextTop">Sin sugerencia todavía</div>
 </div>
 </div>
-
-<section id="view-dashboard" class="view active">
-<div class="grid-3">
-<div class="card">
-<h3>Timeline</h3>
-<div id="timeline" class="scroll">Sin actividad todavía.</div>
-</div>
-<div class="card">
-<h3>Alertas</h3>
-<div id="alertsBox" class="scroll">Sin alertas todavía.</div>
-</div>
-<div class="card">
-<h3>Checklist técnico</h3>
-<div id="checklistBox" class="scroll">Sin checklist todavía.</div>
-</div>
-</div>
-
-<div class="grid-3">
-<div class="card">
-<h3>Score de sospecha</h3>
-<div id="scoreBoard">Sin evaluación todavía.</div>
-</div>
-<div class="card">
-<h3>Siguiente paso</h3>
-<div id="nextStepMain" class="scroll">Sin sugerencia todavía.</div>
-</div>
-<div class="card">
-<h3>Recomendación final</h3>
-<div id="recommendationBox" class="scroll">Sin recomendación todavía.</div>
 </div>
 </div>
 </section>
 
-<section id="view-cases" class="view">
-<div class="grid-2">
-<div class="card">
-<h3>Datos del caso</h3>
+<section class="grid-main">
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>✈️ Datos del caso</h3>
+<p>Ingreso rápido de la falla real en rampa</p>
+</div>
+</div>
+<div class="panel-body">
 <div class="row-2">
 <div class="field">
-<label>Modelo</label>
-<input id="aircraftModel" placeholder="King Air 200">
+<label>Modelo de aeronave</label>
+<input id="aircraftModel" placeholder="Ejemplo: King Air 200">
 </div>
 <div class="field">
-<label>Serial</label>
-<input id="serialNumber" placeholder="BB-143">
+<label>Número de serie</label>
+<input id="serialNumber" placeholder="Ejemplo: BB-143">
 </div>
 </div>
 
@@ -214,26 +776,23 @@ body{font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#1f2b3a}
 <div class="field">
 <label>Tipo de falla</label>
 <select id="faultType">
-<option value="">Selecciona falla</option>
+<option value="">Selecciona tipo de falla</option>
 <option value="green_lh_off">Luz verde LH apagada</option>
 <option value="green_rh_off">Luz verde RH apagada</option>
 <option value="all_indication_fail">Todas las luces fallan</option>
 <option value="unsafe_indication">Indicación unsafe</option>
 <option value="transit_light_on">Luz de tránsito encendida</option>
 <option value="warning_horn">Bocina de warning</option>
-<option value="cabin_not_pressurizing">Cabina no presuriza</option>
-<option value="bleed_issue">Problema bleed</option>
-<option value="bus_power_fail">Falla eléctrica / bus</option>
-<option value="relay_issue">Relay / contactor</option>
-<option value="control_no_response">Control no responde</option>
-<option value="trim_issue">Problema trim</option>
+<option value="bleed_issue">Problema bleed / presurización</option>
+<option value="relay_issue">Problema eléctrico / relay</option>
+<option value="trim_issue">Problema flight controls / trim</option>
 </select>
 </div>
 </div>
 
 <div class="field">
 <label>Falla reportada</label>
-<textarea id="reportedFault" placeholder="Ejemplo: luz verde LH apagada con tren abajo y lamp test OK"></textarea>
+<textarea id="reportedFault" placeholder="Ejemplo: luz verde LH apagada con tren abajo y breaker revisado"></textarea>
 </div>
 
 <div class="field">
@@ -246,168 +805,152 @@ body{font-family:Arial,Helvetica,sans-serif;background:#eef3f8;color:#1f2b3a}
 </select>
 </div>
 
-<div class="btns">
+<div class="btn-row">
 <button class="btn btn-primary" onclick="analyzeWrittenFault()">Analizar falla</button>
+<button class="btn btn-soft" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
 <button class="btn btn-soft" onclick="saveCase()">Guardar caso</button>
+<button class="btn btn-soft" onclick="newCase()">Nuevo caso</button>
+</div>
 </div>
 </div>
 
-<div class="card">
-<h3>Historial / Reapertura</h3>
-<div class="field">
-<label>Buscar</label>
-<input id="historySearch" placeholder="Buscar caso..." oninput="renderHistory()">
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>🧠 Diagnóstico en vivo</h3>
+<p>Ruta lógica, foco técnico y acción sugerida</p>
 </div>
-<div id="historyList" class="scroll">No hay casos guardados todavía.</div>
+</div>
+<div class="panel-body diagnostic-box">
+<div class="info-card">
+<div class="title">Ruta lógica sugerida</div>
+<div class="value" id="routeSummary">Sin ruta todavía</div>
+<div class="sub" id="routeDetail">Completa los datos del caso o analiza una falla para comenzar.</div>
+</div>
+
+<div class="info-card">
+<div class="title">Plan de medición sugerido</div>
+<div class="value" id="nextMeasurement">Sin sugerencia todavía</div>
+<div class="sub">La app irá cambiando esta recomendación según el caso y lo que tú midas.</div>
+</div>
+
+<div class="info-card">
+<div class="title">Conclusión preliminar</div>
+<div class="value" id="liveConclusion">Sin conclusión todavía</div>
+<div class="sub" id="liveConclusionSub">Primero define el caso, luego carga WDM o registra mediciones.</div>
+<div class="tag-row" id="liveTags"></div>
+</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>🤖 Chat G&T</h3>
+<p>Asistente técnico con lenguaje simple y directo</p>
+</div>
+</div>
+<div class="panel-body chat-shell">
+<div id="chatBox" class="chat-box">
+<div class="msg assistant">
+<div class="bubble">Hola Rodrigo. Esta versión está enfocada en verse mejor, sentirse más tecnológica y ser más agradable de usar en terreno.</div>
+</div>
+</div>
+
+<div class="chat-actions">
+<button class="mini-btn" onclick="quickAsk('qué mido ahora')">¿Qué mido ahora?</button>
+<button class="mini-btn" onclick="quickAsk('pin sugerido')">Pin sugerido</button>
+<button class="mini-btn" onclick="quickAsk('qué concluyes')">¿Qué concluyes?</button>
+<button class="mini-btn" onclick="quickAsk('tengo continuidad')">Tengo continuidad</button>
+<button class="mini-btn" onclick="quickAsk('no tengo voltaje')">No tengo voltaje</button>
+<button class="mini-btn" onclick="clearChat()">Limpiar chat</button>
+</div>
+
+<div class="chat-input-row">
+<input id="chatInput" placeholder="Escribe tu observación técnica...">
+<button class="btn btn-primary" onclick="sendChat()">Enviar</button>
+</div>
 </div>
 </div>
 </section>
 
-<section id="view-documents" class="view">
-<div class="grid-2">
-<div class="card">
-<h3>Cargar documento</h3>
+<section class="lower-grid">
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>📘 WDM priorizado</h3>
+<p>Carga PDF, prioriza pines y detecta líneas relevantes</p>
+</div>
+</div>
+<div class="panel-body">
 <div class="field">
 <label>PDF WDM / Manual</label>
 <input id="wdmPdfInput" type="file" accept=".pdf">
 </div>
-<div class="btns">
+
+<div class="btn-row">
 <button class="btn btn-primary" onclick="loadPdfAndAnalyze()">Leer PDF</button>
 <button class="btn btn-soft" onclick="clearPdf()">Limpiar PDF</button>
 </div>
-<div class="muted" style="margin-top:10px;">Valida siempre modelo, serial y configuración real.</div>
+
+<div class="scroll-box" id="docInfo" style="margin-top:12px;">Sin documento activo.</div>
+</div>
 </div>
 
-<div class="card">
-<h3>Resultado lectura</h3>
-<div id="docInfo" class="scroll">Sin documento activo.</div>
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>🔌 Top conectores / pines</h3>
+<p>Prioridad según falla, ATA y texto detectado</p>
+</div>
+</div>
+<div class="panel-body">
+<div class="scroll-box" id="topPins">Sin pines priorizados todavía.</div>
+</div>
+</div>
+
+<div class="panel">
+<div class="panel-head">
+<div>
+<h3>📄 Líneas relevantes del PDF</h3>
+<p>Texto extraído con mejor score técnico</p>
+</div>
+</div>
+<div class="panel-body">
+<div class="scroll-box" id="linesBox">Sin líneas relevantes todavía.</div>
 </div>
 </div>
 </section>
 
-<section id="view-diagnosis" class="view">
-<div class="grid-2">
-<div class="card">
-<h3>Resumen diagnóstico</h3>
-<div class="btns">
-<button class="btn btn-primary" onclick="analyzeWrittenFault()">Analizar automáticamente</button>
-<button class="btn btn-primary" onclick="runDiagnostic()">Ejecutar diagnóstico</button>
-</div>
-<div id="diagnosticSummary" class="scroll" style="margin-top:12px;">Sin diagnóstico todavía.</div>
+<section class="footer-strip">
+<div class="status-tile">
+<div class="label">Timeline</div>
+<div class="scroll-box" id="timeline">Sin actividad todavía.</div>
 </div>
 
-<div class="card">
-<h3>Mediciones registradas</h3>
-<div class="btns">
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('continuity_ok','Continuidad OK')">Continuidad OK</button>
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('continuity_fail','Sin continuidad')">Sin continuidad</button>
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('voltage_ok','Voltaje OK')">Voltaje OK</button>
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('no_voltage','Sin voltaje')">Sin voltaje</button>
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('ground_ok','Ground OK')">Ground OK</button>
-<button class="btn btn-soft small-btn" onclick="recordMeasurement('ground_fail','Ground FAIL')">Ground FAIL</button>
-</div>
-<div id="memoryBox" class="scroll" style="margin-top:12px;">Sin mediciones registradas todavía.</div>
-</div>
-</div>
-</section>
-
-<section id="view-logic" class="view">
-<div class="grid-3">
-<div class="card">
-<h3>Ruta lógica</h3>
-<div id="wdmRoute" class="path"></div>
-</div>
-<div class="card">
-<h3>Pines priorizados</h3>
-<div id="topPins" class="scroll">Sin pines priorizados todavía.</div>
-</div>
-<div class="card">
-<h3>Líneas relevantes</h3>
-<div id="linesBox" class="scroll">Sin líneas relevantes todavía.</div>
-</div>
+<div class="status-tile">
+<div class="label">Alertas del sistema</div>
+<div class="scroll-box" id="alertsBox">Sin alertas todavía.</div>
 </div>
 
-<div class="grid-2">
-<div class="card">
-<h3>Árbol lógico</h3>
-<div id="logicTreeBox" class="scroll">Sin árbol todavía.</div>
-</div>
-<div class="card">
-<h3>Multímetro sugerido</h3>
-<div class="scroll">
-<div><b>Punto:</b> <span id="meterPoint">Sin punto</span></div>
-<div style="margin-top:8px;"><b>Lectura esperada:</b> <span id="meterReading">Sin lectura</span></div>
-<div style="margin-top:8px;"><b>Modo:</b> <span id="meterMode">Sin modo</span></div>
-</div>
-</div>
-</div>
-</section>
-
-<section id="view-chat" class="view">
-<div class="chat-layout">
-<div class="card">
-<h3>Chat IA G&T</h3>
-<div id="chatBox" class="chat-box">
-<div class="msg assistant"><div class="bubble">Hola Rodrigo. Nivel 8 activo. Esta versión es más ordenada y preparada para crecer a backend real.</div></div>
-</div>
-<div class="chat-input">
-<input id="chatInput" placeholder="Escribe tu mensaje técnico...">
-<button class="btn btn-primary" onclick="sendChat()">Enviar</button>
-</div>
+<div class="status-tile">
+<div class="label">Checklist técnico</div>
+<div class="scroll-box" id="checklistBox">Sin checklist todavía.</div>
 </div>
 
-<div class="card">
-<h3>Acciones rápidas</h3>
-<div class="btns">
-<button class="btn btn-soft small-btn" onclick="useContext()">Usar contexto</button>
-<button class="btn btn-soft small-btn" onclick="quickAsk('qué mido ahora')">¿Qué mido ahora?</button>
-<button class="btn btn-soft small-btn" onclick="quickAsk('pin sugerido')">Pin sugerido</button>
-<button class="btn btn-soft small-btn" onclick="quickAsk('qué concluyes')">¿Qué concluyes?</button>
-<button class="btn btn-soft small-btn" onclick="quickAsk('tengo continuidad')">Tengo continuidad</button>
-<button class="btn btn-soft small-btn" onclick="quickAsk('no tengo voltaje')">No tengo voltaje</button>
-<button class="btn btn-soft small-btn" onclick="clearChat()">Limpiar chat</button>
-</div>
-</div>
-</div>
-</section>
-
-<section id="view-settings" class="view">
-<div class="grid-2">
-<div class="card">
-<h3>Base local</h3>
-<p class="muted" style="margin-bottom:12px;">Esto simula una base de datos local. Útil para respaldar y mover casos entre equipos.</p>
-<div class="btns">
-<button class="btn btn-primary" onclick="exportDB()">Exportar JSON</button>
-<button class="btn btn-soft" onclick="document.getElementById('importFile').click()">Importar JSON</button>
-<button class="btn btn-danger" onclick="resetLocalDB()">Borrar base local</button>
-</div>
-<input id="importFile" type="file" accept=".json,application/json" style="display:none" onchange="importDB(event)">
-</div>
-
-<div class="card">
-<h3>Escalado futuro</h3>
-<div class="scroll">
-<div class="item-row">✅ App shell profesional</div>
-<div class="item-row">✅ Casos locales persistentes</div>
-<div class="item-row">✅ Exportación / importación</div>
-<div class="item-row">✅ Motor diagnóstico local</div>
-<div class="item-row">⏳ Backend real</div>
-<div class="item-row">⏳ Multiusuario real</div>
-<div class="item-row">⏳ Base de datos en nube</div>
-<div class="item-row">⏳ Autenticación real</div>
-</div>
-</div>
+<div class="status-tile">
+<div class="label">Score de sospecha</div>
+<div id="scoreBoard">Sin evaluación todavía.</div>
 </div>
 </section>
 </div>
-</main>
-</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.js"></script>
 <script>
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.js";
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.js";
 
-const DB_KEY = "gt_level8_db_v1";
+const DB_KEY = "gt_redesign_v1";
+
 const initialDB = {
 cases: [],
 currentCase: {
@@ -428,21 +971,21 @@ relevantLines: []
 
 let db = loadDB();
 
+function clone(obj){
+return JSON.parse(JSON.stringify(obj));
+}
+
 function loadDB(){
 try{
 const raw = localStorage.getItem(DB_KEY);
-return raw ? JSON.parse(raw) : structuredClone(initialDB);
+return raw ? JSON.parse(raw) : clone(initialDB);
 }catch{
-return structuredClone(initialDB);
+return clone(initialDB);
 }
 }
 
 function persistDB(){
 localStorage.setItem(DB_KEY, JSON.stringify(db));
-}
-
-function structuredClone(obj){
-return JSON.parse(JSON.stringify(obj));
 }
 
 function toast(text){
@@ -451,15 +994,16 @@ const el = document.createElement("div");
 el.className = "toast";
 el.innerHTML = `${escapeHtml(text)}<small>${new Date().toLocaleTimeString()}</small>`;
 wrap.appendChild(el);
-setTimeout(() => el.remove(), 2800);
+setTimeout(() => el.remove(), 3000);
 }
 
-function showView(name, btn){
-document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
-document.getElementById(`view-${name}`).classList.add("active");
-document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-if(btn) btn.classList.add("active");
-setStatus(`Vista abierta: ${name}`);
+function escapeHtml(str){
+return String(str)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;")
+.replaceAll("'","&#39;");
 }
 
 function syncFormFromDB(){
@@ -481,16 +1025,28 @@ db.currentCase.caseState = document.getElementById("caseStateSelect").value;
 persistDB();
 }
 
+function buildDiagnosticData(){
+syncDBFromForm();
+return {
+aircraft: db.currentCase.aircraft || "No ingresado",
+serial: db.currentCase.serial || "No ingresado",
+ata: db.currentCase.ata || "No seleccionado",
+faultType: db.currentCase.faultType || "",
+fault: db.currentCase.fault || "Sin descripción",
+caseState: db.currentCase.caseState || "ABIERTO"
+};
+}
+
 function addTimeline(text){
 db.timeline.unshift({ time: new Date().toLocaleTimeString(), text });
-db.timeline = db.timeline.slice(0, 80);
+db.timeline = db.timeline.slice(0, 60);
 persistDB();
 renderTimeline();
 }
 
 function addAlert(text){
 db.alerts.unshift({ time: new Date().toLocaleTimeString(), text });
-db.alerts = db.alerts.slice(0, 40);
+db.alerts = db.alerts.slice(0, 30);
 persistDB();
 renderAlerts();
 toast(text);
@@ -504,7 +1060,7 @@ setStatus(`Estado del caso: ${newState}`);
 }
 
 function newCase(){
-db.currentCase = structuredClone(initialDB.currentCase);
+db.currentCase = clone(initialDB.currentCase);
 db.timeline = [];
 db.alerts = [];
 db.measurements = [];
@@ -516,42 +1072,51 @@ syncFormFromDB();
 clearChat();
 renderAll();
 addTimeline("Nuevo caso creado");
-toast("Nuevo caso listo");
 setStatus("Nuevo caso creado");
-}
-
-function buildDiagnosticData(){
-syncDBFromForm();
-return {
-aircraft: db.currentCase.aircraft || "No ingresado",
-serial: db.currentCase.serial || "No ingresado",
-ata: db.currentCase.ata || "No seleccionado",
-faultType: db.currentCase.faultType || "",
-fault: db.currentCase.fault || "Sin descripción",
-caseState: db.currentCase.caseState || "ABIERTO"
-};
+toast("Nuevo caso listo");
 }
 
 function detectFromFreeText(text){
 const lower = text.toLowerCase();
-if(lower.includes("lh") && lower.includes("verde") && lower.includes("apag")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_lh_off", label: "Luz verde LH apagada" };
-if(lower.includes("rh") && lower.includes("verde") && lower.includes("apag")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_rh_off", label: "Luz verde RH apagada" };
-if((lower.includes("todas") && lower.includes("luces")) || lower.includes("all lights")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "all_indication_fail", label: "Todas las luces fallan" };
-if(lower.includes("unsafe")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "unsafe_indication", label: "Indicación unsafe" };
-if(lower.includes("transit") || lower.includes("tránsito")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "transit_light_on", label: "Luz de tránsito encendida" };
-if(lower.includes("horn") || lower.includes("bocina") || lower.includes("warning")) return { ata: "ATA 32 - Landing Gear Indication", faultType: "warning_horn", label: "Bocina de warning" };
-if(lower.includes("presur") || lower.includes("cabina") || lower.includes("bleed")) return { ata: "ATA 21 - Pressurization", faultType: "bleed_issue", label: "Presurización / bleed" };
-if(lower.includes("bus") || lower.includes("relay") || lower.includes("energ") || lower.includes("power")) return { ata: "ATA 24 - Electrical Power", faultType: "relay_issue", label: "Sistema eléctrico / relay" };
-if(lower.includes("trim") || lower.includes("control") || lower.includes("flap")) return { ata: "ATA 27 - Flight Controls", faultType: "trim_issue", label: "Flight controls / trim" };
+
+if(lower.includes("lh") && lower.includes("verde") && lower.includes("apag")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_lh_off", label: "Luz verde LH apagada" };
+}
+if(lower.includes("rh") && lower.includes("verde") && lower.includes("apag")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "green_rh_off", label: "Luz verde RH apagada" };
+}
+if((lower.includes("todas") && lower.includes("luces")) || lower.includes("all lights")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "all_indication_fail", label: "Todas las luces fallan" };
+}
+if(lower.includes("unsafe")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "unsafe_indication", label: "Indicación unsafe" };
+}
+if(lower.includes("transit") || lower.includes("tránsito")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "transit_light_on", label: "Luz de tránsito encendida" };
+}
+if(lower.includes("horn") || lower.includes("bocina") || lower.includes("warning")){
+return { ata: "ATA 32 - Landing Gear Indication", faultType: "warning_horn", label: "Bocina de warning" };
+}
+if(lower.includes("presur") || lower.includes("cabina") || lower.includes("bleed")){
+return { ata: "ATA 21 - Pressurization", faultType: "bleed_issue", label: "Presurización / bleed" };
+}
+if(lower.includes("bus") || lower.includes("relay") || lower.includes("energ") || lower.includes("power")){
+return { ata: "ATA 24 - Electrical Power", faultType: "relay_issue", label: "Sistema eléctrico / relay" };
+}
+if(lower.includes("trim") || lower.includes("control") || lower.includes("flap")){
+return { ata: "ATA 27 - Flight Controls", faultType: "trim_issue", label: "Flight controls / trim" };
+}
+
 return { ata: "", faultType: "", label: "" };
 }
 
 function analyzeWrittenFault(){
 const text = document.getElementById("reportedFault").value.trim();
 if(!text){
-addChat("assistant","Primero escribe la falla reportada.");
+addChat("assistant", "Primero escribe la falla reportada.");
 return;
 }
+
 const detected = detectFromFreeText(text);
 if(detected.ata) document.getElementById("ataSelect").value = detected.ata;
 if(detected.faultType) document.getElementById("faultType").value = detected.faultType;
@@ -559,20 +1124,19 @@ document.getElementById("caseStateSelect").value = "EN DIAGNÓSTICO";
 syncDBFromForm();
 
 renderRoute();
-document.getElementById("diagnosticSummary").innerHTML = `
-<div><b>ATA sugerido:</b> ${escapeHtml(detected.ata || "No identificado")}</div>
-<div style="margin-top:8px;"><b>Tipo de falla sugerido:</b> ${escapeHtml(detected.label || "No identificado")}</div>
-`;
 addTimeline("Falla analizada automáticamente");
 addAlert("Caso en análisis. Confirma mediciones antes de cambiar componentes.");
 setStatus("Falla analizada automáticamente");
-renderRecommendation();
-toast("Análisis automático completado");
+renderAll();
 }
 
 function getRoute(ata, faultType){
-if(ata.includes("ATA 32") && faultType === "green_lh_off") return ["BUS-28VDC","CB32-GEAR","J32-LH FEED","S32-LH DOWNLOCK","J32-LH OUT","L32-LH LAMP","GND-LH"];
-if(ata.includes("ATA 32") && faultType === "green_rh_off") return ["BUS-28VDC","CB32-GEAR","J32-RH FEED","S32-RH DOWNLOCK","J32-RH OUT","L32-RH LAMP","GND-RH"];
+if(ata.includes("ATA 32") && faultType === "green_lh_off"){
+return ["BUS-28VDC","CB32-GEAR","J32-LH FEED","S32-LH DOWNLOCK","J32-LH OUT","L32-LH LAMP","GND-LH"];
+}
+if(ata.includes("ATA 32") && faultType === "green_rh_off"){
+return ["BUS-28VDC","CB32-GEAR","J32-RH FEED","S32-RH DOWNLOCK","J32-RH OUT","L32-RH LAMP","GND-RH"];
+}
 if(ata.includes("ATA 21")) return ["BLEED SOURCE","PRESS CONTROLLER","OUTFLOW VALVE","CABIN","SENSING"];
 if(ata.includes("ATA 24")) return ["MAIN BUS","CB24","K24 RELAY","LOAD","GROUND"];
 if(ata.includes("ATA 27")) return ["INPUT SWITCH","CB27","K27 RELAY","ACTUATOR","GROUND"];
@@ -582,22 +1146,25 @@ return ["SOURCE","CONTROL","LOAD","GROUND"];
 function renderRoute(){
 const d = buildDiagnosticData();
 const route = getRoute(d.ata, d.faultType);
-document.getElementById("wdmRoute").innerHTML = route.map((node, i) =>
-`<span class="node">${escapeHtml(node)}</span>${i < route.length - 1 ? '<span class="arrow">→</span>' : ''}`
-).join("");
+document.getElementById("routeSummary").textContent = route.join(" → ");
+document.getElementById("routeDetail").textContent =
+d.ata === "No seleccionado"
+? "Completa los datos del caso o analiza una falla para comenzar."
+: "La ruta se ajusta según ATA, tipo de falla y mediciones posteriores.";
 }
 
 async function loadPdfAndAnalyze(){
 const file = document.getElementById("wdmPdfInput").files[0];
 if(!file){
-addChat("assistant","Primero carga un PDF WDM.");
+addChat("assistant", "Primero carga un PDF WDM.");
 return;
 }
+
 const arrayBuffer = await file.arrayBuffer();
 const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
 db.pdfPages = [];
 
-for(let pageNum=1; pageNum<=pdf.numPages; pageNum++){
+for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++){
 const page = await pdf.getPage(pageNum);
 const content = await page.getTextContent();
 const pageText = content.items.map(item => item.str).join(" ");
@@ -607,9 +1174,8 @@ db.pdfPages.push({ page: pageNum, text: pageText });
 persistDB();
 analyzePdfText();
 addTimeline(`PDF cargado y analizado (${pdf.numPages} páginas)`);
-addAlert("Documento técnico cargado. Valida compatibilidad con el serial.");
+addAlert("Documento técnico cargado. Valida compatibilidad con el serial real.");
 setStatus(`PDF leído correctamente (${pdf.numPages} páginas)`);
-showView('documents', document.querySelector('[data-view="documents"]'));
 }
 
 function analyzePdfText(){
@@ -622,30 +1188,34 @@ if(d.ata.includes("ATA 32")) keywords.push("gear","downlock","unsafe","indicator
 if(d.ata.includes("ATA 21")) keywords.push("pressur","bleed","outflow","controller","cabin");
 if(d.ata.includes("ATA 24")) keywords.push("relay","bus","contactor","power","ground","cb");
 if(d.ata.includes("ATA 27")) keywords.push("trim","control","actuator","relay");
+
 faultText.split(/\s+/).forEach(w => { if(w.length > 2) keywords.push(w); });
 
 const lineResults = [];
+
 db.pdfPages.forEach(pageObj => {
 const chunks = pageObj.text.split(/(?<=[\.\;\:])\s+|\n+/);
 chunks.forEach(chunk => {
 const text = chunk.trim();
 if(!text) return;
+
 const pins = [...new Set(text.match(pinRegex) || [])];
 if(!pins.length) return;
+
 let score = 0;
 const lower = text.toLowerCase();
+
 keywords.forEach(k => { if(lower.includes(k)) score += 3; });
 if(d.faultType === "green_lh_off" && (lower.includes("lh") || lower.includes("left"))) score += 10;
 if(d.faultType === "green_rh_off" && (lower.includes("rh") || lower.includes("right"))) score += 10;
 if(d.ata.includes("ATA 32") && lower.includes("downlock")) score += 8;
-if(d.ata.includes("ATA 24") && (lower.includes("relay") || lower.includes("bus"))) score += 8;
-if(d.ata.includes("ATA 27") && (lower.includes("trim") || lower.includes("actuator"))) score += 8;
+
 lineResults.push({ page: pageObj.page, text, pins, score });
 });
 });
 
 lineResults.sort((a,b) => b.score - a.score);
-db.relevantLines = lineResults.filter(x => x.score > 0).slice(0,15);
+db.relevantLines = lineResults.filter(x => x.score > 0).slice(0, 15);
 
 const pinMap = new Map();
 db.relevantLines.forEach(item => {
@@ -661,12 +1231,12 @@ pinMap.set(pin, prev);
 db.rankedPins = [...pinMap.values()]
 .map(x => ({ pin: x.pin, score: x.score, pages: [...x.pages], sample: x.sample }))
 .sort((a,b) => b.score - a.score)
-.slice(0,12);
+.slice(0, 12);
 
 persistDB();
-renderTopPins();
-renderRelevantLines();
-if(db.rankedPins.length) addAlert(`Pin crítico identificado: ${db.rankedPins[0].pin}`);
+if(db.rankedPins.length){
+addAlert(`Pin crítico identificado: ${db.rankedPins[0].pin}`);
+}
 renderAll();
 }
 
@@ -686,10 +1256,12 @@ function recordMeasurement(key, label){
 db.measurements.unshift({ key, label, time: new Date().toLocaleTimeString() });
 persistDB();
 addTimeline(`Medición registrada: ${label}`);
+
 if(key === "no_voltage") addAlert("Sin voltaje detectado. Revisa alimentación aguas arriba.");
 if(key === "continuity_fail") addAlert("Circuito abierto detectado. Foco en conector, cable o switch.");
 if(key === "ground_fail") addAlert("Ground FAIL. Revisa retorno a tierra.");
 if(key === "voltage_ok") addAlert("Voltaje presente. Baja el foco hacia carga o retorno.");
+
 renderAll();
 setStatus(`Medición registrada: ${label}`);
 }
@@ -741,22 +1313,25 @@ return pin ? `Partir midiendo en ${pin.pin}` : "Analizar PDF o ruta";
 
 function runDiagnostic(){
 const d = buildDiagnosticData();
-const route = getRoute(d.ata, d.faultType);
 const topPin = getSuggestedPin();
-
-document.getElementById("diagnosticSummary").innerHTML = `
-<div><b>Aeronave:</b> ${escapeHtml(d.aircraft)}</div>
-<div><b>Serial:</b> ${escapeHtml(d.serial)}</div>
-<div><b>ATA:</b> ${escapeHtml(d.ata)}</div>
-<div><b>Falla:</b> ${escapeHtml(d.fault)}</div>
-<div style="margin-top:8px;"><b>Ruta:</b> ${route.map(escapeHtml).join(" → ")}</div>
-<div style="margin-top:8px;"><b>Pin prioritario:</b> ${escapeHtml(topPin ? topPin.pin : "Sin pin priorizado todavía")}</div>
-<div style="margin-top:8px;"><b>Siguiente medición:</b> ${escapeHtml(getNextMeasurementSuggestion())}</div>
-`;
+const top = getSuspicionScores()[0];
 
 addTimeline("Diagnóstico ejecutado");
 addAlert("Diagnóstico activo. Sigue el siguiente paso sugerido antes de avanzar.");
-renderAll();
+
+document.getElementById("liveConclusion").textContent =
+topPin ? `Foco preliminar en ${top.name}` : "Primero define el caso o carga el PDF";
+document.getElementById("liveConclusionSub").textContent =
+topPin
+? `Pin principal sugerido: ${topPin.pin}. Siguiente paso: ${getNextMeasurementSuggestion()}.`
+: "Todavía no tengo suficiente contexto técnico.";
+
+document.getElementById("liveTags").innerHTML = `
+<span class="tag">${escapeHtml(d.caseState)}</span>
+<span class="tag">${escapeHtml(top.name)}</span>
+<span class="tag">${escapeHtml(topPin ? topPin.pin : "Sin pin")}</span>
+`;
+
 setStatus("Diagnóstico ejecutado");
 toast("Diagnóstico ejecutado");
 }
@@ -767,7 +1342,13 @@ if(!db.timeline.length){
 box.innerHTML = "Sin actividad todavía.";
 return;
 }
-box.innerHTML = db.timeline.map(x => `<div class="timeline-entry"><b>${x.time}</b> - ${escapeHtml(x.text)}</div>`).join("");
+
+box.innerHTML = db.timeline.map(x => `
+<div class="item">
+<div class="item-title">${escapeHtml(x.time)}</div>
+<div class="item-sub">${escapeHtml(x.text)}</div>
+</div>
+`).join("");
 }
 
 function renderAlerts(){
@@ -776,12 +1357,19 @@ if(!db.alerts.length){
 box.innerHTML = "Sin alertas todavía.";
 return;
 }
-box.innerHTML = db.alerts.map(x => `<div class="alert-row"><b>${x.time}</b> - ${escapeHtml(x.text)}</div>`).join("");
+
+box.innerHTML = db.alerts.map(x => `
+<div class="item">
+<div class="item-title">${escapeHtml(x.time)}</div>
+<div class="item-sub">${escapeHtml(x.text)}</div>
+</div>
+`).join("");
 }
 
 function renderChecklist(){
 const d = buildDiagnosticData();
 const m = getMeasurementMap();
+
 const items = [
 { ok: d.ata && d.ata !== "No seleccionado", text: "ATA definido" },
 { ok: d.fault && d.fault !== "Sin descripción", text: "Falla reportada cargada" },
@@ -789,40 +1377,51 @@ const items = [
 { ok: db.rankedPins.length > 0, text: "Pin prioritario generado" },
 { ok: m.continuity_ok || m.continuity_fail || m.voltage_ok || m.no_voltage || m.ground_ok || m.ground_fail, text: "Al menos una medición registrada" }
 ];
-document.getElementById("checklistBox").innerHTML = items.map(x => `<div class="check-entry">${x.ok ? "✅" : "⬜"} ${escapeHtml(x.text)}</div>`).join("");
+
+document.getElementById("checklistBox").innerHTML = items.map(x => `
+<div class="item">
+<div class="item-sub">${x.ok ? "✅" : "⬜"} ${escapeHtml(x.text)}</div>
+</div>
+`).join("");
 }
 
 function renderScoreBoard(){
+const box = document.getElementById("scoreBoard");
 const scores = getSuspicionScores();
-document.getElementById("scoreBoard").innerHTML = scores.map(x => `
+
+box.innerHTML = scores.map(x => `
 <div class="score-row">
 <div>
-<div style="font-size:13px;font-weight:700;margin-bottom:4px;">${escapeHtml(x.name)}</div>
+<div class="score-label">${escapeHtml(x.name)}</div>
 <div class="bar"><div class="bar-fill" style="width:${x.score}%"></div></div>
 </div>
-<div style="font-size:12px;font-weight:700;">${x.score}</div>
+<div class="metric">${x.score}</div>
 </div>
 `).join("");
 }
 
 function renderRecommendation(){
-const box = document.getElementById("recommendationBox");
 const d = buildDiagnosticData();
 const pin = getSuggestedPin();
 const top = getSuspicionScores()[0];
+
+document.getElementById("nextMeasurement").textContent = getNextMeasurementSuggestion();
+
 if(!d.fault || d.fault === "Sin descripción"){
-box.innerHTML = "Sin recomendación todavía.";
+document.getElementById("liveConclusion").textContent = "Sin conclusión todavía";
+document.getElementById("liveConclusionSub").textContent = "Primero define el caso, luego carga WDM o registra mediciones.";
+document.getElementById("liveTags").innerHTML = "";
 return;
 }
-box.innerHTML = `
-<div class="rec-item">
-<b>Recomendación actual</b><br><br>
-Estado: ${escapeHtml(d.caseState)}<br>
-Mayor sospecha: ${escapeHtml(top.name)} (${top.score})<br>
-Pin prioritario: ${escapeHtml(pin ? pin.pin : "Sin pin")}<br>
-Siguiente paso: ${escapeHtml(getNextMeasurementSuggestion())}<br><br>
-Acción sugerida: no cambiar componentes todavía hasta validar ${escapeHtml(pin ? pin.pin : "el siguiente punto lógico")} con medición directa.
-</div>
+
+document.getElementById("liveConclusion").textContent = top.name;
+document.getElementById("liveConclusionSub").textContent =
+`No cambiar componentes todavía hasta validar ${pin ? pin.pin : "el siguiente punto lógico"} con medición directa.`;
+
+document.getElementById("liveTags").innerHTML = `
+<span class="tag">${escapeHtml(d.caseState)}</span>
+<span class="tag">${escapeHtml(top.name)}</span>
+<span class="tag">${escapeHtml(pin ? pin.pin : "Sin pin")}</span>
 `;
 }
 
@@ -832,83 +1431,38 @@ if(!db.rankedPins.length){
 box.innerHTML = "Sin pines priorizados todavía.";
 return;
 }
+
 box.innerHTML = db.rankedPins.map(item => `
-<div class="pin-item">
-<div><b>${escapeHtml(item.pin)}</b> <span class="pill">score ${item.score}</span></div>
-<div class="pill">pág. ${item.pages.join(", ")}</div>
-<div style="margin-top:6px;">${escapeHtml(item.sample)}</div>
+<div class="item">
+<div class="item-title">${escapeHtml(item.pin)} · score ${item.score}</div>
+<div class="item-sub">Páginas: ${item.pages.join(", ")}</div>
+<div class="item-sub" style="margin-top:6px;">${escapeHtml(item.sample)}</div>
 </div>
 `).join("");
 }
 
 function renderRelevantLines(){
-const docBox = document.getElementById("docInfo");
-const lineBox = document.getElementById("linesBox");
-const html = !db.relevantLines.length ? "Sin líneas relevantes todavía." : db.relevantLines.map(item => `
-<div style="margin-bottom:10px;">
-<span class="pill">pág. ${item.page}</span>
-<span class="pill">score ${item.score}</span>
-<div style="margin-top:6px;">${escapeHtml(item.text)}</div>
+const html = !db.relevantLines.length
+? "Sin líneas relevantes todavía."
+: db.relevantLines.map(item => `
+<div class="item">
+<div class="item-title">Pág. ${item.page} · score ${item.score}</div>
+<div class="item-sub">${escapeHtml(item.text)}</div>
 </div>
 `).join("");
-docBox.innerHTML = html;
-lineBox.innerHTML = html;
-}
 
-function renderLogicTree(){
-const d = buildDiagnosticData();
-const m = getMeasurementMap();
-const items = [];
-items.push(`ATA seleccionado: ${d.ata || "No seleccionado"}`);
-if(d.fault && d.fault !== "Sin descripción") items.push(`Falla activa: ${d.fault}`);
-if(m.continuity_ok) items.push("Continuidad confirmada OK");
-if(m.continuity_fail) items.push("Continuidad FAIL -> circuito abierto");
-if(m.voltage_ok) items.push("Voltaje presente en punto medido");
-if(m.no_voltage) items.push("Sin voltaje -> subir en la ruta");
-if(m.ground_ok) items.push("Ground confirmado OK");
-if(m.ground_fail) items.push("Ground FAIL -> foco en retorno");
-
-document.getElementById("logicTreeBox").innerHTML = items.length ? items.map(x => `<div class="tree-item">${escapeHtml(x)}</div>`).join("") : "Sin árbol todavía.";
-document.getElementById("nextStepMain").innerHTML = `<div class="tree-item"><b>Siguiente paso sugerido:</b><br>${escapeHtml(getNextMeasurementSuggestion())}</div>`;
-}
-
-function renderMeter(){
-const p = getSuggestedPin();
-const d = buildDiagnosticData();
-const m = getMeasurementMap();
-document.getElementById("meterPoint").textContent = p ? p.pin : "Sin punto";
-document.getElementById("meterMode").textContent = (d.ata.includes("ATA 24") || d.ata.includes("ATA 32")) ? "Continuidad / VDC" : "Continuidad / VDC";
-document.getElementById("meterReading").textContent = m.no_voltage ? "Esperado: 0 V" : (m.voltage_ok ? "Esperado: 28 V aprox." : (m.continuity_fail ? "Esperado: abierto" : "Pendiente de medición"));
+document.getElementById("docInfo").innerHTML = html;
+document.getElementById("linesBox").innerHTML = html;
 }
 
 function renderHistory(){
-const q = (document.getElementById("historySearch")?.value || "").toLowerCase();
-const filtered = db.cases.filter(x =>
-`${x.ata} ${x.aircraft} ${x.serial} ${x.fault} ${x.topPin} ${x.caseState}`.toLowerCase().includes(q)
-);
-const box = document.getElementById("historyList");
-if(!filtered.length){
-box.innerHTML = "No hay casos guardados todavía.";
-return;
-}
-box.innerHTML = filtered.map(x => `
-<div class="case-card">
-<h4>${escapeHtml(x.ata)}</h4>
-<div class="pill">${escapeHtml(x.aircraft)}</div>
-<div class="pill">${escapeHtml(x.serial)}</div>
-<div class="pill">${escapeHtml(x.caseState || "ABIERTO")}</div>
-<div style="margin-top:8px;">${escapeHtml(x.fault)}</div>
-<div style="margin-top:8px;"><span class="pill">${escapeHtml(x.topPin || "Sin pin")}</span></div>
-<div class="case-actions">
-<button class="btn btn-soft small-btn" onclick="reopenCase(${x.id})">Reabrir</button>
-</div>
-</div>
-`).join("");
+db.cases = db.cases || [];
 }
 
 function saveCase(){
 const d = buildDiagnosticData();
 const topPin = getSuggestedPin();
+
 db.cases.unshift({
 id: Date.now(),
 createdAt: new Date().toLocaleString(),
@@ -919,31 +1473,34 @@ fault: d.fault,
 topPin: topPin ? topPin.pin : "Sin pin",
 caseState: d.caseState
 });
+
 persistDB();
-renderHistory();
-addTimeline("Caso guardado en historial");
+addTimeline("Caso guardado en historial local");
 setStatus("Caso guardado");
 toast("Caso guardado correctamente");
-showView('cases', document.querySelector('[data-view="cases"]'));
 }
 
-function reopenCase(id){
-const item = db.cases.find(x => x.id === id);
-if(!item) return;
-db.currentCase = {
-aircraft: item.aircraft || "",
-serial: item.serial || "",
-ata: item.ata || "",
-faultType: "",
-fault: item.fault || "",
-caseState: item.caseState || "ABIERTO"
-};
+function clearPdf(){
+document.getElementById("wdmPdfInput").value = "";
+db.pdfPages = [];
+db.rankedPins = [];
+db.relevantLines = [];
 persistDB();
-syncFormFromDB();
-addTimeline(`Caso reabierto desde historial: ${item.ata}`);
-setStatus("Caso reabierto");
-toast("Caso reabierto");
-showView('cases', document.querySelector('[data-view="cases"]'));
+renderAll();
+addTimeline("PDF limpiado");
+setStatus("PDF limpiado");
+}
+
+function renderAll(){
+renderRoute();
+renderTimeline();
+renderAlerts();
+renderChecklist();
+renderScoreBoard();
+renderRecommendation();
+renderTopPins();
+renderRelevantLines();
+persistDB();
 }
 
 function useContext(){
@@ -974,13 +1531,12 @@ box.scrollTop = box.scrollHeight;
 
 function clearChat(){
 document.getElementById("chatBox").innerHTML =
-'<div class="msg assistant"><div class="bubble">Hola Rodrigo. Nivel 8 activo. Esta versión es más ordenada y preparada para crecer a backend real.</div></div>';
+'<div class="msg assistant"><div class="bubble">Hola Rodrigo. Esta versión está enfocada en verse mejor, sentirse más tecnológica y ser más agradable de usar en terreno.</div></div>';
 setStatus("Chat limpiado");
 }
 
 function buildSmartReply(message){
 const lower = message.toLowerCase();
-const d = buildDiagnosticData();
 const pin = getSuggestedPin();
 
 if(lower.includes("pin sugerido")){
@@ -1030,6 +1586,7 @@ function sendChat(){
 const input = document.getElementById("chatInput");
 const text = input.value.trim();
 if(!text) return;
+
 addChat("user", text);
 addChat("assistant", buildSmartReply(text));
 input.value = "";
@@ -1038,109 +1595,26 @@ setStatus(`Chat: ${text}`);
 
 function setStatus(actionText){
 const d = buildDiagnosticData();
-document.getElementById("statusAction").textContent = actionText;
-document.getElementById("statusCase").textContent =
-d.fault && d.fault !== "Sin descripción" ? `${d.ata} | ${d.fault}` : "Sin caso activo";
-document.getElementById("statusPin").textContent = getSuggestedPin() ? getSuggestedPin().pin : "Sin pin priorizado";
-document.getElementById("statusNext").textContent = getNextMeasurementSuggestion();
-document.getElementById("statusCaseState").innerHTML = d.caseState;
-document.getElementById("topCaseState").textContent = d.caseState;
-document.getElementById("topPin").textContent = getSuggestedPin() ? getSuggestedPin().pin : "Sin pin";
-document.getElementById("sideState").textContent = d.fault && d.fault !== "Sin descripción" ? `${d.ata} · ${d.fault}` : "Sin caso activo.";
-document.getElementById("sideNext").textContent = getNextMeasurementSuggestion();
+const pin = getSuggestedPin();
+
+document.getElementById("statusCaseState").textContent = d.caseState;
+document.getElementById("statusPinTop").textContent = pin ? pin.pin : "Sin pin priorizado";
+document.getElementById("statusNextTop").textContent = getNextMeasurementSuggestion();
 renderAll();
 }
 
-function renderAll(){
-renderTimeline();
-renderAlerts();
-renderChecklist();
-renderScoreBoard();
-renderRecommendation();
-renderTopPins();
-renderRelevantLines();
-renderLogicTree();
-renderMeter();
-renderMemory();
-renderHistory();
-renderRoute();
-persistDB();
-}
-
-function exportDB(){
-const blob = new Blob([JSON.stringify(db, null, 2)], { type: "application/json" });
-const a = document.createElement("a");
-a.href = URL.createObjectURL(blob);
-a.download = "gt-troubleshooting-db.json";
-a.click();
-URL.revokeObjectURL(a.href);
-toast("Base local exportada");
-}
-
-function importDB(event){
-const file = event.target.files[0];
-if(!file) return;
-const reader = new FileReader();
-reader.onload = () => {
-try{
-const parsed = JSON.parse(reader.result);
-db = parsed;
-persistDB();
-syncFormFromDB();
-renderAll();
-setStatus("Base local importada");
-toast("Base importada correctamente");
-}catch{
-toast("Archivo inválido");
-}
-};
-reader.readAsText(file);
-}
-
-function resetLocalDB(){
-if(!confirm("¿Borrar toda la base local?")) return;
-db = structuredClone(initialDB);
-persistDB();
-syncFormFromDB();
-clearChat();
-renderAll();
-setStatus("Base local reiniciada");
-toast("Base local borrada");
-}
-
-function clearPdf(){
-document.getElementById("wdmPdfInput").value = "";
-db.pdfPages = [];
-db.rankedPins = [];
-db.relevantLines = [];
-persistDB();
-renderAll();
-addTimeline("PDF limpiado");
-setStatus("PDF limpiado");
-}
-
-function syncStartup(){
+function startup(){
 syncFormFromDB();
 renderAll();
 setStatus("Sistema listo");
-}
-
-function escapeHtml(str){
-return String(str)
-.replaceAll("&","&amp;")
-.replaceAll("<","&lt;")
-.replaceAll(">","&gt;")
-.replaceAll('"',"&quot;")
-.replaceAll("'","&#39;");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
 document.getElementById("chatInput").addEventListener("keydown", (e) => {
 if(e.key === "Enter") sendChat();
 });
-syncStartup();
+startup();
 });
 </script>
 </body>
 </html>
-
