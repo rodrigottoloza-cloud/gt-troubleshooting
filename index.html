@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G&T Aircraft Troubleshooting</title>
 
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
 <style>
 * { box-sizing: border-box; }
 
@@ -16,7 +18,7 @@ color: #eef6fb;
 }
 
 .container {
-max-width: 980px;
+max-width: 1080px;
 margin: 0 auto;
 padding: 24px;
 }
@@ -53,7 +55,7 @@ font-size: 24px;
 color: #b8d2df;
 }
 
-textarea, input[type="text"] {
+textarea, input[type="text"], input[type="file"] {
 width: 100%;
 padding: 14px;
 border-radius: 10px;
@@ -62,8 +64,16 @@ outline: none;
 margin-top: 10px;
 margin-bottom: 16px;
 font-size: 15px;
+}
+
+textarea, input[type="text"] {
 background: #eef6fb;
 color: #102c3a;
+}
+
+input[type="file"] {
+background: #173644;
+color: #eef6fb;
 }
 
 textarea {
@@ -107,16 +117,6 @@ background: #b3261e;
 
 button.danger:hover {
 background: #921f19;
-}
-
-.pill {
-display: inline-block;
-padding: 8px 12px;
-border-radius: 999px;
-background: #173b4a;
-margin: 6px 8px 0 0;
-font-size: 14px;
-color: #d8edf8;
 }
 
 .highlight {
@@ -170,6 +170,33 @@ font-size: 13px;
 color: #9fbcca;
 }
 
+.preview-box {
+margin-top: 10px;
+margin-bottom: 20px;
+background: #102c3a;
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 12px;
+padding: 12px;
+}
+
+.preview-box img {
+max-width: 100%;
+border-radius: 8px;
+display: block;
+margin-top: 10px;
+}
+
+.ocr-status {
+margin-top: 10px;
+color: #b8d2df;
+font-size: 14px;
+}
+
+.small {
+font-size: 13px;
+color: #b8d2df;
+}
+
 @media (max-width: 768px) {
 .grid {
 grid-template-columns: 1fr;
@@ -206,7 +233,12 @@ signalType: "",
 contactState: "",
 logicSummary: "",
 expectedMeasurement: "",
-warningStop: false
+opImageUrl: "",
+wdmImageUrl: "",
+opFileName: "",
+wdmFileName: "",
+opOCRText: "",
+wdmOCRText: ""
 };
 
 function detectSystem(text) {
@@ -256,6 +288,7 @@ combined.includes("ground path") ||
 combined.includes("ground signal") ||
 combined.includes("ground to") ||
 combined.includes("completes the ground") ||
+combined.includes("ground circuit") ||
 combined.includes("tierra") ||
 combined.includes("masa");
 
@@ -265,6 +298,7 @@ combined.includes("28vdc") ||
 combined.includes("voltage") ||
 combined.includes("energizes") ||
 combined.includes("supplies voltage") ||
+combined.includes("electrical power") ||
 combined.includes("voltaje");
 
 const hasNo =
@@ -282,6 +316,7 @@ combined.includes("normalmente cerrado");
 const hasClose =
 combined.includes("closes") ||
 combined.includes("closed when") ||
+combined.includes("close when") ||
 combined.includes("cierra") ||
 combined.includes("completes");
 
@@ -412,17 +447,42 @@ app.innerHTML = `
 if (step === 3) {
 app.innerHTML = `
 <h2 class="section-title">Cargar lógica documental</h2>
-<p class="subtle">En esta fase del MVP, pega aquí el texto relevante del manual.</p>
+<p class="subtle">Ahora puedes subir imágenes para OCR o pegar el texto manualmente.</p>
 
-<label><strong>Principio de operación</strong></label>
-<textarea id="opInput" placeholder="Pega aquí el texto del principio de operación..."></textarea>
+<label><strong>1. Principio de operación — imagen o captura</strong></label>
+<input type="file" accept="image/*" onchange="handleImageUpload(event, 'op')">
+<div id="opPreview" class="preview-box">
+${state.opFileName ? `<div><strong>Archivo:</strong> ${state.opFileName}</div>` : '<div class="small">Todavía no has cargado una imagen.</div>'}
+${state.opImageUrl ? `<img src="${state.opImageUrl}" alt="Principio de operación">` : ''}
+<div id="opStatus" class="ocr-status"></div>
+</div>
+
+<div class="btn-row">
+<button onclick="runOCR('op')">Extraer texto del principio de operación</button>
+</div>
+
+<label><strong>Texto del principio de operación</strong></label>
+<textarea id="opInput" placeholder="Pega aquí el texto del principio de operación...">${escapeHtmlToTextarea(state.opText)}</textarea>
+
+<label><strong>2. Diagrama / WDM — imagen o captura</strong></label>
+<input type="file" accept="image/*" onchange="handleImageUpload(event, 'wdm')">
+<div id="wdmPreview" class="preview-box">
+${state.wdmFileName ? `<div><strong>Archivo:</strong> ${state.wdmFileName}</div>` : '<div class="small">Todavía no has cargado una imagen.</div>'}
+${state.wdmImageUrl ? `<img src="${state.wdmImageUrl}" alt="WDM o ruta eléctrica">` : ''}
+<div id="wdmStatus" class="ocr-status"></div>
+</div>
+
+<div class="btn-row">
+<button onclick="runOCR('wdm')">Extraer texto del WDM</button>
+</div>
 
 <label><strong>Texto relevante del WDM o ruta eléctrica</strong></label>
-<textarea id="wdmInput" placeholder="Pega aquí la información clave del wiring diagram o descripción de la ruta..."></textarea>
+<textarea id="wdmInput" placeholder="Pega aquí la información clave del wiring diagram o descripción de la ruta...">${escapeHtmlToTextarea(state.wdmText)}</textarea>
 
 <div class="warning-box">
 <strong>WARNING</strong>
 <p>La documentación debe corresponder al modelo, número de serie y configuración instalada de la aeronave. G&T no reemplaza el manual.</p>
+<p class="small">Este OCR funciona mejor con capturas limpias, horizontales y de alto contraste. En diagramas densos, revisa y corrige el texto extraído antes de analizar.</p>
 </div>
 
 <div class="btn-row">
@@ -568,6 +628,13 @@ app.innerHTML = `
 }
 }
 
+function escapeHtmlToTextarea(text) {
+return (text || "")
+.replace(/&/g, "&amp;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;");
+}
+
 function goToInterpretation() {
 const value = document.getElementById("faultInput").value.trim();
 if (!value) {
@@ -609,12 +676,100 @@ app.innerHTML = `
 `;
 }
 
+function handleImageUpload(event, type) {
+const file = event.target.files[0];
+if (!file) return;
+
+const url = URL.createObjectURL(file);
+
+if (type === 'op') {
+state.opImageUrl = url;
+state.opFileName = file.name;
+} else {
+state.wdmImageUrl = url;
+state.wdmFileName = file.name;
+}
+
+render();
+}
+
+async function runOCR(type) {
+let imageUrl = "";
+let statusId = "";
+let targetId = "";
+let label = "";
+
+if (type === 'op') {
+imageUrl = state.opImageUrl;
+statusId = "opStatus";
+targetId = "opInput";
+label = "principio de operación";
+} else {
+imageUrl = state.wdmImageUrl;
+statusId = "wdmStatus";
+targetId = "wdmInput";
+label = "WDM";
+}
+
+if (!imageUrl) {
+alert(`Primero debes cargar una imagen para ${label}.`);
+return;
+}
+
+const statusEl = document.getElementById(statusId);
+if (statusEl) statusEl.innerHTML = "Procesando OCR... esto puede tardar unos segundos.";
+
+try {
+const result = await Tesseract.recognize(
+imageUrl,
+'eng',
+{
+logger: m => {
+if (statusEl && m.status) {
+const progress = m.progress ? ` (${Math.round(m.progress * 100)}%)` : "";
+statusEl.innerHTML = `${m.status}${progress}`;
+}
+}
+}
+);
+
+const text = (result.data.text || "").trim();
+
+if (type === 'op') {
+state.opOCRText = text;
+state.opText = text;
+} else {
+state.wdmOCRText = text;
+state.wdmText = text;
+}
+
+render();
+
+const target = document.getElementById(targetId);
+if (target) target.value = text;
+
+const refreshedStatusEl = document.getElementById(statusId);
+if (refreshedStatusEl) {
+refreshedStatusEl.innerHTML = text
+? "OCR completado. Revisa y corrige el texto antes de analizar."
+: "OCR completado, pero no se extrajo texto útil. Prueba con una imagen más clara.";
+}
+} catch (error) {
+console.error(error);
+const refreshedStatusEl = document.getElementById(statusId);
+if (refreshedStatusEl) {
+refreshedStatusEl.innerHTML = "Error al procesar OCR.";
+}
+alert("No fue posible procesar la imagen. Prueba con una captura más clara.");
+}
+}
+
 function analyzeDocs() {
 const op = document.getElementById("opInput").value.trim();
 const wdm = document.getElementById("wdmInput").value.trim();
 
 if (!op || !wdm) {
-alert("Debes pegar el principio de operación y el texto relevante del WDM.");
+alert("Debes ingresar el principio de operación y el texto relevante del WDM.");
 return;
 }
 
@@ -672,6 +827,12 @@ state.signalType = "";
 state.contactState = "";
 state.logicSummary = "";
 state.expectedMeasurement = "";
+state.opImageUrl = "";
+state.wdmImageUrl = "";
+state.opFileName = "";
+state.wdmFileName = "";
+state.opOCRText = "";
+state.wdmOCRText = "";
 render();
 }
 
