@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>G&T Aircraft Troubleshooting</title>
-
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
 <style>
@@ -13,46 +12,112 @@
 body {
 margin: 0;
 font-family: Arial, sans-serif;
-background: linear-gradient(135deg, #091923, #102c3a);
+background: linear-gradient(135deg, #08141d, #102c3a);
 color: #eef6fb;
 }
 
-.container {
-max-width: 1080px;
+.app-shell {
+max-width: 1380px;
 margin: 0 auto;
-padding: 24px;
+padding: 20px;
 }
 
-.header {
+.topbar {
+display: flex;
+justify-content: space-between;
+align-items: center;
+gap: 20px;
 margin-bottom: 18px;
+padding: 16px 20px;
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 16px;
 }
 
-.header h1 {
+.brand h1 {
 margin: 0;
 font-size: 30px;
 }
 
-.header p {
-margin: 8px 0 0;
+.brand p {
+margin: 6px 0 0;
 color: #b8d2df;
+font-size: 14px;
 }
 
-.card {
+.status-chip {
+padding: 10px 14px;
+border-radius: 999px;
+font-weight: 700;
+font-size: 14px;
+background: #173644;
+color: #d8edf8;
+white-space: nowrap;
+}
+
+.layout {
+display: grid;
+grid-template-columns: 300px 1fr 320px;
+gap: 18px;
+}
+
+.sidebar, .main-card, .history-panel {
 background: rgba(19, 47, 60, 0.96);
 border: 1px solid rgba(255,255,255,0.08);
 border-radius: 16px;
+box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+}
+
+.sidebar, .history-panel {
+padding: 18px;
+height: fit-content;
+position: sticky;
+top: 20px;
+}
+
+.main-card {
 padding: 22px;
-box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+}
+
+.panel-title {
+margin: 0 0 12px 0;
+font-size: 20px;
 }
 
 .section-title {
-margin-top: 0;
-margin-bottom: 14px;
-font-size: 24px;
+margin: 0 0 14px 0;
+font-size: 26px;
 }
 
 .subtle {
 color: #b8d2df;
+}
+
+.progress-wrap {
+margin: 18px 0 22px;
+}
+
+.progress-label {
+display: flex;
+justify-content: space-between;
+margin-bottom: 8px;
+font-size: 14px;
+color: #b8d2df;
+}
+
+.progress-bar {
+width: 100%;
+height: 10px;
+background: #173644;
+border-radius: 999px;
+overflow: hidden;
+}
+
+.progress-fill {
+height: 100%;
+background: linear-gradient(90deg, #00a8e8, #4ff0c8);
+border-radius: 999px;
+transition: width 0.25s ease;
 }
 
 textarea, input[type="text"], input[type="file"] {
@@ -96,12 +161,10 @@ border-radius: 10px;
 padding: 12px 18px;
 cursor: pointer;
 font-size: 15px;
-font-weight: 600;
+font-weight: 700;
 }
 
-button:hover {
-background: #008ec4;
-}
+button:hover { background: #008ec4; }
 
 button.secondary {
 background: #2d4d5c;
@@ -119,39 +182,10 @@ button.danger:hover {
 background: #921f19;
 }
 
-.highlight {
-color: #4ff0c8;
-font-weight: 700;
-}
-
-.warning-box {
-background: rgba(179, 38, 30, 0.15);
-border: 1px solid rgba(255, 99, 99, 0.35);
-border-radius: 12px;
-padding: 16px;
-margin: 14px 0;
-}
-
-.success-box {
-background: rgba(34, 139, 34, 0.14);
-border: 1px solid rgba(100, 255, 160, 0.25);
-border-radius: 12px;
-padding: 16px;
-margin: 14px 0;
-}
-
-.info-box {
-background: rgba(0, 168, 232, 0.12);
-border: 1px solid rgba(0, 168, 232, 0.25);
-border-radius: 12px;
-padding: 16px;
-margin: 14px 0;
-}
-
-.grid {
+.card-grid {
 display: grid;
 grid-template-columns: 1fr 1fr;
-gap: 16px;
+gap: 14px;
 }
 
 .mini-card {
@@ -160,19 +194,46 @@ border-radius: 12px;
 padding: 14px;
 }
 
-ul {
-padding-left: 20px;
+.mini-card strong {
+display: block;
+margin-bottom: 8px;
+color: #cfe8f4;
 }
 
-.footer-note {
-margin-top: 18px;
-font-size: 13px;
-color: #9fbcca;
+.info-box, .warning-box, .success-box, .neutral-box {
+border-radius: 12px;
+padding: 16px;
+margin: 14px 0;
+}
+
+.info-box {
+background: rgba(0,168,232,0.12);
+border: 1px solid rgba(0,168,232,0.25);
+}
+
+.warning-box {
+background: rgba(179,38,30,0.15);
+border: 1px solid rgba(255,99,99,0.35);
+}
+
+.success-box {
+background: rgba(34,139,34,0.14);
+border: 1px solid rgba(100,255,160,0.25);
+}
+
+.neutral-box {
+background: rgba(255,255,255,0.04);
+border: 1px solid rgba(255,255,255,0.08);
+}
+
+.highlight {
+color: #4ff0c8;
+font-weight: 700;
 }
 
 .preview-box {
-margin-top: 10px;
-margin-bottom: 20px;
+margin-top: 8px;
+margin-bottom: 18px;
 background: #102c3a;
 border: 1px solid rgba(255,255,255,0.08);
 border-radius: 12px;
@@ -181,9 +242,9 @@ padding: 12px;
 
 .preview-box img {
 max-width: 100%;
-border-radius: 8px;
-display: block;
+border-radius: 10px;
 margin-top: 10px;
+display: block;
 }
 
 .ocr-status {
@@ -192,35 +253,172 @@ color: #b8d2df;
 font-size: 14px;
 }
 
+.tag {
+display: inline-block;
+margin: 6px 8px 0 0;
+padding: 8px 12px;
+border-radius: 999px;
+font-size: 13px;
+font-weight: 700;
+background: #173644;
+color: #d8edf8;
+}
+
+.certainty-high {
+background: rgba(34,139,34,0.18);
+color: #8ff0b6;
+}
+
+.certainty-medium {
+background: rgba(255,166,0,0.16);
+color: #ffd28a;
+}
+
+.certainty-low {
+background: rgba(179,38,30,0.18);
+color: #ff9c9c;
+}
+
+ul {
+padding-left: 20px;
+}
+
 .small {
 font-size: 13px;
 color: #b8d2df;
 }
 
-@media (max-width: 768px) {
-.grid {
+.footer-note {
+margin-top: 18px;
+font-size: 13px;
+color: #9fbcca;
+}
+
+.history-item {
+background: #173644;
+border-radius: 12px;
+padding: 12px;
+margin-bottom: 10px;
+}
+
+.history-item h4 {
+margin: 0 0 8px 0;
+font-size: 15px;
+}
+
+.history-item p {
+margin: 4px 0;
+font-size: 13px;
+color: #c8dfe9;
+}
+
+.history-empty {
+color: #9fbcca;
+font-size: 14px;
+}
+
+.history-actions {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+margin-top: 10px;
+}
+
+@media (max-width: 1180px) {
+.layout {
 grid-template-columns: 1fr;
 }
 
-.container {
-padding: 14px;
+.sidebar, .history-panel {
+position: static;
+}
+
+.card-grid {
+grid-template-columns: 1fr;
+}
+
+.topbar {
+flex-direction: column;
+align-items: flex-start;
 }
 }
 </style>
 </head>
 <body>
 
-<div class="container">
-<div class="header">
+<div class="app-shell">
+<div class="topbar">
+<div class="brand">
 <h1>G&T Aircraft Troubleshooting</h1>
 <p>IA guiada por documentación técnica, lógica de sistema y doctrina de seguridad.</p>
 </div>
+<div id="certaintyChip" class="status-chip">Certeza: En espera</div>
+</div>
 
-<div id="app" class="card"></div>
+<div class="layout">
+<aside class="sidebar">
+<h3 class="panel-title">Caso actual</h3>
+
+<div class="progress-wrap">
+<div class="progress-label">
+<span>Progreso</span>
+<span id="progressText">0%</span>
+</div>
+<div class="progress-bar">
+<div id="progressFill" class="progress-fill" style="width:0%"></div>
+</div>
+</div>
+
+<div class="neutral-box">
+<strong>Falla</strong>
+<p id="sideFault" class="small">Sin definir</p>
+</div>
+
+<div class="neutral-box">
+<strong>Sistema</strong>
+<p id="sideSystem" class="small">—</p>
+</div>
+
+<div class="neutral-box">
+<strong>ATA probable</strong>
+<p id="sideATA" class="small">—</p>
+</div>
+
+<div class="neutral-box">
+<strong>Condición reportada</strong>
+<p id="sideCondition" class="small">—</p>
+</div>
+
+<div class="neutral-box">
+<strong>Lógica detectada</strong>
+<p id="sideLogic" class="small">—</p>
+</div>
+
+<div class="neutral-box">
+<strong>Estado esperado</strong>
+<p id="sideExpected" class="small">—</p>
+</div>
+</aside>
+
+<main class="main-card">
+<div id="app"></div>
+</main>
+
+<aside class="history-panel">
+<h3 class="panel-title">Historial de casos</h3>
+<div id="historyList" class="history-empty">No hay casos guardados todavía.</div>
+<div class="history-actions">
+<button class="secondary" onclick="exportCases()">Exportar JSON</button>
+<button class="danger" onclick="clearCases()">Borrar historial</button>
+</div>
+</aside>
+</div>
 </div>
 
 <script>
 let step = 0;
+
+const STORAGE_KEY = "gt_cases_history";
 
 const state = {
 faultText: "",
@@ -233,42 +431,121 @@ signalType: "",
 contactState: "",
 logicSummary: "",
 expectedMeasurement: "",
+certainty: "En espera",
+certaintyClass: "",
 opImageUrl: "",
 wdmImageUrl: "",
 opFileName: "",
 wdmFileName: "",
-opOCRText: "",
-wdmOCRText: ""
+finalConclusion: ""
 };
+
+function getCases() {
+try {
+return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+} catch {
+return [];
+}
+}
+
+function saveCases(cases) {
+localStorage.setItem(STORAGE_KEY, JSON.stringify(cases));
+}
+
+function addCaseRecord(record) {
+const cases = getCases();
+cases.unshift(record);
+saveCases(cases);
+renderHistory();
+}
+
+function clearCases() {
+const ok = confirm("¿Seguro que quieres borrar todo el historial de casos?");
+if (!ok) return;
+localStorage.removeItem(STORAGE_KEY);
+renderHistory();
+}
+
+function exportCases() {
+const cases = getCases();
+const blob = new Blob([JSON.stringify(cases, null, 2)], { type: "application/json" });
+const url = URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+a.href = url;
+a.download = "gt_cases_history.json";
+a.click();
+
+URL.revokeObjectURL(url);
+}
+
+function openCase(index) {
+const cases = getCases();
+const record = cases[index];
+if (!record) return;
+
+Object.assign(state, {
+faultText: record.faultText || "",
+detectedSystem: record.detectedSystem || "",
+detectedATA: record.detectedATA || "",
+clarifiedCondition: record.clarifiedCondition || "",
+opText: record.opText || "",
+wdmText: record.wdmText || "",
+signalType: record.signalType || "",
+contactState: record.contactState || "",
+logicSummary: record.logicSummary || "",
+expectedMeasurement: record.expectedMeasurement || "",
+certainty: record.certainty || "En espera",
+certaintyClass: record.certaintyClass || "",
+finalConclusion: record.finalConclusion || "",
+opImageUrl: "",
+wdmImageUrl: "",
+opFileName: "",
+wdmFileName: ""
+});
+
+step = 4;
+render();
+}
+
+function renderHistory() {
+const historyEl = document.getElementById("historyList");
+if (!historyEl) return;
+
+const cases = getCases();
+
+if (!cases.length) {
+historyEl.innerHTML = `<div class="history-empty">No hay casos guardados todavía.</div>`;
+return;
+}
+
+historyEl.innerHTML = cases.map((item, index) => `
+<div class="history-item">
+<h4>${escapeHtml(item.faultText || "Caso sin título")}</h4>
+<p><strong>Sistema:</strong> ${escapeHtml(item.detectedSystem || "—")}</p>
+<p><strong>ATA:</strong> ${escapeHtml(item.detectedATA || "—")}</p>
+<p><strong>Certeza:</strong> ${escapeHtml(item.certainty || "—")}</p>
+<p><strong>Resultado:</strong> ${escapeHtml(item.finalConclusion || "Sin cierre")}</p>
+<div class="history-actions">
+<button class="secondary" onclick="openCase(${index})">Abrir</button>
+</div>
+</div>
+`).join("");
+}
 
 function detectSystem(text) {
 const t = text.toLowerCase();
 
-if (
-t.includes("tren") || t.includes("gear") || t.includes("uplock") ||
-t.includes("downlock") || t.includes("unsafe")
-) {
+if (t.includes("tren") || t.includes("gear") || t.includes("uplock") || t.includes("downlock") || t.includes("unsafe")) {
 return { system: "Landing Gear", ata: "ATA 32" };
 }
-
-if (
-t.includes("bleed") || t.includes("presur") || t.includes("cabin") ||
-t.includes("flow pack") || t.includes("outflow")
-) {
+if (t.includes("bleed") || t.includes("presur") || t.includes("cabin") || t.includes("flow pack") || t.includes("outflow")) {
 return { system: "Bleed / Pressurization", ata: "ATA 21" };
 }
-
-if (
-t.includes("flap") || t.includes("aileron") || t.includes("rudder") ||
-t.includes("elevator") || t.includes("control surface")
-) {
+if (t.includes("flap") || t.includes("aileron") || t.includes("rudder") || t.includes("elevator") || t.includes("control")) {
 return { system: "Flight Controls", ata: "ATA 27" };
 }
-
-if (
-t.includes("voltaje") || t.includes("voltage") || t.includes("bus") ||
-t.includes("breaker") || t.includes("electrical") || t.includes("relay")
-) {
+if (t.includes("voltaje") || t.includes("voltage") || t.includes("bus") || t.includes("breaker") || t.includes("relay") || t.includes("electrical")) {
 return { system: "Electrical", ata: "ATA 24" };
 }
 
@@ -282,6 +559,8 @@ let signalType = "No determinado con certeza";
 let contactState = "No determinado con certeza";
 let logicSummary = "No fue posible definir la lógica del sistema con certeza suficiente.";
 let expectedMeasurement = "No medir todavía. Falta certeza técnica.";
+let certainty = "Insuficiente";
+let certaintyClass = "certainty-low";
 
 const hasGround =
 combined.includes("ground path") ||
@@ -334,18 +613,24 @@ if (hasGround && !hasVoltage) {
 signalType = "Tierra";
 logicSummary = "La documentación sugiere que el circuito trabaja principalmente con una señal de tierra.";
 expectedMeasurement = "Esperar continuidad a tierra o 0.0 ohm contra estructura, según la condición confirmada del sistema.";
+certainty = "Alta";
+certaintyClass = "certainty-high";
 }
 
 if (hasVoltage && !hasGround) {
 signalType = "Voltaje";
 logicSummary = "La documentación sugiere que el circuito trabaja principalmente con presencia o remoción de voltaje.";
 expectedMeasurement = "Esperar presencia o ausencia de voltaje según la condición confirmada del sistema.";
+certainty = "Alta";
+certaintyClass = "certainty-high";
 }
 
 if (hasGround && hasVoltage) {
 signalType = "Mixto o no concluyente";
 logicSummary = "La documentación contiene referencias tanto a tierra como a voltaje. Se requiere revisar la ruta exacta y la condición del esquema.";
 expectedMeasurement = "No emitir una medición definitiva sin revisar el punto exacto del circuito.";
+certainty = "Media";
+certaintyClass = "certainty-medium";
 }
 
 if (hasNo && !hasNc) {
@@ -358,6 +643,10 @@ contactState = "NC / Normally Closed / Normalmente cerrado";
 
 if (hasNo && hasNc) {
 contactState = "Existen componentes NO y NC; revisar cada elemento individualmente";
+if (certainty === "Alta") {
+certainty = "Media";
+certaintyClass = "certainty-medium";
+}
 }
 
 if (signalType !== "No determinado con certeza") {
@@ -372,8 +661,62 @@ return {
 signalType,
 contactState,
 logicSummary,
-expectedMeasurement
+expectedMeasurement,
+certainty,
+certaintyClass
 };
+}
+
+function escapeHtmlToTextarea(text) {
+return (text || "")
+.replace(/&/g, "&amp;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;");
+}
+
+function escapeHtml(text) {
+return (text || "")
+.replace(/&/g, "&amp;")
+.replace(/</g, "&lt;")
+.replace(/>/g, "&gt;");
+}
+
+function updateSidebar() {
+document.getElementById("sideFault").textContent = state.faultText || "Sin definir";
+document.getElementById("sideSystem").textContent = state.detectedSystem || "—";
+document.getElementById("sideATA").textContent = state.detectedATA || "—";
+document.getElementById("sideCondition").textContent = state.clarifiedCondition || "—";
+document.getElementById("sideLogic").textContent = state.signalType || "—";
+document.getElementById("sideExpected").textContent = state.expectedMeasurement || "—";
+
+const chip = document.getElementById("certaintyChip");
+chip.textContent = `Certeza: ${state.certainty}`;
+chip.className = `status-chip ${state.certaintyClass || ""}`;
+
+const totalSteps = 6;
+const currentProgress = Math.min(Math.round((step / totalSteps) * 100), 100);
+document.getElementById("progressText").textContent = `${currentProgress}%`;
+document.getElementById("progressFill").style.width = `${currentProgress}%`;
+}
+
+function saveCurrentCaseRecord(resultText) {
+const record = {
+savedAt: new Date().toISOString(),
+faultText: state.faultText,
+detectedSystem: state.detectedSystem,
+detectedATA: state.detectedATA,
+clarifiedCondition: state.clarifiedCondition,
+opText: state.opText,
+wdmText: state.wdmText,
+signalType: state.signalType,
+contactState: state.contactState,
+logicSummary: state.logicSummary,
+expectedMeasurement: state.expectedMeasurement,
+certainty: state.certainty,
+certaintyClass: state.certaintyClass,
+finalConclusion: resultText
+};
+addCaseRecord(record);
 }
 
 function render() {
@@ -387,14 +730,15 @@ app.innerHTML = `
 <div class="btn-row">
 <button onclick="goToInterpretation()">Continuar</button>
 </div>
-<p class="footer-note">G&T interpretará automáticamente el sistema y ATA probable. Si no hay suficiente claridad, te pedirá precisar la condición.</p>
+<p class="footer-note">G&T clasificará automáticamente el sistema y ATA probable.</p>
 `;
 }
 
 if (step === 1) {
 app.innerHTML = `
 <h2 class="section-title">Interpretación automática</h2>
-<div class="grid">
+
+<div class="card-grid">
 <div class="mini-card">
 <strong>Sistema detectado</strong>
 <p>${state.detectedSystem}</p>
@@ -407,11 +751,11 @@ app.innerHTML = `
 
 <div class="info-box">
 <strong>Ahora necesito precisión.</strong>
-<p>Una falla mal descrita no puede diagnosticarse de forma segura.</p>
+<p>La falla debe quedar correctamente definida antes de seguir.</p>
 </div>
 
 <p><strong>¿En qué condición exacta ocurre la falla?</strong></p>
-<input type="text" id="conditionInput" placeholder="Ej: Tren abajo y asegurado / en tierra / luz verde LH no enciende">
+<input type="text" id="conditionInput" placeholder="Ej: Tren abajo y asegurado, en tierra, luz verde LH apagada">
 
 <div class="btn-row">
 <button onclick="saveCondition()">Confirmar condición</button>
@@ -423,6 +767,7 @@ app.innerHTML = `
 if (step === 2) {
 app.innerHTML = `
 <h2 class="section-title">Chequeo rápido previo</h2>
+
 <div class="warning-box">
 <strong>Recuerda:</strong>
 <p>Un gran porcentaje de las fallas no son realmente una falla del sistema. Primero elimina lo simple.</p>
@@ -447,11 +792,11 @@ app.innerHTML = `
 if (step === 3) {
 app.innerHTML = `
 <h2 class="section-title">Cargar lógica documental</h2>
-<p class="subtle">Ahora puedes subir imágenes para OCR o pegar el texto manualmente.</p>
+<p class="subtle">Puedes subir imágenes para OCR o pegar el texto manualmente.</p>
 
 <label><strong>1. Principio de operación — imagen o captura</strong></label>
 <input type="file" accept="image/*" onchange="handleImageUpload(event, 'op')">
-<div id="opPreview" class="preview-box">
+<div class="preview-box">
 ${state.opFileName ? `<div><strong>Archivo:</strong> ${state.opFileName}</div>` : '<div class="small">Todavía no has cargado una imagen.</div>'}
 ${state.opImageUrl ? `<img src="${state.opImageUrl}" alt="Principio de operación">` : ''}
 <div id="opStatus" class="ocr-status"></div>
@@ -461,14 +806,14 @@ ${state.opImageUrl ? `<img src="${state.opImageUrl}" alt="Principio de operació
 <button onclick="runOCR('op')">Extraer texto del principio de operación</button>
 </div>
 
-<label><strong>Texto del principio de operación</strong></label>
+<label><strong>Texto original — principio de operación</strong></label>
 <textarea id="opInput" placeholder="Pega aquí el texto del principio de operación...">${escapeHtmlToTextarea(state.opText)}</textarea>
 
 <label><strong>2. Diagrama / WDM — imagen o captura</strong></label>
 <input type="file" accept="image/*" onchange="handleImageUpload(event, 'wdm')">
-<div id="wdmPreview" class="preview-box">
+<div class="preview-box">
 ${state.wdmFileName ? `<div><strong>Archivo:</strong> ${state.wdmFileName}</div>` : '<div class="small">Todavía no has cargado una imagen.</div>'}
-${state.wdmImageUrl ? `<img src="${state.wdmImageUrl}" alt="WDM o ruta eléctrica">` : ''}
+${state.wdmImageUrl ? `<img src="${state.wdmImageUrl}" alt="WDM">` : ''}
 <div id="wdmStatus" class="ocr-status"></div>
 </div>
 
@@ -476,13 +821,12 @@ ${state.wdmImageUrl ? `<img src="${state.wdmImageUrl}" alt="WDM o ruta eléctric
 <button onclick="runOCR('wdm')">Extraer texto del WDM</button>
 </div>
 
-<label><strong>Texto relevante del WDM o ruta eléctrica</strong></label>
+<label><strong>Texto original — WDM / ruta eléctrica</strong></label>
 <textarea id="wdmInput" placeholder="Pega aquí la información clave del wiring diagram o descripción de la ruta...">${escapeHtmlToTextarea(state.wdmText)}</textarea>
 
 <div class="warning-box">
 <strong>WARNING</strong>
-<p>La documentación debe corresponder al modelo, número de serie y configuración instalada de la aeronave. G&T no reemplaza el manual.</p>
-<p class="small">Este OCR funciona mejor con capturas limpias, horizontales y de alto contraste. En diagramas densos, revisa y corrige el texto extraído antes de analizar.</p>
+<p>La documentación debe corresponder al modelo, número de serie y configuración instalada. Revisa el texto OCR antes de analizar.</p>
 </div>
 
 <div class="btn-row">
@@ -496,15 +840,7 @@ if (step === 4) {
 app.innerHTML = `
 <h2 class="section-title">Interpretación técnica G&T</h2>
 
-<div class="grid">
-<div class="mini-card">
-<strong>Sistema</strong>
-<p>${state.detectedSystem}</p>
-</div>
-<div class="mini-card">
-<strong>Condición reportada</strong>
-<p>${state.clarifiedCondition}</p>
-</div>
+<div class="card-grid">
 <div class="mini-card">
 <strong>Tipo de señal detectada</strong>
 <p>${state.signalType}</p>
@@ -515,8 +851,22 @@ app.innerHTML = `
 </div>
 </div>
 
+<div class="tag ${state.certaintyClass}">
+Nivel de certeza: ${state.certainty}
+</div>
+
+<div class="neutral-box">
+<strong>Texto original — principio de operación</strong>
+<p class="small">${escapeHtml(state.opText || "—")}</p>
+</div>
+
+<div class="neutral-box">
+<strong>Texto original — WDM / ruta</strong>
+<p class="small">${escapeHtml(state.wdmText || "—")}</p>
+</div>
+
 <div class="info-box">
-<strong>Interpretación funcional</strong>
+<strong>Interpretación funcional G&T</strong>
 <p>${state.logicSummary}</p>
 </div>
 
@@ -545,7 +895,7 @@ app.innerHTML = `
 </ul>
 </div>
 
-<p><strong>¿El switch / relay / válvula / componente generador de señal está siendo accionado correctamente?</strong></p>
+<p><strong>¿El componente generador de señal está siendo accionado correctamente?</strong></p>
 
 <div class="btn-row">
 <button onclick="step=6; render()">Sí</button>
@@ -563,17 +913,16 @@ app.innerHTML = `
 <p>No mides para descubrir. Mides para confirmar lo que la lógica documental indica que debería existir.</p>
 </div>
 
-<p><strong>Instrucción general de esta fase MVP:</strong></p>
-<ul>
-<li>Dirígete al componente que genera la señal.</li>
-<li>Usa el WDM para identificar conector y pin exactos.</li>
-<li>Realiza la medición correspondiente según el estado esperado definido arriba.</li>
-</ul>
-
 <div class="success-box">
 <strong>Estado esperado</strong>
 <p class="highlight">${state.expectedMeasurement}</p>
 </div>
+
+<ul>
+<li>Dirígete al componente que genera la señal.</li>
+<li>Usa el WDM para identificar conector y pin exactos.</li>
+<li>Realiza la medición según el estado esperado definido.</li>
+</ul>
 
 <p><strong>¿La medición cumple con el estado esperado?</strong></p>
 
@@ -593,14 +942,9 @@ app.innerHTML = `
 <p>La señal en el origen parece correcta. El siguiente paso es seguir la señal aguas abajo: conectores intermedios, cableado y entrada al panel o componente destino.</p>
 </div>
 
-<ul>
-<li>Verifica el siguiente punto del circuito</li>
-<li>Confirma que el mismo estado esperado siga presente</li>
-<li>Si la señal se pierde entre dos puntos, ahí está acotada la falla</li>
-</ul>
-
 <div class="btn-row">
-<button onclick="restartApp()">Nuevo caso</button>
+<button onclick="saveAndRestart('Señal correcta en origen. Continuar aguas abajo.')">Guardar caso y nuevo caso</button>
+<button class="secondary" onclick="restartApp()">Nuevo caso sin guardar</button>
 </div>
 `;
 }
@@ -622,17 +966,14 @@ app.innerHTML = `
 </ul>
 
 <div class="btn-row">
-<button onclick="restartApp()">Nuevo caso</button>
+<button onclick="saveAndRestart('La señal no coincide con el estado esperado en origen.')">Guardar caso y nuevo caso</button>
+<button class="secondary" onclick="restartApp()">Nuevo caso sin guardar</button>
 </div>
 `;
 }
-}
 
-function escapeHtmlToTextarea(text) {
-return (text || "")
-.replace(/&/g, "&amp;")
-.replace(/</g, "&lt;")
-.replace(/>/g, "&gt;");
+updateSidebar();
+renderHistory();
 }
 
 function goToInterpretation() {
@@ -646,8 +987,7 @@ state.faultText = value;
 const detection = detectSystem(value);
 state.detectedSystem = detection.system;
 state.detectedATA = detection.ata;
-step = 1;
-render();
+renderStep(1);
 }
 
 function saveCondition() {
@@ -656,13 +996,17 @@ if (!value) {
 alert("Debes definir la condición exacta de la falla.");
 return;
 }
-
 state.clarifiedCondition = value;
-step = 2;
-render();
+renderStep(2);
 }
 
 function basicSolved() {
+state.certainty = "Alta";
+state.certaintyClass = "certainty-high";
+
+const resultText = "Falla resuelta en chequeo básico previo.";
+saveCurrentCaseRecord(resultText);
+
 const app = document.getElementById("app");
 app.innerHTML = `
 <h2 class="section-title">Falla resuelta en chequeo previo</h2>
@@ -674,6 +1018,8 @@ app.innerHTML = `
 <button onclick="restartApp()">Nuevo caso</button>
 </div>
 `;
+updateSidebar();
+renderHistory();
 }
 
 function handleImageUpload(event, type) {
@@ -682,7 +1028,7 @@ if (!file) return;
 
 const url = URL.createObjectURL(file);
 
-if (type === 'op') {
+if (type === "op") {
 state.opImageUrl = url;
 state.opFileName = file.name;
 } else {
@@ -699,7 +1045,7 @@ let statusId = "";
 let targetId = "";
 let label = "";
 
-if (type === 'op') {
+if (type === "op") {
 imageUrl = state.opImageUrl;
 statusId = "opStatus";
 targetId = "opInput";
@@ -717,29 +1063,23 @@ return;
 }
 
 const statusEl = document.getElementById(statusId);
-if (statusEl) statusEl.innerHTML = "Procesando OCR... esto puede tardar unos segundos.";
+if (statusEl) statusEl.innerHTML = "Procesando OCR...";
 
 try {
-const result = await Tesseract.recognize(
-imageUrl,
-'eng',
-{
+const result = await Tesseract.recognize(imageUrl, "eng", {
 logger: m => {
 if (statusEl && m.status) {
 const progress = m.progress ? ` (${Math.round(m.progress * 100)}%)` : "";
 statusEl.innerHTML = `${m.status}${progress}`;
 }
 }
-}
-);
+});
 
 const text = (result.data.text || "").trim();
 
-if (type === 'op') {
-state.opOCRText = text;
+if (type === "op") {
 state.opText = text;
 } else {
-state.wdmOCRText = text;
 state.wdmText = text;
 }
 
@@ -751,16 +1091,14 @@ if (target) target.value = text;
 const refreshedStatusEl = document.getElementById(statusId);
 if (refreshedStatusEl) {
 refreshedStatusEl.innerHTML = text
-? "OCR completado. Revisa y corrige el texto antes de analizar."
-: "OCR completado, pero no se extrajo texto útil. Prueba con una imagen más clara.";
+? "OCR completado. Revisa y corrige el texto."
+: "OCR completado, pero no se extrajo texto útil.";
 }
 } catch (error) {
 console.error(error);
 const refreshedStatusEl = document.getElementById(statusId);
-if (refreshedStatusEl) {
-refreshedStatusEl.innerHTML = "Error al procesar OCR.";
-}
-alert("No fue posible procesar la imagen. Prueba con una captura más clara.");
+if (refreshedStatusEl) refreshedStatusEl.innerHTML = "Error al procesar OCR.";
+alert("No fue posible procesar la imagen.");
 }
 }
 
@@ -781,12 +1119,19 @@ state.signalType = parsed.signalType;
 state.contactState = parsed.contactState;
 state.logicSummary = parsed.logicSummary;
 state.expectedMeasurement = parsed.expectedMeasurement;
+state.certainty = parsed.certainty;
+state.certaintyClass = parsed.certaintyClass;
 
-step = 4;
-render();
+renderStep(4);
 }
 
 function mechanicalStop() {
+state.certainty = "Media";
+state.certaintyClass = "certainty-medium";
+
+const resultText = "Condición mecánica no normal. Verificar rigging o ajuste.";
+saveCurrentCaseRecord(resultText);
+
 const app = document.getElementById("app");
 app.innerHTML = `
 <h2 class="section-title">WARNING</h2>
@@ -803,39 +1148,53 @@ app.innerHTML = `
 <button onclick="restartApp()">Nuevo caso</button>
 </div>
 `;
+updateSidebar();
+renderHistory();
 }
 
 function measurementPass() {
-step = 7;
-render();
+renderStep(7);
 }
 
 function measurementFail() {
-step = 8;
+renderStep(8);
+}
+
+function saveAndRestart(resultText) {
+saveCurrentCaseRecord(resultText);
+restartApp();
+}
+
+function renderStep(newStep) {
+step = newStep;
 render();
 }
 
 function restartApp() {
 step = 0;
-state.faultText = "";
-state.detectedSystem = "";
-state.detectedATA = "";
-state.clarifiedCondition = "";
-state.opText = "";
-state.wdmText = "";
-state.signalType = "";
-state.contactState = "";
-state.logicSummary = "";
-state.expectedMeasurement = "";
-state.opImageUrl = "";
-state.wdmImageUrl = "";
-state.opFileName = "";
-state.wdmFileName = "";
-state.opOCRText = "";
-state.wdmOCRText = "";
+Object.assign(state, {
+faultText: "",
+detectedSystem: "",
+detectedATA: "",
+clarifiedCondition: "",
+opText: "",
+wdmText: "",
+signalType: "",
+contactState: "",
+logicSummary: "",
+expectedMeasurement: "",
+certainty: "En espera",
+certaintyClass: "",
+opImageUrl: "",
+wdmImageUrl: "",
+opFileName: "",
+wdmFileName: "",
+finalConclusion: ""
+});
 render();
 }
 
+renderHistory();
 render();
 </script>
 
